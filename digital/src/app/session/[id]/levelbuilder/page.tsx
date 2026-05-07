@@ -140,7 +140,7 @@ function MaterialEditor({
               }`}
             >
               <Image
-                src={`/materials/${name.charAt(0).toUpperCase() + name.slice(1)}.png`}
+                src={`/materials/${name.charAt(0).toUpperCase() + name.slice(1)}.toLowerCase().png`}
                 alt={name}
                 width={64}
                 height={64}
@@ -780,7 +780,7 @@ export default function LevelBuilderPage({
                   className="flex items-center gap-3 p-2 border rounded-lg bg-white shadow-sm"
                 >
                   <Image
-                    src={`/materials/${String(m).charAt(0).toUpperCase() + String(m).slice(1)}.png`}
+                    src={`/materials/${String(m).toLowerCase()}.png`}
                     alt={m}
                     width={28}
                     height={28}
