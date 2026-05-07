@@ -140,7 +140,7 @@ function MaterialEditor({
               }`}
             >
               <Image
-                src={`/materials/${name.charAt(0).toUpperCase() + name.slice(1)}.toLowerCase().png`}
+                src={`/materials/${name.toLowerCase()}.png`}
                 alt={name}
                 width={64}
                 height={64}
