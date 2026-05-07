@@ -2,7 +2,7 @@ export const runtime = 'nodejs'
 
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 export async function GET() {
   const { data, error } = await supabase
