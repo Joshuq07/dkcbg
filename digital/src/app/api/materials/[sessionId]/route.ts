@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export async function GET(req, { params }) {
+export async function GET(req: Request, { params }: { params: { sessionId: string } }) {
   const sessionId = params.sessionId
   const supabase = createClient(supabaseUrl, supabaseAnon)
 
@@ -23,7 +23,7 @@ const { data } = await supabase
   })
 }
 
-export async function POST(req, { params }) {
+export async function POST(req: Request, { params }: { params: { sessionId: string } }) {
   const sessionId = params.sessionId
   const body = await req.json()
   const supabase = createClient(supabaseUrl, supabaseAnon)
