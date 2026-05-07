@@ -533,6 +533,7 @@ export default function CharacterGuidePage() {
             {tabs.map(tab => (
               <button
                 key={tab}
+                onClick={() => setActive(tab)}
                 className={`
                   px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all shrink-0
                   ${active === tab
