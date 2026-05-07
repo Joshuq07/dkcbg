@@ -7,7 +7,7 @@ const characters = {
     accent: "#c0c2c0",
     guide: `WIP`,
     abilities: [
-      { name: "ERA - Environment First", type: "Core", value: "+0", imp: 4, diff: 2, desc: "WIP", detail: "WIP" },
+      { name: "ERA - Environment First", type: "Core", value: "+0", imp: 4, diff: 2, desc: "WIP", detail: "WIPs" },
       { name: "ARE - Animal First", type: "Core", value: "+0", imp: 3, diff: 2, desc: "WIP", detail: "WIP" },
       { name: "RAE - Resource First", type: "Core", value: "+0", imp: 2, diff: 4, desc: "WIP", detail: "WIP" },
       { name: "# to ERA - Size First", type: "Core", value: "+0", imp: 4, diff: 4, desc: "WIP", detail: "WIP" }
