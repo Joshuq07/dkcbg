@@ -540,6 +540,7 @@ export default function CharacterGuidePage() {
                     ? "font-semibold text-white shadow-sm"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}
                 `}
+                style={active === tab ? { backgroundColor: characters[tab].color } : {}}
               >
                 {tab}
               </button>
