@@ -407,7 +407,7 @@ const characters = {
   },
 }
 
-function ImportanceDots({ value, max = 5, color }) {
+function ImportanceDots({ value, max = 5, color }: { value: number, max?: number, color: string }) {
   return (
     <div className="flex gap-1 items-center">
       {Array.from({ length: max }).map((_, i) => (
