@@ -3,10 +3,10 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-export default function SessionNavbar({ sessionId }) {
+export default function SessionNavbar({ sessionId }: { sessionId: string }) {
   const pathname = usePathname()
 
-  const linkClass = (href) =>
+  const linkClass = (href: string) =>
     pathname === href
       ? "text-blue-600 font-semibold"
       : "text-gray-600 hover:text-gray-900"
