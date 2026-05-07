@@ -792,16 +792,17 @@ export const LEVEL_CODE = {
 }
 }
 
-export function getLevelCode(levelId) {
-  for (const game in LEVEL_CODE) {
-    for (const world in LEVEL_CODE[game]) {
-      for (const num in LEVEL_CODE[game][world]) {
-        if (LEVEL_CODE[game][world][num] === levelId) {
+export function getLevelCode(levelId: number) {
+  const code = LEVEL_CODE as Record<string, Record<string, Record<string, number>>>
+  for (const game in code) {
+    for (const world in code[game]) {
+      for (const num in code[game][world]) {
+        if (code[game][world][num] === levelId) {
           return `${game}-${world}-${num}`
         }
       }
     }
   }
-  return "?-?-?" // fallback
+  return '?-?-?'
 }
 

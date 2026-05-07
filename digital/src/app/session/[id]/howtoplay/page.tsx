@@ -425,7 +425,7 @@ function ImportanceDots({ value, max = 5, color }: { value: number, max?: number
   )
 }
 
-function AbilityCard({ ability, color, accent }) {
+function AbilityCard({ ability, color, accent }: { ability: { name: string, value: string, type: string, imp?: number, diff?: number, desc?: string, detail?: string }, color: string, accent: string }) {
   const [open, setOpen] = useState(false)
   const isNegative = ability.value.startsWith("-")
   const isZero = ability.value === "0" || ability.value === "+0"
@@ -474,11 +474,11 @@ function AbilityCard({ ability, color, accent }) {
           <div className="hidden sm:flex flex-col gap-0.5 items-end">
             <div className="flex items-center gap-1.5">
               <span className="text-xs text-gray-400 w-10 text-right">Imp</span>
-              <ImportanceDots value={ability.imp} color={color} />
+              <ImportanceDots value={ability.imp ?? 0} color={color} />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-xs text-gray-400 w-10 text-right">Diff</span>
-              <ImportanceDots value={ability.diff} color={accent} />
+              <ImportanceDots value={ability.diff ?? 0} color={accent} />
             </div>
           </div>
           <svg
@@ -495,11 +495,11 @@ function AbilityCard({ ability, color, accent }) {
           <div className="sm:hidden flex gap-4">
             <div className="flex items-center gap-1.5">
               <span className="text-xs text-gray-500">Importance:</span>
-              <ImportanceDots value={ability.imp} color={color} />
+              <ImportanceDots value={ability.imp ?? 0} color={color} />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-xs text-gray-500">Difficulty:</span>
-              <ImportanceDots value={ability.diff} color={accent} />
+              <ImportanceDots value={ability.diff ?? 0} color={accent} />
             </div>
           </div>
           <div
@@ -518,8 +518,8 @@ function AbilityCard({ ability, color, accent }) {
 const BOTTOM_TABS = ["Starter Layouts", "Target Items"]
 
 export default function CharacterGuidePage() {
-  const tabs = Object.keys(characters)
-  const [active, setActive] = useState("General Tips")
+  const tabs = Object.keys(characters) as (keyof typeof characters)[]
+  const [active, setActive] = useState<keyof typeof characters>("General Tips")
   const char = characters[active]
   const [bottomTab, setBottomTab] = useState("Starter Layouts")
 
@@ -533,14 +533,12 @@ export default function CharacterGuidePage() {
             {tabs.map(tab => (
               <button
                 key={tab}
-                onClick={() => { setActive(tab); setBottomTab("Starter Layouts") }}
                 className={`
                   px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all shrink-0
                   ${active === tab
                     ? "font-semibold text-white shadow-sm"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}
                 `}
-                style={active === tab ? { backgroundColor: characters[tab].color } : {}}
               >
                 {tab}
               </button>

@@ -1,6 +1,17 @@
 import SessionNavbar from './SessionNavbar'
+import { ReactNode } from 'react'
 
-export default function SessionLayout({ children, params }) {
+type SessionLayoutProps = {
+  children: ReactNode
+  params: {
+    id: string
+  }
+}
+
+export default function SessionLayout({
+  children,
+  params,
+}: SessionLayoutProps) {
   const { id: sessionId } = params
 
   return (

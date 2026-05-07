@@ -42,7 +42,8 @@ export const BOX_LAYOUT = [
   { type: 'star4',  dx: 163, dy: 0, w: 30, h: 62 },
   { type: 'check',  dx: 197, dy: 0, w: 61, h: 62 },
   { type: 'bang',   dx: 262, dy: 0, w: 62, h: 62 },
-]
+] as const
+
 
 
 export function boxesFromLevelAnchor(anchor: LevelAnchor): Box[] {
@@ -61,7 +62,6 @@ export function boxesFromLevelAnchor(anchor: LevelAnchor): Box[] {
     page: anchor.page,
   }))
 }
-import { LevelAnchor } from '@/lib/boxes'
 export const LEVEL_ANCHORS_IMAGE_1: LevelAnchor[] = [
   { level: 1, page: 1, x: 533, y: 445 },
   { level: 2, page: 1, x: 533, y: 520 },

@@ -1,10 +1,20 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 
-export function useSessionData(sessionId, userEmail = null) {
-  const [session, setSession] = useState(null)
-  const [members, setMembers] = useState([])
-  const [entries, setEntries] = useState([])
+type Entry = {
+  user_email?: string
+  [key: string]: any
+}
+
+export function useSessionData(
+  sessionId: string,
+  userEmail?: string | null
+) {
+  const [session, setSession] = useState<any>(null)
+  const [members, setMembers] = useState<any[]>([])
+  const [entries, setEntries] = useState<Entry[]>([])
+
+  
 
   // -----------------------------
   // Initial load

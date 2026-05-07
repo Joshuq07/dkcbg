@@ -4,7 +4,9 @@ import { useAuth } from '@/lib/useAuth'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-type Session = { id: string; name: string; host_email: string; created_at: string }
+type Member = { user_email: string; player_name?: string; character_name?: string }
+type Stats = { built: number; bangs: number }
+type Session = { id: string; name: string; host_email: string; created_at: string; stats?: Stats; members?: Member[] }
 
 export default function SessionsPage() {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -30,9 +32,9 @@ export default function SessionsPage() {
     const list = s.sessions ?? []
 
     const withStats = await Promise.all(
-      list.map(async session => {
+      list.map(async (session: Session) => {
         const stats = await fetch(
-          `/api/session_stats/${session.id}?user_email=${user.email}`
+          `/api/session_stats/${session.id}?user_email=${user!.email}`
         ).then(r => r.json())
 
         const { members } = await fetch(`/api/session_members?session_id=${session.id}`)
@@ -60,9 +62,8 @@ export default function SessionsPage() {
     body: JSON.stringify({
       action: 'create',
       name,
-      password,
-      user_email: user.email,                            
-      display_name: user.user_metadata?.full_name ?? user.email, // optional
+      password,                       
+      display_name: user!.name ?? user!.email,
     }),
   })
 
@@ -84,8 +85,7 @@ export default function SessionsPage() {
       action: 'join',
       sessionId: selectedSession.id,
       password,
-      user_email: user.email,                               
-      display_name: user.user_metadata?.full_name ?? user.email,
+      display_name: user!.name ?? user!.email,
     }),
   })
 
@@ -188,7 +188,7 @@ localStorage.setItem(`joined_${data.session.id}`, 'true')
 {}
     {s.members && (
       <div className="text-xs text-gray-600 mt-2">
-        {s.members.map(m => (
+        {s.members.map((m: Member) => (
           <div key={m.user_email}>
             {m.user_email === user.email ? (
               <span className="font-semibold">You</span>
