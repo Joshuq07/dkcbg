@@ -125,8 +125,8 @@ export default function MapPage() {
           type="text"
           value={query}
           onChange={e => handleSearch(e.target.value)}
-          placeholder="Search spaces… e.g. Cranky's Cabin, Water, Lost World"
-          className="flex-1 bg-gray-100 text-gray-900 placeholder-gray-400 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-yellow-400"
+          placeholder="Search spaces…"
+          className="flex-1 bg-gray-100 text-gray-900 placeholder-gray-400 rounded-lg px-4 py-2 text-sm outline-none"
         />
         {matchedSpaces.length > 0 && (
           <span className="text-gray-500 text-xs shrink-0">
@@ -139,7 +139,7 @@ export default function MapPage() {
           className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-700 bg-white"
         >
           {[100, 80, 70, 60, 50, 40].map(v => (
-            <option key={v} value={v}>{v}% brightness</option>
+            <option key={v} value={v}>{v}%</option>
           ))}
         </select>
         {query && (
