@@ -15,6 +15,7 @@ import {
 } from '@/lib/boxes'
 import { computePercentage } from '@/lib/percentages'
 import type { BoxEntry as BoxEntryType } from '@/lib/types'
+import SessionStats from './SessionStats'
 
 type SessionData = {
   id: string
@@ -44,17 +45,18 @@ export default function SessionPage() {
   const [members, setMembers] = useState<Member[]>([])
 
   const [zoomScale, setZoomScale] = useState(1)
+  const [showStats, setShowStats] = useState(false)
 
-useEffect(() => {
-  function updateZoom() {
-    const ratio = window.devicePixelRatio || 1
-    // Only counter-scale if zoomed in past 100%
-    setZoomScale(ratio > 1 ? 1 / ratio : 1)
-  }
-  updateZoom()
-  window.addEventListener('resize', updateZoom)
-  return () => window.removeEventListener('resize', updateZoom)
-}, [])
+  useEffect(() => {
+    function updateZoom() {
+      const ratio = window.devicePixelRatio || 1
+      // Only counter-scale if zoomed in past 100%
+      setZoomScale(ratio > 1 ? 1 / ratio : 1)
+    }
+    updateZoom()
+    window.addEventListener('resize', updateZoom)
+    return () => window.removeEventListener('resize', updateZoom)
+  }, [])
 
   const isHost = session?.host_email === user?.email
   const rawMode = session?.mode ?? 'my'
@@ -485,14 +487,14 @@ useEffect(() => {
     let display = ''
 
     if (viewMode === 'global') {
-      if (isNumber)     display = computeBuiltFraction(box.level)
+      if (isNumber) display = computeBuiltFraction(box.level)
       else if (isCheck) display = computeCheckFraction(box.level)
-      else if (isBang)  display = computeBangFraction(box.level)
-      else if (isStar)  display = entry?.value ?? ''
+      else if (isBang) display = computeBangFraction(box.level)
+      else if (isStar) display = entry?.value ?? ''
     } else {
-      if (isStar)        display = entry?.value ?? ''
-      else if (isCheck)  display = entry ? '✔︎' : ''
-      else if (isBang)   display = entry ? '!' : ''
+      if (isStar) display = entry?.value ?? ''
+      else if (isCheck) display = entry ? '✔︎' : ''
+      else if (isBang) display = entry ? '!' : ''
       else if (isNumber) display = entry?.value ?? ''
     }
 
@@ -517,8 +519,8 @@ useEffect(() => {
             viewMode === 'global'
               ? 'black'
               : lost && isNumber
-              ? 'red'
-              : 'black',
+                ? 'red'
+                : 'black',
         }}
       >
         {display}
@@ -530,65 +532,73 @@ useEffect(() => {
 
   return (
     <main className="w-full min-h-screen p-4 flex justify-center">
-  <div className="w-full max-w-[2400px]">
+      <div className="w-full max-w-[2400px]">
 
-      <h1 className="text-2xl font-bold mb-2">{session.name}</h1>
+        <h1 className="text-2xl font-bold mb-2">{session.name}</h1>
 
-      {isHost && (
-        <button
-          onClick={async () => {
-            const newMode = viewMode === 'my' ? 'global' : 'my'
-            await fetch(`/api/sessions/${sessionId}`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ mode: newMode }),
-            })
-            setSession(s => (s ? { ...s, mode: newMode } : s))
-          }}
-          className="btn-primary mb-4"
-        >
-          {viewMode === 'global' ? 'All Players' : 'My View'}
-        </button>
-      )}
+        {isHost && (
+          <button
+            onClick={async () => {
+              const newMode = viewMode === 'my' ? 'global' : 'my'
+              await fetch(`/api/sessions/${sessionId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: newMode }),
+              })
+              setSession(s => (s ? { ...s, mode: newMode } : s))
+            }}
+            className="btn-primary mb-4"
+          >
+            {viewMode === 'global' ? 'All Players' : 'My View'}
+          </button>
+        )}
 
-      {isHost && (
-        <button
-          onClick={async () => {
-            const confirmDelete = window.prompt(
-              'Type DELETE to permanently remove this session:',
-              ''
-            )
-            if (confirmDelete !== 'DELETE') return
-            await fetch(`/api/sessions/${sessionId}`, { method: 'DELETE' })
-            router.push('/sessions')
-          }}
-          className="bg-red-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-red-600"
-        >
-          Delete Session
-        </button>
-      )}
+        {isHost && (
+          <button
+            onClick={async () => {
+              const confirmDelete = window.prompt(
+                'Type DELETE to permanently remove this session:',
+                ''
+              )
+              if (confirmDelete !== 'DELETE') return
+              await fetch(`/api/sessions/${sessionId}`, { method: 'DELETE' })
+              router.push('/sessions')
+            }}
+            className="bg-red-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-red-600"
+          >
+            Delete Session
+          </button>
+        )}
+        {isHost && (
+          <button
+            onClick={() => setShowStats(true)}
+            className="bg-blue-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-blue-600"
+          >
+            Stats
+          </button>
+        )}
 
-      {/**/}
-<div className="flex flex-col lg:flex-row gap-4">
+        {/**/}
+        <div className="flex flex-col lg:flex-row gap-4">
 
-  {/* PAGE 1 */}
-  <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
-    <img src="/page1.png" className="w-full h-auto block" />
-    {boxesByPage[1].map(box => (
-      <div key={box.id}>{renderBox(box)}</div>
-    ))}
-  </div>
-<div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
-    <img src="/page2.png" className="w-full h-auto block" />
-    {boxesByPage[2].map(box => (
-      <div key={box.id}>{renderBox(box)}</div>
-    ))}
-  </div>
+          {/* PAGE 1 */}
+          <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
+            <img src="/page1.png" className="w-full h-auto block" />
+            {boxesByPage[1].map(box => (
+              <div key={box.id}>{renderBox(box)}</div>
+            ))}
+          </div>
+          <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
+            <img src="/page2.png" className="w-full h-auto block" />
+            {boxesByPage[2].map(box => (
+              <div key={box.id}>{renderBox(box)}</div>
+            ))}
+          </div>
 
-  
-<Draggable handle=".drag-handle">
-  <div
-    className="
+
+          <Draggable handle=".drag-handle">
+            <div
+              className="
       fixed
       bottom-20
       right-4
@@ -604,99 +614,107 @@ useEffect(() => {
       drag-handle
       z-[9999]
     "
-    style={{
-      width: `${500 * (1 / (window.devicePixelRatio || 1))}px`,
-      maxWidth: '90vw',
-      fontSize: `${12 * (1 / (window.devicePixelRatio || 1))}px`,
-      transformOrigin: 'bottom right',
-    }}
-  >
-    {sortedMembers.map((m, idx) => {
-      const canEdit =
-        (viewMode === 'my' && m.user_email === user?.email) ||
-        (viewMode === 'global' && user?.email === session.host_email)
+              style={{
+                width: `${500 * (1 / (window.devicePixelRatio || 1))}px`,
+                maxWidth: '90vw',
+                fontSize: `${12 * (1 / (window.devicePixelRatio || 1))}px`,
+                transformOrigin: 'bottom right',
+              }}
+            >
+              {sortedMembers.map((m, idx) => {
+                const canEdit =
+                  (viewMode === 'my' && m.user_email === user?.email) ||
+                  (viewMode === 'global' && user?.email === session.host_email)
 
-      return (
-        <div key={m.user_email} className="flex flex-col" style={{ width: 'calc(50% - 8px)' }}>
-          <span className="font-semibold text-gray-800 text-xs truncate">
-            {m.display_name || m.user_email}
-          </span>
-          <span className="mb-2 text-xs text-gray-500">Player {idx + 1}</span>
+                return (
+                  <div key={m.user_email} className="flex flex-col" style={{ width: 'calc(50% - 8px)' }}>
+                    <span className="font-semibold text-gray-800 text-xs truncate">
+                      {m.display_name || m.user_email}
+                    </span>
+                    <span className="mb-2 text-xs text-gray-500">Player {idx + 1}</span>
 
-          {}
-          <input
-            className="border rounded px-2 py-1 text-xs mb-1"
-            placeholder="Player Name"
-            value={m.player_name ?? ''}
-            disabled={!canEdit}
-            onChange={async e => {
-              const value = e.target.value
-              setMembers(prev =>
-                prev.map(mem =>
-                  mem.user_email === m.user_email
-                    ? { ...mem, player_name: value }
-                    : mem
+                    { }
+                    <input
+                      className="border rounded px-2 py-1 text-xs mb-1"
+                      placeholder="Player Name"
+                      value={m.player_name ?? ''}
+                      disabled={!canEdit}
+                      onChange={async e => {
+                        const value = e.target.value
+                        setMembers(prev =>
+                          prev.map(mem =>
+                            mem.user_email === m.user_email
+                              ? { ...mem, player_name: value }
+                              : mem
+                          )
+                        )
+                        await fetch('/api/session_members', {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            session_id: sessionId,
+                            user_email: m.user_email,
+                            player_name: value
+                          })
+                        })
+                      }}
+                    />
+
+                    { }
+                    <input
+                      className="border rounded px-2 py-1 text-xs mb-1"
+                      placeholder="Character Name"
+                      value={m.character_name ?? ''}
+                      disabled={!canEdit}
+                      onChange={async e => {
+                        const value = e.target.value
+                        setMembers(prev =>
+                          prev.map(mem =>
+                            mem.user_email === m.user_email
+                              ? { ...mem, character_name: value }
+                              : mem
+                          )
+                        )
+                        await fetch('/api/session_members', {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            session_id: sessionId,
+                            user_email: m.user_email,
+                            character_name: value
+                          })
+                        })
+                      }}
+                    />
+
+                    { }
+                    <div className="border rounded px-2 py-1 text-xs mb-1 bg-gray-50 text-gray-600">
+                      {levelsBuilt(m.user_email)} levels
+                    </div>
+
+                    { }
+                    <div className="border rounded px-2 py-1 text-xs bg-gray-50 text-gray-600">
+                      {bangCount(m.user_email)} / 142 "!"
+                    </div>
+                  </div>
                 )
-              )
-              await fetch('/api/session_members', {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  session_id: sessionId,
-                  user_email: m.user_email,
-                  player_name: value
-                })
-              })
-            }}
-          />
+              })}
+            </div>
+          </Draggable>
 
-          {}
-          <input
-            className="border rounded px-2 py-1 text-xs mb-1"
-            placeholder="Character Name"
-            value={m.character_name ?? ''}
-            disabled={!canEdit}
-            onChange={async e => {
-              const value = e.target.value
-              setMembers(prev =>
-                prev.map(mem =>
-                  mem.user_email === m.user_email
-                    ? { ...mem, character_name: value }
-                    : mem
-                )
-              )
-              await fetch('/api/session_members', {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  session_id: sessionId,
-                  user_email: m.user_email,
-                  character_name: value
-                })
-              })
-            }}
-          />
 
-          {}
-          <div className="border rounded px-2 py-1 text-xs mb-1 bg-gray-50 text-gray-600">
-            {levelsBuilt(m.user_email)} levels
-          </div>
-
-          {}
-          <div className="border rounded px-2 py-1 text-xs bg-gray-50 text-gray-600">
-            {bangCount(m.user_email)} / 142 "!"
-          </div>
         </div>
-      )
-    })}
-  </div>
-</Draggable>
-
-    
-  </div>
 
 
-</div>
+      </div>
+      {isHost && (
+        <button
+          onClick={() => setShowStats(true)}
+          className="bg-blue-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-blue-600"
+        >
+          Stats
+        </button>
+      )}
     </main>
   )
 }
