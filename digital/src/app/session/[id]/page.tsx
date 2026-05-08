@@ -46,6 +46,7 @@ export default function SessionPage() {
 
   const [zoomScale, setZoomScale] = useState(1)
   const [showStats, setShowStats] = useState(false)
+  const [showOptions, setShowOptions] = useState(false)
 
   useEffect(() => {
     function updateZoom() {
@@ -536,6 +537,7 @@ export default function SessionPage() {
 
         <h1 className="text-2xl font-bold mb-2">{session.name}</h1>
 
+
         {isHost && (
           <button
             onClick={async () => {
@@ -547,35 +549,60 @@ export default function SessionPage() {
               })
               setSession(s => (s ? { ...s, mode: newMode } : s))
             }}
-            className="btn-primary mb-4"
+            className="bg-gray-500 btn-primary mb-4"
           >
             {viewMode === 'global' ? 'All Players' : 'My View'}
           </button>
         )}
 
+        <button
+          onClick={() => setShowStats(true)}
+          className="bg-gray-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-blue-600"
+        >
+          Stats
+        </button>
+
         {isHost && (
-          <button
-            onClick={async () => {
-              const confirmDelete = window.prompt(
-                'Type DELETE to permanently remove this session:',
-                ''
-              )
-              if (confirmDelete !== 'DELETE') return
-              await fetch(`/api/sessions/${sessionId}`, { method: 'DELETE' })
-              router.push('/sessions')
-            }}
-            className="bg-red-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-red-600"
-          >
-            Delete Session
-          </button>
-        )}
-        {isHost && (
-          <button
-            onClick={() => setShowStats(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-blue-600"
-          >
-            Stats
-          </button>
+          <>
+            <button
+              onClick={() => setShowOptions(true)}
+              className="bg-gray-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-gray-600"
+            >
+              Options
+            </button>
+
+            {showOptions && (
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
+                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+                  <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                    <h2 className="text-lg font-bold text-gray-900">Options</h2>
+                    <button
+                      onClick={() => setShowOptions(false)}
+                      className="text-gray-400 hover:text-gray-700 text-xl leading-none"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className="px-5 py-4 space-y-3">
+                    <button
+                      onClick={async () => {
+                        const confirmDelete = window.prompt(
+                          'Type DELETE to permanently remove this session:',
+                          ''
+                        )
+                        if (confirmDelete !== 'DELETE') return
+                        await fetch(`/api/sessions/${sessionId}`, { method: 'DELETE' })
+                        router.push('/sessions')
+                      }}
+                      className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm"
+                    >
+                      Delete Session
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/**/}

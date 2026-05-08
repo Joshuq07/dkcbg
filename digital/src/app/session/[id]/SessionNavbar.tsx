@@ -22,7 +22,7 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
         href={`/session/${sessionId}`}
         className={`shrink-0 ${linkClass(`/session/${sessionId}`)}`}
       >
-        Session
+        Game
       </Link>
 
       <Link
