@@ -5,19 +5,21 @@ const characters = {
   "General Tips": {
     color: "#070807",
     accent: "#c0c2c0",
-    guide: `WIP`,
+    guide: `Below are general strategies to think about in the Game, checkout the individual chraacter tabs for in-depth breakdowns of each character and their unique strategies.`,
     abilities: [
-      { name: "ERA - Environment First", type: "Core", value: "+0", imp: 4, diff: 2, desc: "WIP", detail: "WIPs" },
-      { name: "ARE - Animal First", type: "Core", value: "+0", imp: 3, diff: 2, desc: "WIP", detail: "WIP" },
-      { name: "RAE - Resource First", type: "Core", value: "+0", imp: 2, diff: 4, desc: "WIP", detail: "WIP" },
-      { name: "# to ERA - Size First", type: "Core", value: "+0", imp: 4, diff: 4, desc: "WIP", detail: "WIP" }
-      
+      { name: "Money Conversion", type: "Core", value: "1", imp: 5, diff: 5, desc: "Translate a Wealth of Money into a Wealth of Resources", detail: "There are generally 2 options with money in this game, A - Spend all your money, always buying everything you want, never attempting to save until you are broke, and B - Making smart financial decisions and prioritizing a money making engine over other things like card collection or completion progress. You can spend lots of resources to get rich, absurdly rich, $20,000+ by turn 100, but that's not gonna help you actually win unless you no how to convert that money. Whats the point of an extra $10,000 if you ended in 2nd place. Is it possible that you could've made decisions throughout the game where you mightve not seen the value, but looking back you didn't actually need $5000 at all times and you shouldve just spent it. With all the items and cards you can buy, and all the things you could potentially waste your money on, how do you know how to actually convert money into resources? Well, in my opinion, you don't actually need to think about very much, because only materials actually matter. Bonuses, Saving, Music, Bosses, Homework, Bannaa Birds Returned, etc... are all important, but you're gonna get them all done on time. Whoever builds levels the fastest though, thats who wins 99/100 times. That's the bottleneck pretty much 100% of the time. If your level building was done, you could fill your entire inventory with items to help you do all the other requirements, but obviosly you can't becuase most of your inventory until the very end of the game will be materials. And its the end of the game that actually gives us the answer to the material conversion quesiton of what is the worth of a material that I need, cause at the end of the game, when you only need 5, 10, maybe 15 levels you start to see materials as turns. How long will it take me to get this Mines card, what kinda luck. You can't simply spend your money to get it guarenteed, you'd need to either have it as a purchase item or have some other effect trigger to let you do that. But at the end of the game, that Mines card is likely worth more than its listed price to you, probably worth more than 2x, 3x, 5x, maybe even 10x. Remember this earlier in the game then, think about every card as part of completing the game, when choosing between spaces does one give 2 things you need vs the other 3, well maybe pick the 3. Money wise, overspend on items or opportunities to get materials or levels, $1000 for a 3-4 card level might seem absurd, but when that 3 card level could be the 142th level you desperately need $1000 seems like a good deal. At bazaar's, if you've got the money, overspend. Buy as many copies of a card as you need of it, pick up items that are material positive even if they seem kinda pricey. This all assumes you have money, but if you do, don't be stingy with it once you've reached a certain point, and that point may be different depending on the gamestate, but in general, making money is easier than spending it in this game, as absurd as that sounds, especially later in the game. If you're worried about ! prices, just do the math, see how much you'll need,so you know what you can spend.  " },
+      { name: "ERA - Environment First", type: "Core", value: "2", imp: 4, diff: 2, desc: "Build levels in groups, based on their Environments.", detail: "Certain Environments will be easier to come by throughout the game, and certain Environments feature much larger levels on average than other often similarly priced or number cards. Castle levels for example often feature 5+ cards, while Ship Deck levels generally only require a 3-4 cards. Different levels with the same environment also usually share similar resoureces or animals, and might come from the same games or even worlds. By builing in groups you get quite a few advantages. First, certain worlds become extra valuable to land on, as you'll want multiple copies of spaces in a small area, meaning you can aqquire alot very quickly if you land on close material spaces. Additionally, Camera Pieces can be used more effectively as you are copying cards you struggle to get and already have a copy of so you don't need to wait on an opponent. Also, when you finish the block of levels, you're then done with that card (if you also scrapbook it), which means you can avoid that material in the future, which likely isnt a problem since it was probably a difficult environment to get your hands on. Using a Camera Piece on a common card like Ropes just isn't going to net you as much value as an environment you've found is very hard to get, likely cause its section of the board you've avoided most of the game. ERA works much better than ARE and RAE, because Environments share like cards and like locations on the board more often than the other two, and there are also a lot more environments, while some levels might not even have animals. Since there are so many environments, each indivdual one gives you less options than animals or resources, so finishing them early helps keep your level options up and save you from wasted inventory." },
+      { name: "ARE - Animal First", type: "Core", value: "3", imp: 3, diff: 2, desc: "Build levels in groups, based on their Animals.", detail: "WIP" },
+      { name: "RAE - Resource First", type: "Core", value: "4", imp: 2, diff: 4, desc: "Build levels in groups, based on their Resources.", detail: "WIP" },
+      { name: "# to ERA - Size First", type: "Core", value: "5", imp: 4, diff: 4, desc: "Prioritize building larger levels early over smaller levels.", detail: "WIP" }
+
+
     ],
     layouts: [
-      
+
     ],
     targetItems: [
-      {label: "DKC Guidebook", abilities: "asldkjfa;lksjdf"}
+      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
     ],
   },
   "Donkey Kong": {
@@ -46,7 +48,7 @@ const characters = {
       { label: "Other", abilities: "Sub in Boxing Gloves as needed, route mainly off of Ground Slap, and determine which of Ground Slap, Cargo Throw, or Bwananarang is getting you the most value. Lot of Grey Flex potential at the +1,2,3 instead of Groundslap, Bwananarang, or Cargo Throw" },
     ],
     targetItems: [
-      {label: "DKC Guidebook", abilities: "asldkjfa;lksjdf"}
+      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
     ],
   },
 
@@ -76,8 +78,8 @@ const characters = {
       { label: "+3", abilities: "Boom Boxing, Rocketbarrel Barrage, Banana Peels, Chimpy Charge, Super Golden Feathers, Hat Trick, Welcome to the DLC Club, Double Jeopardy, Hero Mode" },
     ],
     targetItems: [
-      {label: "Melon Crate", abilities: "When you have Double Jeopardy equipped, holding the 1 inventory Melon Crate will protect you from it ever activating either effect, letting you play more risky/aggressive without any actual risk"},
-      {label: "Candy's Cellphone Number", abilities: "Hero Mode stops you from saving as often, this item gives you control of saving back making your negatives less risky."}
+      { label: "Melon Crate", abilities: "When you have Double Jeopardy equipped, holding the 1 inventory Melon Crate will protect you from it ever activating either effect, letting you play more risky/aggressive without any actual risk" },
+      { label: "Candy's Cellphone Number", abilities: "Hero Mode stops you from saving as often, this item gives you control of saving back making your negatives less risky." }
     ],
   },
 
@@ -107,7 +109,7 @@ const characters = {
       { label: "Other", abilities: "Lot of Flexibility here, in general want to ensure you have equipped what you need, and be more willing to swap around than other characters." },
     ],
     targetItems: [
-      {label: "DKC Guidebook", abilities: "asldkjfa;lksjdf"}
+      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
     ],
   },
 
@@ -139,7 +141,7 @@ const characters = {
       { label: "Other", abilities: "Depending on player count, spread, and strategy, Crushing the Competition could be viable allthroughout the game, but it's most releavant right at the start with tons of bunching." },
     ],
     targetItems: [
-      {label: "DKC Guidebook", abilities: "asldkjfa;lksjdf"}
+      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
     ],
   },
 
@@ -170,7 +172,7 @@ const characters = {
       { label: "Other", abilities: "Some flexibility in how early you implement Kongnapped, Backstabbing, Scaffolding, and Monkeyport based on game state and your objective progress." },
     ],
     targetItems: [
-      {label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space."}
+      { label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space." }
     ],
   },
 
@@ -200,7 +202,7 @@ const characters = {
       { label: "Other", abilities: "Lot of flexibility in the order and swapping out positives, as well as temporarily losing Stolen Lunch Money at times to get more money." },
     ],
     targetItems: [
-      {label: "Banana Tree", abilities: "If you have Stolen Lunch Money equipped and are short on money, Banana Tree is a good long term investment to get back control of your income."}
+      { label: "Banana Tree", abilities: "If you have Stolen Lunch Money equipped and are short on money, Banana Tree is a good long term investment to get back control of your income." }
     ],
   },
 
@@ -231,7 +233,7 @@ const characters = {
       { label: "Other", abilities: "Disco Chunky and Hunky Chunk are both solid swaps at early/mid game if you are not getting as much use out of Tax Evasion, Deforestation, or Sandwichum Knuckles" },
     ],
     targetItems: [
-      {label: "Silver Feathers", abilities: "Very safe item to pickup, when held alongside a Golden Feather, you can never lose lives"}
+      { label: "Silver Feathers", abilities: "Very safe item to pickup, when held alongside a Golden Feather, you can never lose lives" }
     ],
   },
 
@@ -266,7 +268,7 @@ const characters = {
       { label: "Other", abilities: "Rubber Banding Can be taken if you are able to not get too punished by it. How long Power-Up Tokens stay in your inventory depends on how quickly and much you want to upgrade your stats." },
     ],
     targetItems: [
-      {label: "Fractone (Bonus)", abilities: "Fractone gives Taj an easy way to consistently setup Wrong Warp Whistle and adds a free benefit, meaning he won't have to use Red Balloons on himself and he will warp more often."}
+      { label: "Fractone (Bonus)", abilities: "Fractone gives Taj an easy way to consistently setup Wrong Warp Whistle and adds a free benefit, meaning he won't have to use Red Balloons on himself and he will warp more often." }
     ],
   },
 
@@ -298,7 +300,7 @@ const characters = {
       { label: "Other", abilities: "Lots of Flexibility here, Banana Plantation, Banana Ship, X to Y to Z, and Going Bananas are good at all points in the game" },
     ],
     targetItems: [
-      {label: "DKC Guidebook", abilities: "asldkjfa;lksjdf"}
+      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
     ],
   },
 
@@ -332,9 +334,9 @@ const characters = {
       { label: "Other", abilities: "Get out of my swamp can be subbed in at various points if you aren't getting a lot of value from other abilities like Garbage Collector. Your non-full game negatives can also be removed for short bursts like if you've saved up a bunch of Camera Pieces or want to search Bazaar a lot. Make sure that by your big powerspike at +1 you have a lot of money saved up as thats when you want to start committing to your traps." },
     ],
     targetItems: [
-      {label: "One of My 7 Koopa Hotels", abilities: "If you manage to set this up inside your danger zone, it's a money printer. Look to see if it ever falls into the item discard, and then purchase it once you are on the space you want it (Requires Crocodile Isle Garbage Collector to purchase from discard)."},
-      {label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space."},
-      {label: "Cage", abilities: "By placing this on a token space in your danger zone, you'll get many more tokens from this than the usual player could. (His opponenets can also do this so make sure to nab it out of the discard pile)"}
+      { label: "One of My 7 Koopa Hotels", abilities: "If you manage to set this up inside your danger zone, it's a money printer. Look to see if it ever falls into the item discard, and then purchase it once you are on the space you want it (Requires Crocodile Isle Garbage Collector to purchase from discard)." },
+      { label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space." },
+      { label: "Cage", abilities: "By placing this on a token space in your danger zone, you'll get many more tokens from this than the usual player could. (His opponenets can also do this so make sure to nab it out of the discard pile)" }
     ],
   },
 
@@ -366,7 +368,7 @@ const characters = {
       { label: "+3", abilities: "Swap Harp, IntilleSense Specs, Wallopoid, All-Mine Remote, Inviseaux, King Crockoid, Mountain of Paperwork, False Imprisonment, King of Rot" },
     ],
     targetItems: [
-      {label: "DKC Guidebook", abilities: "asldkjfa;lksjdf"}
+      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
     ],
   },
 
@@ -402,7 +404,7 @@ const characters = {
       { label: "Other", abilities: "Very light kit here, Kremling Krunch should be avoided if you're using Share the Booty. Belly Armor/Righthand Minon can be swapped depending on game state. Main deciion for character is which minions to use and which K. Rool to be, not your other abilities" },
     ],
     targetItems: [
-      {label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space."}
+      { label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space." }
     ],
   },
 }
@@ -437,18 +439,18 @@ function AbilityCard({ ability, color, accent }: { ability: { name: string, valu
   const valueBg = isNegative
     ? "bg-red-100 text-red-700 border-red-200"
     : isZero
-    ? "bg-gray-100 text-gray-600 border-gray-200"
-    : "bg-green-100 text-green-700 border-green-200"
+      ? "bg-gray-100 text-gray-600 border-gray-200"
+      : "bg-green-100 text-green-700 border-green-200"
 
   const typeBadge = isCore
     ? { bg: "bg-blue-50 text-blue-600 border-blue-200", label: "Core" }
     : isUnlockable
-    ? { bg: "bg-yellow-50 text-yellow-700 border-yellow-200", label: "Unlockable" }
-    : isFullGame
-    ? { bg: "bg-red-50 text-red-600 border-red-200", label: "Full Game" }
-    : isCostume
-    ? { bg: "bg-purple-50 text-purple-700 border-purple-200", label: "Costume" }
-    : null
+      ? { bg: "bg-yellow-50 text-yellow-700 border-yellow-200", label: "Unlockable" }
+      : isFullGame
+        ? { bg: "bg-red-50 text-red-600 border-red-200", label: "Full Game" }
+        : isCostume
+          ? { bg: "bg-purple-50 text-purple-700 border-purple-200", label: "Costume" }
+          : null
 
   return (
     <div
@@ -527,7 +529,7 @@ export default function CharacterGuidePage() {
     <main className="min-h-screen bg-gray-50">
       {/* HEADER */}
       <div className="bg-white border-b shadow-sm sticky top-0 z-10 w-full">
-  <div className="px-4">
+        <div className="px-4">
 
           <div className="flex items-center gap-2 py-2 overflow-x-auto no-scrollbar">
             {tabs.map(tab => (
@@ -553,27 +555,27 @@ export default function CharacterGuidePage() {
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
         {/* Character header */}
         {/* Character header */}
-<div
-  className="rounded-xl p-5 text-white shadow flex flex-col sm:flex-row items-start sm:items-center gap-6"
-  style={{ backgroundColor: char.color }}
->
-  <div className="flex-1">
-    <h1 className="text-2xl font-bold mb-2">{active}</h1>
-    {char.guide && (
-      <p className="text-sm leading-relaxed opacity-90">
-        {char.guide}
-      </p>
-    )}
-  </div>
+        <div
+          className="rounded-xl p-5 text-white shadow flex flex-col sm:flex-row items-start sm:items-center gap-6"
+          style={{ backgroundColor: char.color }}
+        >
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold mb-2">{active}</h1>
+            {char.guide && (
+              <p className="text-sm leading-relaxed opacity-90">
+                {char.guide}
+              </p>
+            )}
+          </div>
 
-  <div className="w-32 h-32 rounded-lg overflow-hidden bg-white/20 flex items-center justify-center">
-    <img
-      src={`/characters/${active}/portrait.png`}
-      alt={`${active} portrait`}
-      className="object-contain w-full h-full"
-    />
-  </div>
-</div>
+          <div className="w-32 h-32 rounded-lg overflow-hidden bg-white/20 flex items-center justify-center">
+            <img
+              src={`/characters/${active}/portrait.png`}
+              alt={`${active} portrait`}
+              className="object-contain w-full h-full"
+            />
+          </div>
+        </div>
 
 
         <div>
@@ -596,11 +598,10 @@ export default function CharacterGuidePage() {
               <button
                 key={t}
                 onClick={() => setBottomTab(t)}
-                className={`text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-md transition-colors ${
-                  bottomTab === t
-                    ? "text-white"
-                    : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-                }`}
+                className={`text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-md transition-colors ${bottomTab === t
+                  ? "text-white"
+                  : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+                  }`}
                 style={bottomTab === t ? { backgroundColor: char.color } : {}}
               >
                 {t}
@@ -627,7 +628,7 @@ export default function CharacterGuidePage() {
             </div>
           )}
 
-         {bottomTab === "Target Items" && (
+          {bottomTab === "Target Items" && (
             <div className="rounded-xl border border-gray-200 overflow-hidden">
               {char.targetItems.map((targetItems, i) => (
                 <div
