@@ -84,8 +84,9 @@ function computeStatsForUser(userEmail: string, entries: BoxEntry[]) {
 
   // Failed "!" cost — built levels without bang, excluding final bosses
   let failedBangCost = 0
-  for (const level of builtLevels) {
+  for (const level of Array.from(builtLevels)) {
     if (FINAL_BOSS_LEVELS.has(level)) continue
+
     if (!bangLevels.has(level)) {
       const difficulty = bonusDifficulties[level - 1] ?? 0
       failedBangCost += difficulty * 100
