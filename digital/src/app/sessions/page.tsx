@@ -60,11 +60,12 @@ export default function SessionsPage() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      action: 'create',
-      name,
-      password,                       
-      display_name: user!.name ?? user!.email,
-    }),
+  action: 'create',
+  name,
+  password,
+  user_email: user!.email,          
+  display_name: user!.name ?? user!.email,
+}),
   })
 
   const data = await res.json()
@@ -82,11 +83,12 @@ export default function SessionsPage() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      action: 'join',
-      sessionId: selectedSession.id,
-      password,
-      display_name: user!.name ?? user!.email,
-    }),
+  action: 'join',
+  sessionId: selectedSession.id,
+  password,
+  user_email: user!.email,         
+  display_name: user!.name ?? user!.email,
+}),
   })
 
   const data = await res.json()
