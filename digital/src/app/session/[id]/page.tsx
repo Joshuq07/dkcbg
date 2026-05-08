@@ -631,7 +631,7 @@ export default function SessionPage() {
           </div>
 
 
-          <Draggable handle=".drag-handle">
+          <Draggable handle=".drag-handle" cancel="input">
             <div
               className="
       fixed
@@ -639,23 +639,16 @@ export default function SessionPage() {
       right-4
       bg-white/85
       backdrop-blur-sm
-      p-3
       rounded-lg
       shadow-lg
-      flex
-      flex-wrap
-      gap-4
-      cursor-move
-      drag-handle
       z-[9999]
     "
-              style={{
-                width: `${500 * (1 / (window.devicePixelRatio || 1))}px`,
-                maxWidth: '90vw',
-                fontSize: `${12 * (1 / (window.devicePixelRatio || 1))}px`,
-                transformOrigin: 'bottom right',
-              }}
+              style={{}}
             >
+              <div className="drag-handle cursor-move px-3 pt-2 pb-1 text-xs text-gray-400 select-none border-b border-gray-200">
+                ⠿ drag
+              </div>
+              <div className="p-3 flex flex-wrap gap-4" style={{ width: `${500 * (1 / (window.devicePixelRatio || 1))}px`, maxWidth: '90vw', fontSize: `${12 * (1 / (window.devicePixelRatio || 1))}px` }}>
               {sortedMembers.map((m, idx) => {
                 const canEdit =
                   (viewMode === 'my' && m.user_email === user?.email) ||
@@ -733,7 +726,8 @@ export default function SessionPage() {
                     </div>
                   </div>
                 )
-              })}
+             })}
+              </div>
             </div>
           </Draggable>
 
