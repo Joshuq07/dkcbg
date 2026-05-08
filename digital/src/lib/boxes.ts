@@ -163,7 +163,7 @@ export const LEVEL_ANCHORS_IMAGE_1: LevelAnchor[] = [
   { level: 83, page: 1, x: 2060, y: 4008 },
   { level: 84, page: 1, x: 2060, y: 4073 },
   { level: 85, page: 1, x: 2060, y: 4138 },
-  { level: 86, page: 1, x: 2060, y: 4300 },
+  { level: 86, page: 1, x: 2060, y: 4235 },
   { level: 87, page: 1, x: 2060, y: 4333 }
 ]
 export const LEVEL_ANCHORS_IMAGE_2: LevelAnchor[] = [
