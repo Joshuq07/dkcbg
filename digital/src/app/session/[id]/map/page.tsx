@@ -14,6 +14,23 @@ interface SpaceInfo {
   coords: [number, number]
 }
 
+const BEAR_ALIASES: Record<string, string[]> = {
+  "barnacle's island": ["bazaar"],
+  "brash's stadium": ["bazaar"],
+  "blunder's booth": ["bazaar"],
+  "bramble's bungalow": ["bazaar"],
+  "blue's beach hut": ["bazaar"],
+  "bazooka's barracks": ["bazaar"],
+  "blizzard's basecamp": ["bazaar"],
+  "barter's swap shop": ["bazaar"],
+  "benny's chairlift": ["bazaar"],
+  "björn's chairlift": ["bazaar"],
+  "baffle's code room": ["bazaar"],
+  "boomer's bomb shelter": ["bazaar"],
+  "bachelor's pad": ["bazaar"],
+  "bazaar's general store": ["bazaar"],
+}
+
 function getMatchingSpaces(query: string): number[] {
   if (!query.trim()) return []
 
@@ -33,8 +50,12 @@ function getMatchingSpaces(query: string): number[] {
     const searchableEntries = isMaterial ? entries.slice(1) : entries
     const world = WORLD_MAP[spaceIndex] ?? ''
 
+    const spaceNameLower = searchableEntries.join(' ').toLowerCase()
+    const bearAliases = BEAR_ALIASES[spaceNameLower] ?? []
+
     const haystack = [
       ...searchableEntries,
+      ...bearAliases,
       world,
       String(spaceIndex),
       isMaterial ? 'material' : ''
@@ -42,7 +63,13 @@ function getMatchingSpaces(query: string): number[] {
       .join(' ')
       .toLowerCase()
 
-    const allMatch = terms.every(term => haystack.includes(term))
+    const expandedTerms = terms.flatMap(term =>
+      term === 'bazaar'
+        ? ['bazaar', ...Object.keys(BEAR_ALIASES).flatMap(k => BEAR_ALIASES[k])]
+        : [term]
+    )
+
+    const allMatch = expandedTerms.every(term => haystack.includes(term))
     if (allMatch) results.push(spaceIndex)
   })
 
@@ -55,6 +82,7 @@ export default function MapPage() {
   const [selected, setSelected] = useState<SpaceInfo | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerSize, setContainerSize] = useState({ w: 0, h: 0 })
+  const [dimness, setDimness] = useState(100)
 
   useEffect(() => {
     const ro = new ResizeObserver(entries => {
@@ -90,26 +118,34 @@ export default function MapPage() {
   const isMaterial = (entries: string[]) => entries[0] === 'M'
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900">
+    <div className="flex flex-col h-screen bg-white">
       {/* Search bar */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-gray-800 border-b border-gray-700 shrink-0">
-        <span className="text-yellow-400 text-lg">★</span>
+      <div className="flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200 shrink-0">
         <input
           type="text"
           value={query}
           onChange={e => handleSearch(e.target.value)}
           placeholder="Search spaces… e.g. Cranky's Cabin, Water, Lost World"
-          className="flex-1 bg-gray-700 text-white placeholder-gray-400 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-yellow-400"
+          className="flex-1 bg-gray-100 text-gray-900 placeholder-gray-400 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-yellow-400"
         />
         {matchedSpaces.length > 0 && (
-          <span className="text-gray-400 text-xs shrink-0">
+          <span className="text-gray-500 text-xs shrink-0">
             {matchedSpaces.length} space{matchedSpaces.length !== 1 ? 's' : ''}
           </span>
         )}
+        <select
+          value={dimness}
+          onChange={e => setDimness(Number(e.target.value))}
+          className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-700 bg-white"
+        >
+          {[100, 80, 70, 60, 50, 40].map(v => (
+            <option key={v} value={v}>{v}% brightness</option>
+          ))}
+        </select>
         {query && (
           <button
             onClick={() => handleSearch('')}
-            className="text-gray-400 hover:text-white text-sm px-2"
+            className="text-gray-400 hover:text-gray-700 text-sm px-2"
           >
             ✕
           </button>
@@ -124,6 +160,7 @@ export default function MapPage() {
           fill
           className="object-contain"
           priority
+          style={{ filter: `brightness(${dimness}%)` }}
         />
 
         {/* Stars */}
