@@ -230,6 +230,5 @@ export const LEVEL_ANCHORS_IMAGE_2: LevelAnchor[] = [
   { level: 139, page: 2, x: 2050, y: 1658 },
   { level: 140, page: 2, x: 2050, y: 1723 },
   { level: 141, page: 2, x: 2050, y: 1788 },
-
-  { level: 142, page: 2, x: 2050, y: 1972 }
+  { level: 142, page: 2, x: 2050, y: 1853 }
 ]

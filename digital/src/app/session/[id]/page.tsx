@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/useAuth'
 import { useRouter, useParams } from 'next/navigation'
-import { useEffect, useMemo, useCallback, useState } from 'react'
+import { useEffect, useMemo, useCallback, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import Draggable from "react-draggable"
 
@@ -47,6 +47,7 @@ export default function SessionPage() {
   const [zoomScale, setZoomScale] = useState(1)
   const [showStats, setShowStats] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
+  const pendingNextNumber = useRef<number | null>(null)
 
   useEffect(() => {
     function updateZoom() {
@@ -94,6 +95,10 @@ export default function SessionPage() {
     loadSession()
     loadEntries()
   }, [loadSession, loadEntries])
+
+  useEffect(() => {
+    pendingNextNumber.current = null
+  }, [entries])
 
   useEffect(() => {
     if (!sessionId) return
@@ -266,7 +271,10 @@ export default function SessionPage() {
       .filter(e => e.user_email === userEmail && e.box_type === 'number' && e.value)
       .map(e => parseInt(e.value!, 10))
       .filter(n => !Number.isNaN(n))
-    return nums.length === 0 ? 1 : Math.max(...nums) + 1
+    const fromState = nums.length === 0 ? 1 : Math.max(...nums) + 1
+    const next = Math.max(fromState, (pendingNextNumber.current ?? 0) + 1)
+    pendingNextNumber.current = next
+    return next
   }
 
   async function handleBoxClick(box: Box) {
