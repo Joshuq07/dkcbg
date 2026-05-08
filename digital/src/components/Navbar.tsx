@@ -9,7 +9,6 @@ export function Navbar() {
   const { user, isAuthenticated, signIn, signOut } = useAuth()
   const pathname = usePathname()
 
-  // ⭐ Hide global navbar inside a session
   const inSession = pathname.startsWith('/session/')
   if (inSession) return null
 
@@ -21,7 +20,7 @@ export function Navbar() {
         </Link>
 
         <Link href="/sessions" className="text-sm text-gray-500 hover:text-gray-800">
-          Sessions
+          Games
         </Link>
       </div>
 
@@ -41,7 +40,7 @@ export function Navbar() {
               {user.name}
             </Link>
 
-            
+
           </>
         ) : (
           <button
