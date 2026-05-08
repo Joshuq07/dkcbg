@@ -701,34 +701,38 @@ export default function LevelBuilderPage({
       <section>
         <h2 className="text-2xl font-semibold mb-3">Material Progress</h2>
 
-        <div className="flex gap-2 mb-3 text-sm">
-          {(['all', 'environments', 'resources', 'animals'] as const).map(tab => (
+        <div className="flex flex-col gap-2 mb-3 text-sm">
+          <div className="flex flex-wrap gap-2">
+            {(['all', 'environments', 'resources', 'animals'] as const).map(tab => (
+              <button
+                key={tab}
+                onClick={() => setMatProgressTab(tab)}
+                className={`px-3 py-1 rounded border ${
+                  matProgressTab === tab
+                    ? 'bg-blue-600 text-white border-blue-700'
+                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                {tab[0].toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={includeInventory}
+                onChange={e => setIncludeInventory(e.target.checked)}
+              />
+              Include materials in your inventory towards completion
+            </label>
             <button
-              key={tab}
-              onClick={() => setMatProgressTab(tab)}
-              className={`px-3 py-1 rounded border ${
-                matProgressTab === tab
-                  ? 'bg-blue-600 text-white border-blue-700'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
-              }`}
+              onClick={() => setMatProgressAsc(a => !a)}
+              className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100 shrink-0"
             >
-              {tab[0].toUpperCase() + tab.slice(1)}
+              {matProgressAsc ? '↑ Lowest first' : '↓ Highest first'}
             </button>
-          ))}
-          <label className="ml-auto flex items-center gap-1 text-sm cursor-pointer">
-            <input
-              type="checkbox"
-              checked={includeInventory}
-              onChange={e => setIncludeInventory(e.target.checked)}
-            />
-            Include materials in your inventory towards completion
-          </label>
-          <button
-            onClick={() => setMatProgressAsc(a => !a)}
-            className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
-          >
-            {matProgressAsc ? '↑ Lowest first' : '↓ Highest first'}
-          </button>
+          </div>
         </div>
 
         {(() => {
