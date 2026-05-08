@@ -78,7 +78,7 @@ function computeStatsForUser(userEmail: string, entries: BoxEntry[]) {
   }
 
   // Final bosses completed (built + bang)
-  const finalBossesCompleted = [...FINAL_BOSS_LEVELS].filter(
+  const finalBossesCompleted = Array.from(FINAL_BOSS_LEVELS).filter(
     l => builtLevels.has(l) && bangLevels.has(l)
   )
 
@@ -139,8 +139,8 @@ export default function SessionStats({ members, entries, onClose }: Props) {
                 key={m.user_email}
                 onClick={() => setActiveTab(m.user_email)}
                 className={`px-4 py-2 text-sm shrink-0 border-b-2 transition-colors ${activeTab === m.user_email
-                    ? 'border-blue-500 text-blue-600 font-semibold'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-blue-500 text-blue-600 font-semibold'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
               >
                 {m.player_name || m.display_name || m.user_email}
