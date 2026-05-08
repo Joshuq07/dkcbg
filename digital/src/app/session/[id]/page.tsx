@@ -707,13 +707,13 @@ export default function SessionPage() {
 
 
       </div>
-      {isHost && (
-        <button
-          onClick={() => setShowStats(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-blue-600"
-        >
-          Stats
-        </button>
+
+      {showStats && (
+        <SessionStats
+          members={members}
+          entries={entries}
+          onClose={() => setShowStats(false)}
+        />
       )}
     </main>
   )
