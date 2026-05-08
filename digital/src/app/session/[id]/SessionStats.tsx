@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { WORLD_MAP, bonusDifficulties } from '@/lib/dkcbg/data'
+import { LEVEL_CODE, bonusDifficulties } from '@/lib/dkcbg/data'
 import type { BoxEntry } from '@/lib/types'
 
 // Final boss level numbers
@@ -14,19 +14,27 @@ const FINAL_BOSS_NAMES: Record<number, string> = {
   142: 'Knautilus',
 }
 
-// Build world → level[] map from WORLD_MAP
-function buildWorldLevels(): Record<string, number[]> {
-  const map: Record<string, number[]> = {}
-  Object.entries(WORLD_MAP).forEach(([levelStr, world]) => {
-    if (!world) return
-    const level = Number(levelStr)
-    if (!map[world]) map[world] = []
-    map[world].push(level)
-  })
-  return map
+const WORLD_NAMES: Record<string, Record<number, string>> = {
+  '1': { 1: 'Kongo Jungle', 2: 'Monkey Mines', 3: 'Vine Valley', 4: 'Gorilla Glacier', 5: 'Kremkroc Industries Inc.', 6: 'Chimp Caverns', 7: 'Gang-Plank Galleon' },
+  '2': { 1: 'Gangplank Galleon', 2: 'Crocodile Cauldron', 3: 'Krem Quay', 4: 'Krazy Kremland', 5: 'Gloomy Gulch', 6: "K. Rool's Keep", 7: 'The Flying Krock', 8: 'Lost World' },
+  '3': { 1: 'Lake Orangatanga', 2: 'Kremwood Forest', 3: 'Cotton-Top Cove', 4: 'Mekanos', 5: 'K3', 6: 'Razor Ridge', 7: 'Pacifica', 8: 'KAOS Kore', 9: 'Krematoa' },
 }
 
-const WORLD_LEVELS = buildWorldLevels()
+// Build level → world name, and world → levels[] maps from LEVEL_CODE
+const LEVEL_TO_WORLD: Record<number, string> = {}
+const WORLD_LEVELS: Record<string, number[]> = {}
+
+for (const [gameKey, worlds] of Object.entries(LEVEL_CODE)) {
+  for (const [worldKey, levels] of Object.entries(worlds)) {
+    const worldName = WORLD_NAMES[gameKey]?.[Number(worldKey)] ?? `Game ${gameKey} World ${worldKey}`
+    for (const levelNum of Object.values(levels)) {
+      LEVEL_TO_WORLD[levelNum] = worldName
+      if (!WORLD_LEVELS[worldName]) WORLD_LEVELS[worldName] = []
+      WORLD_LEVELS[worldName].push(levelNum)
+    }
+  }
+}
+
 const ALL_WORLDS = Object.keys(WORLD_LEVELS)
 
 interface Member {
