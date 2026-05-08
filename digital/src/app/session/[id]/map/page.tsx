@@ -83,6 +83,7 @@ export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerSize, setContainerSize] = useState({ w: 0, h: 0 })
   const [dimness, setDimness] = useState(100)
+  const [randomSpace, setRandomSpace] = useState<number | null>(null)
 
   useEffect(() => {
     const ro = new ResizeObserver(entries => {
@@ -101,6 +102,18 @@ export default function MapPage() {
     setQuery(value)
     setMatchedSpaces(getMatchingSpaces(value))
     setSelected(null)
+    setRandomSpace(null)
+  }
+
+  const handleRandom = () => {
+    const worldSpaces = Object.entries(WORLD_MAP)
+      .filter(([, world]) => world !== null)
+      .map(([index]) => Number(index))
+    const pick = worldSpaces[Math.floor(Math.random() * worldSpaces.length)]
+    setQuery('')
+    setMatchedSpaces([])
+    setSelected(null)
+    setRandomSpace(pick)
   }
 
   const handleStarClick = (spaceIndex: number) => {
@@ -142,6 +155,12 @@ export default function MapPage() {
             <option key={v} value={v}>{v}%</option>
           ))}
         </select>
+        <button
+          onClick={handleRandom}
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white hover:bg-gray-50 shrink-0"
+        >
+          Random Space
+        </button>
         {query && (
           <button
             onClick={() => handleSearch('')}
@@ -165,7 +184,7 @@ export default function MapPage() {
 
         {/* Stars */}
         {containerSize.w > 0 &&
-          matchedSpaces.map(spaceIndex => {
+          [...matchedSpaces, ...(randomSpace ? [randomSpace] : [])].map(spaceIndex => {
             const i = spaceIndex - 1
             const coords = SPACE_COORDINATES[i]
             if (!coords) return null
