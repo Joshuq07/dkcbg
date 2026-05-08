@@ -133,8 +133,30 @@ export default function MapPage() {
             const coords = SPACE_COORDINATES[i]
             if (!coords) return null
 
-            const x = coords[0] * scaleX
-            const y = coords[1] * scaleY
+            const BOARD_W = 2690
+            const BOARD_H = 1905
+
+            const containerAspect = containerSize.w / containerSize.h
+            const boardAspect = BOARD_W / BOARD_H
+
+            let renderedW: number, renderedH: number, offsetX: number, offsetY: number
+
+            if (containerAspect > boardAspect) {
+              // letterbox left/right
+              renderedH = containerSize.h
+              renderedW = renderedH * boardAspect
+              offsetX = (containerSize.w - renderedW) / 2
+              offsetY = 0
+            } else {
+              // letterbox top/bottom
+              renderedW = containerSize.w
+              renderedH = renderedW / boardAspect
+              offsetX = 0
+              offsetY = (containerSize.h - renderedH) / 2
+            }
+
+            const x = offsetX + (coords[0] / BOARD_W) * renderedW
+            const y = offsetY + (coords[1] / BOARD_H) * renderedH
 
             return (
               <button
