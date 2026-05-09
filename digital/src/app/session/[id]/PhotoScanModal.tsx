@@ -164,7 +164,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
           <div className="flex flex-col items-center justify-center gap-6 px-6 py-10">
             <p className="text-sm text-gray-500 text-center max-w-sm">
               Take a photo of your material cards or upload one from your device.
-              The AI will read the card names and update your inventory.
             </p>
 
             <input
