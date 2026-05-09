@@ -2,9 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
+import { useAuth } from '@/lib/useAuth'
 
 export default function SessionNavbar({ sessionId }: { sessionId: string }) {
   const pathname = usePathname()
+  const { user, isAuthenticated, signIn } = useAuth()
 
   const linkClass = (href: string) =>
     pathname === href
@@ -66,6 +69,18 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
       >
         Space Alert
       </Link>
+
+      <div className="ml-auto flex items-center">
+        {user?.image && (
+          <Image
+            src={user.image}
+            alt="avatar"
+            width={32}
+            height={32}
+            className="rounded-full"
+          />
+        )}
+      </div>
 
     </nav>
   )
