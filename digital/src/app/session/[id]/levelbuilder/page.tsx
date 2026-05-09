@@ -146,6 +146,8 @@ function MaterialEditor({
                 alt={name}
                 width={64}
                 height={64}
+                onClick={() => onIncrement(name)}
+                className="cursor-pointer"
               />
 
               <span className="text-xs mt-1">{name}</span>
