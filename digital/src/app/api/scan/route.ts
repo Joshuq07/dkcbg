@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     console.log("🚀 CALLING CLAUDE...")
 
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-3-5-sonnet-latest',
       max_tokens: 1000,
       temperature: 0,
       messages: [
