@@ -215,6 +215,7 @@ const [queueHydrated, setQueueHydrated] = useState(false)
 const [queueSearch, setQueueSearch] = useState('')
 const [queueTab, setQueueTab] = useState<'levels' | 'environments' | 'resources' | 'animals'>('levels')
 const [showBuiltInQueue, setShowBuiltInQueue] = useState(false)
+const [includeScrapbookProgress, setIncludeScrapbookProgress] = useState(true)
 
   useEffect(() => {
     if (!user || !sessionId) return
@@ -509,7 +510,6 @@ useEffect(() => {
       list = ALL_MATERIALS
         .filter(m => needed.has(m))
         .map(m => ({ name: m, missing: localMissingCounts[m] || 0 }))
-      return list
     }
 
     if (viewMode === 'needed') {
@@ -566,7 +566,7 @@ useEffect(() => {
         const aName = typeof a === 'string' ? a : a.name
         const bName = typeof b === 'string' ? b : b.name
 
-        if (viewMode === 'needed') {
+        if (viewMode === 'needed' || viewMode === 'queued') {
           const aMissing = typeof a === 'string' ? 0 : (a.missing || 0)
           const bMissing = typeof b === 'string' ? 0 : (b.missing || 0)
           if (bMissing !== aMissing) return bMissing - aMissing
@@ -835,6 +835,14 @@ useEffect(() => {
               />
               Include materials in your inventory towards completion
             </label>
+            <label className="flex items-center gap-1 cursor-pointer">
+  <input
+    type="checkbox"
+    checked={includeScrapbookProgress}
+    onChange={e => setIncludeScrapbookProgress(e.target.checked)}
+  />
+  Include Scrapbook towards completion
+</label>
             <button
               onClick={() => setMatProgressAsc(a => !a)}
               className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100 shrink-0"
@@ -874,11 +882,12 @@ useEffect(() => {
             const stillNeeded = totalNeeded - usedByBuilt
             const have = includeInventory ? (materialCounts[m] || 0) : 0
             const usedFromInventory = Math.min(have, stillNeeded)
+const scrapbookTotal = includeScrapbookProgress ? totalNeeded + 1 : totalNeeded
+const scrapbookUsed = (includeScrapbookProgress && scrapbooked.includes(m)) ? 1 : 0
+const used = usedByBuilt + usedFromInventory + scrapbookUsed
+const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
 
-            const used = usedByBuilt + usedFromInventory
-            const pct = totalNeeded === 0 ? 100 : (used / totalNeeded) * 100
-
-            return { m, used, totalNeeded, pct }
+            return { m, used, totalNeeded: scrapbookTotal, pct }
           })
 
           const sorted = [...withStats].sort((a, b) =>
