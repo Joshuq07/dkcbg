@@ -44,9 +44,16 @@ async function scanImageWithClaude(base64: string, mediaType: string): Promise<S
 
   const data = await response.json()
 
-  const detected: string[] = (data.parsed?.detected || []).filter((m: string) =>
-    ALL_MATERIALS.includes(m)
-  )
+  const detected: string[] = []
+
+for (const item of data.parsed?.detected || []) {
+  const name = item.name
+  const count = item.count ?? 1
+
+  for (let i = 0; i < count; i++) {
+    detected.push(name)
+  }
+}
 
   const detectedSet = new Set(detected)
   const undetected = ALL_MATERIALS.filter(m => !detectedSet.has(m))

@@ -72,16 +72,22 @@ export async function POST(req: Request) {
 Return ONLY valid JSON. No markdown. No explanation. No extra text.
 
 Task:
-Identify which card names are visible in the image.
+Identify which card names are visible in the image AND how many copies of each card exist.
 
 Valid names:
 ${materialList}
 
 Return format:
-{"detected": ["Card Name 1", "Card Name 2"]}
+{
+  "detected": [
+    { "name": "Card Name 1", "count": 2 },
+    { "name": "Card Name 2", "count": 1 }
+  ]
+}
 
 Rules:
 - Only use names from the list
+- Count how many copies are visible
 - If none found, return {"detected": []}
               `.trim(),
             },
