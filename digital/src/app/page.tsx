@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/useAuth'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import Image from 'next/image'
 
 export default function Home() {
   const { isAuthenticated, isLoading, signIn } = useAuth()
@@ -17,9 +18,16 @@ export default function Home() {
   return (
     <main className="page-container flex flex-col items-center justify-center min-h-[80vh] gap-8">
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-3">Welcome to MyApp</h1>
-        <p className="text-gray-500 text-lg">Sign in to get started.</p>
+        <h1 className="text-4xl font-bold mb-3">Donkey Kong Country Board Game</h1>
+        <p className="text-gray-500 text-lg">Sign in to unlock access.</p>
       </div>
+      <Image
+        src="/title.png"
+        alt="Donkey Kong Country"
+        width={900}
+        height={465}
+        className="rounded-lg"
+      />
       <button onClick={signIn} className="btn-primary flex items-center gap-3 text-base px-6 py-3">
         <GoogleIcon />
         Sign in with Google
