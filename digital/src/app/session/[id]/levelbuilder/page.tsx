@@ -208,6 +208,13 @@ export default function LevelBuilderPage({
   const [includeInventory, setIncludeInventory] = useState(true)
   const [includeScrapbook, setIncludeScrapbook] = useState(false)
 const [scrapbooked, setScrapbooked] = useState<string[]>([])
+const [showQueue, setShowQueue] = useState(false)
+const [queuedLevels, setQueuedLevels] = useState<number[]>([])
+const [queuedMaterials, setQueuedMaterials] = useState<Record<string, number>>({})
+const [queueHydrated, setQueueHydrated] = useState(false)
+const [queueSearch, setQueueSearch] = useState('')
+const [queueTab, setQueueTab] = useState<'levels' | 'environments' | 'resources' | 'animals'>('levels')
+const [showBuiltInQueue, setShowBuiltInQueue] = useState(false)
 
   useEffect(() => {
     if (!user || !sessionId) return
@@ -275,6 +282,35 @@ const [scrapbooked, setScrapbooked] = useState<string[]>([])
     .then(r => r.json())
     .then(json => setScrapbooked(json.scrapbooked_materials || []))
 }, [user, sessionId])
+
+useEffect(() => {
+  if (!user || !sessionId || queueHydrated) return
+  fetch(`/api/queue/${sessionId}`, {
+    headers: { 'x-user-id': user.email! }
+  })
+    .then(r => r.json())
+    .then(json => {
+      setQueuedLevels(json.queued_levels || [])
+      setQueuedMaterials(json.queued_materials || {})
+      setQueueHydrated(true)
+    })
+}, [user, sessionId, queueHydrated])
+
+useEffect(() => {
+  if (!user || !sessionId || !queueHydrated) return
+  const timeout = setTimeout(() => {
+    fetch(`/api/queue/${sessionId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_email: user.email,
+        queued_levels: queuedLevels,
+        queued_materials: queuedMaterials
+      })
+    })
+  }, 300)
+  return () => clearTimeout(timeout)
+}, [queuedLevels, queuedMaterials, sessionId, user, queueHydrated])
 
   const remainingLevels = useMemo(() => {
     return computeRemainingLevels(userEntries as LogicEntry[] || [])
@@ -440,11 +476,41 @@ const [scrapbooked, setScrapbooked] = useState<string[]>([])
     return enriched
   }, [closestRaw, stats.bonusCoins])
 
+   const queuedMaterialTotals = useMemo(() => {
+  const totals: Record<string, number> = {}
+  // From queued levels
+  for (const lvl of queuedLevels) {
+    const mats = materialList[lvl - 1] || []
+    for (const m of mats) {
+      totals[m] = (totals[m] || 0) + 1
+    }
+  }
+  // From directly queued materials
+  for (const [m, count] of Object.entries(queuedMaterials)) {
+    totals[m] = (totals[m] || 0) + count
+  }
+  return totals
+}, [queuedLevels, queuedMaterials])
+
   const displayedMaterials = useMemo((): MaterialItem[] => {
     let list: MaterialItem[] = ALL_MATERIALS
 
     const neededCounts: Record<string, number> = {}
     const localMissingCounts: Record<string, number> = {}
+
+    if (viewMode === 'queued') {
+      for (const [m, count] of Object.entries(queuedMaterialTotals)) {
+        neededCounts[m] = count
+      }
+      for (const m of Object.keys(neededCounts)) {
+        localMissingCounts[m] = neededCounts[m]
+      }
+      const needed = new Set(Object.keys(neededCounts))
+      list = ALL_MATERIALS
+        .filter(m => needed.has(m))
+        .map(m => ({ name: m, missing: localMissingCounts[m] || 0 }))
+      return list
+    }
 
     if (viewMode === 'needed') {
       for (const lvl of remainingLevels || []) {
@@ -511,7 +577,9 @@ const [scrapbooked, setScrapbooked] = useState<string[]>([])
     }
 
     return list
-  }, [viewMode, materialCounts, remainingLevels, materialSortMode, includeScrapbook, scrapbooked])
+  }, [viewMode, materialCounts, remainingLevels, materialSortMode, includeScrapbook, scrapbooked, queuedMaterialTotals])
+
+ 
 
   const formatLevel = (
     id: number,
@@ -549,19 +617,38 @@ const [scrapbooked, setScrapbooked] = useState<string[]>([])
   return (
     <div className="p-6 space-y-10 max-w-[1600px] mx-auto">
 
-      <div className="flex gap-2 text-sm">
+      <div className="flex gap-2 text-sm flex-wrap">
         {modeButton('default', viewMode, setViewMode)}
         {modeButton('owned', viewMode, setViewMode)}
         {modeButton('needed', viewMode, setViewMode)}
+        {modeButton('queued', viewMode, setViewMode)}
+        <button
+          onClick={() => setShowQueue(true)}
+          className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
+        >
+          Queue {queuedLevels.length + Object.values(queuedMaterials).filter(v => v > 0).length > 0
+            ? `(${queuedLevels.length + Object.values(queuedMaterials).filter(v => v > 0).length})`
+            : ''}
+        </button>
       </div>
-      <label className="flex items-center gap-1 text-sm cursor-pointer">
-        <input
-          type="checkbox"
-          checked={includeScrapbook}
-          onChange={e => setIncludeScrapbook(e.target.checked)}
-        />
-        Include Scrapbook in needed
-      </label>
+      <div className="flex flex-wrap gap-3 text-sm">
+        <label className="flex items-center gap-1 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={includeScrapbook}
+            onChange={e => setIncludeScrapbook(e.target.checked)}
+          />
+          Include Scrapbook in needed
+        </label>
+        <label className="flex items-center gap-1 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={showBuiltInQueue}
+            onChange={e => setShowBuiltInQueue(e.target.checked)}
+          />
+          Show built levels in queue
+        </label>
+      </div>
 
       <button
         onClick={() =>
@@ -829,6 +916,159 @@ const [scrapbooked, setScrapbooked] = useState<string[]>([])
           )
         })()}
       </section>
+
+      {showQueue && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col max-h-[85vh]">
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
+              <h2 className="text-lg font-bold text-gray-900">Queue</h2>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setQueuedLevels([]); setQueuedMaterials({}) }}
+                  className="text-sm text-red-500 hover:text-red-700 px-2"
+                >
+                  Clear Queue
+                </button>
+                <button
+                  onClick={() => setShowQueue(false)}
+                  className="text-gray-400 hover:text-gray-700 text-xl leading-none"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex border-b border-gray-100 shrink-0 overflow-x-auto">
+              {(['levels', 'environments', 'resources', 'animals'] as const).map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setQueueTab(tab)}
+                  className={`px-4 py-2 text-sm shrink-0 border-b-2 transition-colors ${
+                    queueTab === tab
+                      ? 'border-blue-500 text-blue-600 font-semibold'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  {tab[0].toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            {/* Search (levels tab only) */}
+            {queueTab === 'levels' && (
+              <div className="px-4 pt-3 shrink-0">
+                <input
+                  type="text"
+                  value={queueSearch}
+                  onChange={e => setQueueSearch(e.target.value)}
+                  placeholder="Search levels…"
+                  className="w-full border rounded px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+            )}
+
+            {/* Content */}
+            <div className="overflow-y-auto flex-1 px-4 py-3 space-y-1">
+              {queueTab === 'levels' && (() => {
+                const builtSet = new Set(
+                  (userEntries || [])
+                    .filter(e => (e as LogicEntry).box_type === 'number' && (e as LogicEntry).value)
+                    .map(e => (e as LogicEntry).level)
+                )
+
+                return Array.from({ length: 142 }, (_, i) => i + 1)
+                  .filter(id => showBuiltInQueue || !builtSet.has(id))
+                  .filter(id => {
+                    if (!queueSearch.trim()) return true
+                    const name = levelNames[id - 1]?.toLowerCase() ?? ''
+                    const code = getLevelCode(id)?.toLowerCase() ?? ''
+                    const mats = (materialList[id - 1] || []).join(' ').toLowerCase()
+                    const q = queueSearch.toLowerCase()
+                    return name.includes(q) || code.includes(q) || mats.includes(q)
+                  })
+                  .map(id => {
+                    const name = levelNames[id - 1]
+                    const code = getLevelCode(id)
+                    const mats = materialList[id - 1] || []
+                    const isQueued = queuedLevels.includes(id)
+                    const isBuilt = builtSet.has(id)
+
+                    return (
+                      <label
+                        key={id}
+                        className={`flex items-start gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-50 ${
+                          isQueued ? 'bg-blue-50' : ''
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isQueued}
+                          onChange={() =>
+                            setQueuedLevels(prev =>
+                              prev.includes(id) ? prev.filter(l => l !== id) : [...prev, id]
+                            )
+                          }
+                          className="mt-0.5 shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium">
+                            <span className="text-gray-400 mr-1">{code}</span>
+                            {name}
+                            {isBuilt && <span className="ml-1 text-xs text-green-600">(built)</span>}
+                          </div>
+                          <div className="text-xs text-gray-400 truncate">
+                            {mats.join(', ')}
+                          </div>
+                        </div>
+                      </label>
+                    )
+                  })
+              })()}
+
+              {queueTab !== 'levels' && (() => {
+                const matList = queueTab === 'environments'
+                  ? environmentList
+                  : queueTab === 'resources'
+                  ? resourceList
+                  : animalList
+
+                return matList.map(m => {
+                  const count = queuedMaterials[m] || 0
+                  return (
+                    <div key={m} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50">
+                      <Image
+                        src={`/materials/${m.toLowerCase()}.png`}
+                        alt={m}
+                        width={28}
+                        height={28}
+                        className="shrink-0"
+                      />
+                      <span className="flex-1 text-sm">{m}</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setQueuedMaterials(p => ({ ...p, [m]: Math.max(0, (p[m] || 0) - 1) }))}
+                          className="w-6 h-6 rounded bg-red-100 text-red-600 hover:bg-red-200 text-sm font-bold"
+                        >
+                          –
+                        </button>
+                        <span className="w-6 text-center text-sm font-semibold">{count}</span>
+                        <button
+                          onClick={() => setQueuedMaterials(p => ({ ...p, [m]: (p[m] || 0) + 1 }))}
+                          className="w-6 h-6 rounded bg-green-100 text-green-600 hover:bg-green-200 text-sm font-bold"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )
