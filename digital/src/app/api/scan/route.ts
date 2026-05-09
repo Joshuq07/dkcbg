@@ -24,6 +24,8 @@ function extractJSON(text: string) {
 
 export async function POST(req: Request) {
   try {
+    console.log("🔥 /api/scan HIT")
+
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
         { error: 'ANTHROPIC_API_KEY is not set' },
@@ -33,12 +35,20 @@ export async function POST(req: Request) {
 
     const { base64, mediaType, materialList } = await req.json()
 
+    console.log("📩 REQUEST:", {
+      hasBase64: !!base64,
+      mediaType,
+      materialListLength: materialList?.length
+    })
+
     if (!base64 || !mediaType || !materialList) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       )
     }
+
+    console.log("🚀 CALLING CLAUDE...")
 
     const response = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
@@ -80,16 +90,23 @@ Rules:
       ],
     })
 
+    console.log("🤖 CLAUDE RAW RESPONSE:", response)
+
     const text =
       response.content
         .filter((b: any) => b.type === 'text')
         .map((b: any) => b.text)
         .join('') || ''
 
+    console.log("🧾 CLAUDE TEXT OUTPUT:", text)
+
     const parsed = extractJSON(text)
 
+    console.log("🧩 PARSED RESULT:", parsed)
+
     if (!parsed) {
-      console.error('RAW CLAUDE OUTPUT:', text)
+      console.error("❌ FAILED PARSE")
+      console.error("RAW OUTPUT:", text)
 
       return NextResponse.json({
         text,
@@ -102,6 +119,7 @@ Rules:
       text,
       parsed,
     })
+
   } catch (error) {
     console.error('Scan API error:', error)
 
