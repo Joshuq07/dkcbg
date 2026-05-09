@@ -32,29 +32,21 @@ function imageFileToBase64(file: File): Promise<string> {
 }
 
 async function scanImageWithClaude(base64: string, mediaType: string): Promise<ScanResult> {
-  const materialList = ALL_MATERIALS.join(', ')
-
   const response = await fetch('/api/scan', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    base64,
-    mediaType,
-    materialList: ALL_MATERIALS.join(', ')
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      base64,
+      mediaType,
+      materialList: ALL_MATERIALS.join(', ')
+    })
   })
-})
 
-const data = await response.json()
-const text = data.text || ''
+  const data = await response.json()
 
-  let detected: string[] = []
-  try {
-    const cleaned = text.replace(/```json|```/g, '').trim()
-    const parsed = JSON.parse(cleaned)
-    detected = (parsed.detected || []).filter((m: string) => ALL_MATERIALS.includes(m))
-  } catch {
-    throw new Error('Failed to parse AI response')
-  }
+  const detected: string[] = (data.parsed?.detected || []).filter((m: string) =>
+    ALL_MATERIALS.includes(m)
+  )
 
   const detectedSet = new Set(detected)
   const undetected = ALL_MATERIALS.filter(m => !detectedSet.has(m))

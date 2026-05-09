@@ -26,36 +26,36 @@ export async function POST(req: Request) {
     }
 
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [
+  model: 'claude-sonnet-4-20250514',
+  max_tokens: 1000,
+
+  // 👇 THIS is the key fix
+  response_format: { type: "json" },
+
+  messages: [
+    {
+      role: 'user',
+      content: [
         {
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mediaType,
-                data: base64,
-              },
-            },
-            {
-              type: 'text',
-              text: `You are scanning a photo of material cards from a board game.
-Here is the complete list of valid card names (exact spelling matters):
-${materialList}
-
-Look at the photo and identify which card names from the list above are visible.
-Only return names that exactly match the list above.
-
-Respond with ONLY a JSON object in this exact format:
-{"detected": ["Card Name 1", "Card Name 2"]}`,
-            },
-          ],
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: mediaType,
+            data: base64
+          }
         },
-      ],
-    })
+        {
+          type: 'text',
+          text: `Return ONLY JSON like:
+{"detected": ["Card Name 1"]}
+
+Valid cards:
+${materialList}`
+        }
+      ]
+    }
+  ]
+})
 
     const text = response.content
       .filter(block => block.type === 'text')
