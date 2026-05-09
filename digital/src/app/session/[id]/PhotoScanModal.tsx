@@ -125,7 +125,7 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
 
   function handleConfirm() {
     if (!scanResult) return
-    const finalDetected = new Set([...checkedDetected, ...checkedUndetected])
+    const finalDetected = new Set([...Array.from(checkedDetected), ...Array.from(checkedUndetected)])
     const counts: Record<string, number> = {}
     for (const m of ALL_MATERIALS) {
       counts[m] = finalDetected.has(m) ? 1 : 0
