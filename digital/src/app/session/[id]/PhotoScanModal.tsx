@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import React, { useRef, useState } from 'react'
-import { ALL_MATERIALS } from '@/lib/dkcbg/materials' // adjust import to wherever ALL_MATERIALS is exported from
+import { environmentList, resourceList, animalList } from '@/lib/dkcbg/data'
+const ALL_MATERIALS = [...environmentList, ...resourceList, ...animalList]
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -77,7 +78,6 @@ Respond with ONLY a JSON object in this exact format, no other text:
   try {
     const cleaned = text.replace(/```json|```/g, '').trim()
     const parsed = JSON.parse(cleaned)
-    // Validate against known materials
     detected = (parsed.detected || []).filter((m: string) => ALL_MATERIALS.includes(m))
   } catch {
     throw new Error('Failed to parse AI response')
