@@ -526,8 +526,8 @@ useEffect(() => {
 
       for (const m of Object.keys(neededCounts)) {
         const have = materialCounts[m] || 0
-        const scrapboookBonus = (includeScrapbook && !scrapbooked.includes(m)) ? 1 : 0
-        const need = neededCounts[m] + scrapboookBonus
+        const scrapbookBonus = (includeScrapbook && !scrapbooked.includes(m)) ? 1 : 0
+        const need = neededCounts[m] + scrapbookBonus
         const missing = Math.max(0, need - have)
         if (missing > 0) localMissingCounts[m] = missing
       }
@@ -1095,7 +1095,17 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
       {showPhotoScan && (
         <PhotoScanModal
           onClose={() => setShowPhotoScan(false)}
-          onConfirm={(counts: Record<string, number>) => setMaterialCounts(counts)}
+          onConfirm={(scanned: Record<string, number>) =>
+  setMaterialCounts(prev => {
+    const updated = { ...prev }
+
+    for (const [m, c] of Object.entries(scanned)) {
+      updated[m] = (updated[m] || 0) + c
+    }
+
+    return updated
+  })
+}
         />
       )}
 

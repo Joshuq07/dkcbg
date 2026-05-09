@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import React, { useRef, useState } from 'react'
 import { environmentList, resourceList, animalList } from '@/lib/dkcbg/data'
+
 const ALL_MATERIALS = [...environmentList, ...resourceList, ...animalList]
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -24,7 +25,7 @@ function imageFileToBase64(file: File): Promise<string> {
     const reader = new FileReader()
     reader.onload = () => {
       const result = reader.result as string
-      resolve(result.split(',')[1]) // strip data:image/...;base64,
+      resolve(result.split(',')[1])
     }
     reader.onerror = reject
     reader.readAsDataURL(file)
@@ -46,14 +47,14 @@ async function scanImageWithClaude(base64: string, mediaType: string): Promise<S
 
   const detected: string[] = []
 
-for (const item of data.parsed?.detected || []) {
-  const name = item.name
-  const count = item.count ?? 1
+  for (const item of data.parsed?.detected || []) {
+    const name = item.name
+    const count = item.count ?? 1
 
-  for (let i = 0; i < count; i++) {
-    detected.push(name)
+    for (let i = 0; i < count; i++) {
+      detected.push(name)
+    }
   }
-}
 
   const detectedSet = new Set(detected)
   const undetected = ALL_MATERIALS.filter(m => !detectedSet.has(m))
@@ -67,11 +68,15 @@ type Phase = 'upload' | 'scanning' | 'confirm' | 'error'
 
 export default function PhotoScanModal({ onClose, onConfirm }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+
   const [phase, setPhase] = useState<Phase>('upload')
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [scanResult, setScanResult] = useState<ScanResult | null>(null)
-  const [checkedDetected, setCheckedDetected] = useState<Set<string>>(new Set())
-  const [checkedUndetected, setCheckedUndetected] = useState<Set<string>>(new Set())
+
+  // ✅ COUNTER MAP STATE (fixed)
+  const [checkedDetected, setCheckedDetected] = useState<Record<string, number>>({})
+  const [checkedUndetected, setCheckedUndetected] = useState<Record<string, number>>({})
+
   const [errorMsg, setErrorMsg] = useState('')
 
   async function handleFile(file: File) {
@@ -85,9 +90,18 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
       const mediaType = file.type as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
       const base64 = await imageFileToBase64(file)
       const result = await scanImageWithClaude(base64, mediaType)
+
       setScanResult(result)
-      setCheckedDetected(new Set(result.detected))
-      setCheckedUndetected(new Set())
+
+      // initialize counters
+      const detectedInit: Record<string, number> = {}
+      for (const m of result.detected) {
+        detectedInit[m] = (detectedInit[m] || 0) + 1
+      }
+
+      setCheckedDetected(detectedInit)
+      setCheckedUndetected({})
+
       setPhase('confirm')
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Unknown error')
@@ -96,12 +110,18 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
   }
 
   function handleConfirm() {
-    if (!scanResult) return
-    const finalDetected = new Set([...Array.from(checkedDetected), ...Array.from(checkedUndetected)])
     const counts: Record<string, number> = {}
-    for (const m of ALL_MATERIALS) {
-      counts[m] = finalDetected.has(m) ? 1 : 0
+
+    for (const m of ALL_MATERIALS) counts[m] = 0
+
+    for (const [m, c] of Object.entries(checkedDetected)) {
+      counts[m] += c
     }
+
+    for (const [m, c] of Object.entries(checkedUndetected)) {
+      counts[m] += c
+    }
+
     onConfirm(counts)
     onClose()
   }
@@ -110,23 +130,23 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
     setPhase('upload')
     setImageUrl(null)
     setScanResult(null)
-    setCheckedDetected(new Set())
-    setCheckedUndetected(new Set())
+    setCheckedDetected({})
+    setCheckedUndetected({})
     setErrorMsg('')
   }
 
   function toggleDetected(m: string) {
     setCheckedDetected(prev => {
-      const next = new Set(prev)
-      if (next.has(m)) next.delete(m); else next.add(m)
+      const next = { ...prev }
+      next[m] = next[m] ? next[m] + 1 : 1
       return next
     })
   }
 
   function toggleUndetected(m: string) {
     setCheckedUndetected(prev => {
-      const next = new Set(prev)
-      if (next.has(m)) next.delete(m); else next.add(m)
+      const next = { ...prev }
+      next[m] = next[m] ? next[m] + 1 : 1
       return next
     })
   }
@@ -141,13 +161,13 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
           <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
         </div>
 
-        {/* ── UPLOAD phase ── */}
+        {/* UPLOAD */}
         {phase === 'upload' && (
           <div className="flex flex-col items-center justify-center gap-6 px-6 py-10">
             <p className="text-sm text-gray-500 text-center max-w-sm">
-              Take a photo of your material cards or upload one from your device.
-              The AI will read the card names and update your inventory.
+              Take a photo or upload one. AI will detect your materials.
             </p>
+
             <input
               ref={fileInputRef}
               type="file"
@@ -159,157 +179,88 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
                 if (f) handleFile(f)
               }}
             />
+
             <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
               <button
-                onClick={() => {
-                  if (fileInputRef.current) {
-                    fileInputRef.current.removeAttribute('capture')
-                    fileInputRef.current.click()
-                  }
-                }}
-                className="flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm font-medium transition-colors"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 text-sm"
               >
-                📁 Upload Photo
-              </button>
-              <button
-                onClick={() => {
-                  if (fileInputRef.current) {
-                    fileInputRef.current.setAttribute('capture', 'environment')
-                    fileInputRef.current.click()
-                  }
-                }}
-                className="flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm font-medium transition-colors"
-              >
-                📷 Take Photo
+                📁 Upload / Take Photo
               </button>
             </div>
-            <p className="text-xs text-gray-400 text-center">
-              For best results, lay cards flat in good lighting with names visible.
-            </p>
           </div>
         )}
 
-        {/* ── SCANNING phase ── */}
+        {/* SCANNING */}
         {phase === 'scanning' && (
           <div className="flex flex-col items-center gap-6 px-6 py-10">
             {imageUrl && (
-              <img
-                src={imageUrl}
-                alt="Uploaded cards"
-                className="w-full max-h-64 object-contain rounded-lg border"
-              />
+              <img src={imageUrl} className="w-full max-h-64 object-contain rounded-lg border" />
             )}
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-gray-500">Scanning cards with AI…</p>
-            </div>
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 
-        {/* ── CONFIRM phase ── */}
+        {/* CONFIRM */}
         {phase === 'confirm' && scanResult && (
           <>
             <div className="overflow-y-auto flex-1 px-5 py-4 space-y-5">
-              {/* Image preview */}
+
               {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt="Scanned cards"
-                  className="w-full max-h-48 object-contain rounded-lg border"
-                />
+                <img src={imageUrl} className="w-full max-h-48 object-contain rounded-lg border" />
               )}
 
-              <p className="text-xs text-gray-500">
-                Review the results below. Accepting will <strong>replace</strong> your entire inventory with only the checked cards.
-              </p>
-
-              {/* Detected */}
               <div>
-                <h3 className="text-sm font-semibold text-green-700 mb-2 flex items-center gap-1">
-                  <span>✅ Detected ({checkedDetected.size})</span>
-                  <span className="text-xs font-normal text-gray-400 ml-1">— uncheck to exclude</span>
+                <h3 className="font-semibold text-green-700 mb-2">
+                  Detected
                 </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
-                  {scanResult.detected.map(m => (
-                    <label key={m} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-green-50 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={checkedDetected.has(m)}
-                        onChange={() => toggleDetected(m)}
-                        className="accent-green-600 shrink-0"
-                      />
-                      <Image
-                        src={`/materials/${m.toLowerCase()}.png`}
-                        alt={m}
-                        width={20}
-                        height={20}
-                        className="shrink-0"
-                      />
-                      <span className="text-xs truncate">{m}</span>
-                    </label>
-                  ))}
-                </div>
+
+                {scanResult.detected.map(m => (
+                  <label key={m} className="flex gap-2 items-center">
+                    <input
+                      type="checkbox"
+                      checked={!!checkedDetected[m]}
+                      onChange={() => toggleDetected(m)}
+                    />
+                    <span>{m}</span>
+                  </label>
+                ))}
               </div>
 
-              {/* Not detected — only show if there are any */}
-              {scanResult.undetected.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-red-600 mb-2 flex items-center gap-1">
-                    <span>❌ Not detected ({checkedUndetected.size} added back)</span>
-                    <span className="text-xs font-normal text-gray-400 ml-1">— check to include</span>
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
-                    {scanResult.undetected.map(m => (
-                      <label key={m} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-red-50 cursor-pointer opacity-60">
-                        <input
-                          type="checkbox"
-                          checked={checkedUndetected.has(m)}
-                          onChange={() => toggleUndetected(m)}
-                          className="accent-red-600 shrink-0"
-                        />
-                        <Image
-                          src={`/materials/${m.toLowerCase()}.png`}
-                          alt={m}
-                          width={20}
-                          height={20}
-                          className="shrink-0"
-                        />
-                        <span className="text-xs truncate">{m}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <div>
+                <h3 className="font-semibold text-red-600 mb-2">
+                  Not Detected
+                </h3>
+
+                {scanResult.undetected.map(m => (
+                  <label key={m} className="flex gap-2 items-center">
+                    <input
+                      type="checkbox"
+                      checked={!!checkedUndetected[m]}
+                      onChange={() => toggleUndetected(m)}
+                    />
+                    <span>{m}</span>
+                  </label>
+                ))}
+              </div>
+
             </div>
 
-            {/* Footer */}
-            <div className="flex gap-3 px-5 py-4 border-t shrink-0">
-              <button
-                onClick={handleRetake}
-                className="flex-1 px-4 py-2 rounded-lg border text-sm text-gray-600 hover:bg-gray-50"
-              >
-                Retake / Reupload
+            <div className="flex gap-3 px-5 py-4 border-t">
+              <button onClick={handleRetake} className="flex-1 border rounded-lg py-2">
+                Retake
               </button>
-              <button
-                onClick={handleConfirm}
-                className="flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"
-              >
-                Accept ({checkedDetected.size + checkedUndetected.size} cards)
+              <button onClick={handleConfirm} className="flex-1 bg-blue-600 text-white rounded-lg py-2">
+                Confirm
               </button>
             </div>
           </>
         )}
 
-        {/* ── ERROR phase ── */}
+        {/* ERROR */}
         {phase === 'error' && (
-          <div className="flex flex-col items-center gap-4 px-6 py-10">
-            <p className="text-red-600 text-sm text-center">{errorMsg || 'Something went wrong.'}</p>
-            <button
-              onClick={handleRetake}
-              className="px-4 py-2 rounded-lg border text-sm text-gray-600 hover:bg-gray-50"
-            >
-              Try Again
-            </button>
+          <div className="p-6 text-red-600 text-center">
+            {errorMsg}
           </div>
         )}
 
