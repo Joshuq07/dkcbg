@@ -835,6 +835,7 @@ function toggleScrapbook(material: string) {
         <SessionStats
           members={members}
           entries={entries}
+          scrapbooked={{ [user?.email ?? '']: scrapbooked }}
           onClose={() => setShowStats(false)}
         />
       )}

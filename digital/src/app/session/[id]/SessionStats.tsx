@@ -46,6 +46,7 @@ interface Member {
 interface Props {
   members: Member[]
   entries: BoxEntry[]
+  scrapbooked: Record<string, string[]>
   onClose: () => void
 }
 
@@ -112,7 +113,7 @@ function computeStatsForUser(userEmail: string, entries: BoxEntry[]) {
   }
 }
 
-export default function SessionStats({ members, entries, onClose }: Props) {
+export default function SessionStats({ members, entries, scrapbooked, onClose }: Props) {
   const [activeTab, setActiveTab] = useState(members[0]?.user_email ?? '')
 
   const statsByUser = useMemo(() => {
@@ -185,7 +186,7 @@ export default function SessionStats({ members, entries, onClose }: Props) {
             />
             <StatRow
               label="Cards Scrapbooked"
-              value="—"
+              value={`${(scrapbooked[activeTab] || []).length} / 68`}
             />
             <StatRow
               label="Final Bosses Completed"
