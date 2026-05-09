@@ -52,6 +52,7 @@ export default function SessionPage() {
   const pendingNextNumber = useRef<number | null>(null)
   const [scrapbooked, setScrapbooked] = useState<string[]>([])
 const [scrapHydrated, setScrapHydrated] = useState(false)
+const [allScrapbooked, setAllScrapbooked] = useState<Record<string, string[]>>({})
 
   useEffect(() => {
     function updateZoom() {
@@ -87,6 +88,19 @@ const [scrapHydrated, setScrapHydrated] = useState(false)
     const s = await fetch(`/api/sessions/${sessionId}`).then(r => r.json())
     setSession(s.session)
     setMembers(s.members ?? [])
+    // after setMembers(s.members)
+const scrapResults = await Promise.all(
+  (s.members ?? []).map((m: Member) =>
+    fetch(`/api/scrapbook/${sessionId}`, {
+      headers: { 'x-user-id': m.user_email }
+    }).then(r => r.json())
+  )
+)
+const allScrap: Record<string, string[]> = {}
+for (let i = 0; i < s.members.length; i++) {
+  allScrap[s.members[i].user_email] = scrapResults[i].scrapbooked_materials || []
+}
+setAllScrapbooked(allScrap)
   }, [sessionId])
 
   const loadEntries = useCallback(async () => {
@@ -703,22 +717,31 @@ function toggleScrapbook(material: string) {
         </div>
 
         {/* Scrapbook checkbox */}
-        <button
-          onClick={() => toggleScrapbook(anchor.material)}
-          className="absolute flex items-center justify-center leading-none"
-          style={{
-            left: `${(sb.x / 3300) * 100}%`,
-            top: `${(sb.y / 4740) * 100}%`,
-            width: `${(sb.w / 3300) * 100}%`,
-            height: `${(sb.h / 4740) * 100}%`,
-            fontSize: 'min(1.2cqw, 0.8rem)',
-            color: 'black',
-            background: 'transparent',
-            border: 'none',
-          }}
-        >
-          {isScrapbooked ? '✔︎' : ''}
-        </button>
+<button
+  onClick={() => viewMode !== 'global' && toggleScrapbook(anchor.material)}
+  className="absolute flex items-center justify-center leading-none"
+  style={{
+    left: `${(sb.x / 3300) * 100}%`,
+    top: `${(sb.y / 4740) * 100}%`,
+    width: `${(sb.w / 3300) * 100}%`,
+    height: `${(sb.h / 4740) * 100}%`,
+    fontSize: 'min(1.2cqw, 0.8rem)',
+    color: 'black',
+    background: 'transparent',
+    border: 'none',
+    pointerEvents: viewMode === 'global' ? 'none' : 'auto',
+    cursor: viewMode === 'global' ? 'default' : 'pointer',
+  }}
+>
+  {viewMode === 'global'
+  ? (() => {
+      const count = members.filter(m =>
+        (allScrapbooked[m.user_email] || []).includes(anchor.material)
+      ).length
+      return count > 0 ? `${count}/${members.length}` : ''
+    })()
+  : isScrapbooked ? '✔︎' : ''}
+</button>
       </React.Fragment>
     )
   })}
