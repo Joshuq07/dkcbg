@@ -24,6 +24,8 @@ import {
   getLevelCode
 } from '@/lib/dkcbg/data'
 
+import PhotoScanModal from '../PhotoScanModal' // adjust path
+
 const ALL_MATERIALS = [
   ...environmentList,
   ...resourceList,
@@ -216,6 +218,8 @@ const [queueSearch, setQueueSearch] = useState('')
 const [queueTab, setQueueTab] = useState<'levels' | 'environments' | 'resources' | 'animals'>('levels')
 const [showBuiltInQueue, setShowBuiltInQueue] = useState(false)
 const [includeScrapbookProgress, setIncludeScrapbookProgress] = useState(true)
+
+const [showPhotoScan, setShowPhotoScan] = useState(false)
 
   useEffect(() => {
     if (!user || !sessionId) return
@@ -666,6 +670,12 @@ useEffect(() => {
             ? `(${queuedLevels.length + Object.values(queuedMaterials).filter(v => v > 0).length})`
             : ''}
         </button>
+        <button
+  onClick={() => setShowPhotoScan(true)}
+  className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
+>
+  📷 Scan
+</button>
 </div>
       <MaterialEditor
         counts={materialCounts}
@@ -1076,6 +1086,12 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                   )
                 })
               })()}
+              {showPhotoScan && (
+  <PhotoScanModal
+    onClose={() => setShowPhotoScan(false)}
+    onConfirm={(counts: Record<string, number>) => setMaterialCounts(counts)}
+  />
+)}
             </div>
           </div>
         </div>
