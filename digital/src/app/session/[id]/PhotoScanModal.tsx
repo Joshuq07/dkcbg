@@ -8,11 +8,6 @@ const ALL_MATERIALS = [...environmentList, ...resourceList, ...animalList]
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-interface ScanResult {
-  detected: string[]
-  undetected: string[]
-}
-
 interface Props {
   onClose: () => void
   onConfirm: (counts: Record<string, number>) => void
@@ -32,7 +27,7 @@ function imageFileToBase64(file: File): Promise<string> {
   })
 }
 
-async function scanImageWithClaude(base64: string, mediaType: string): Promise<ScanResult> {
+async function scanImageWithClaude(base64: string, mediaType: string): Promise<Record<string, number>> {
   const response = await fetch('/api/scan', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -45,21 +40,63 @@ async function scanImageWithClaude(base64: string, mediaType: string): Promise<S
 
   const data = await response.json()
 
-  const detected: string[] = []
-
+  // Build a counts map from the detected array
+  const counts: Record<string, number> = {}
   for (const item of data.parsed?.detected || []) {
     const name = item.name
-    const count = item.count ?? 1
-
-    for (let i = 0; i < count; i++) {
-      detected.push(name)
+    const count = typeof item.count === 'number' ? item.count : 1
+    if (ALL_MATERIALS.includes(name)) {
+      counts[name] = (counts[name] || 0) + count
     }
   }
 
-  const detectedSet = new Set(detected)
-  const undetected = ALL_MATERIALS.filter(m => !detectedSet.has(m))
+  return counts
+}
 
-  return { detected, undetected }
+// ── Counter component ─────────────────────────────────────────────────────────
+
+function CountRow({
+  name,
+  count,
+  onChange,
+  dim,
+}: {
+  name: string
+  count: number
+  onChange: (val: number) => void
+  dim?: boolean
+}) {
+  return (
+    <div
+      className={`flex items-center gap-2 p-1.5 rounded-lg ${
+        dim && count === 0 ? 'opacity-40' : ''
+      }`}
+    >
+      <Image
+        src={`/materials/${name.toLowerCase()}.png`}
+        alt={name}
+        width={24}
+        height={24}
+        className="shrink-0"
+      />
+      <span className="flex-1 text-xs truncate">{name}</span>
+      <div className="flex items-center gap-1 shrink-0">
+        <button
+          onClick={() => onChange(Math.max(0, count - 1))}
+          className="w-6 h-6 rounded bg-red-100 text-red-600 hover:bg-red-200 text-sm font-bold leading-none"
+        >
+          –
+        </button>
+        <span className="w-5 text-center text-sm font-semibold tabular-nums">{count}</span>
+        <button
+          onClick={() => onChange(count + 1)}
+          className="w-6 h-6 rounded bg-green-100 text-green-600 hover:bg-green-200 text-sm font-bold leading-none"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  )
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -68,15 +105,10 @@ type Phase = 'upload' | 'scanning' | 'confirm' | 'error'
 
 export default function PhotoScanModal({ onClose, onConfirm }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
-
   const [phase, setPhase] = useState<Phase>('upload')
   const [imageUrl, setImageUrl] = useState<string | null>(null)
-  const [scanResult, setScanResult] = useState<ScanResult | null>(null)
-
-  // ✅ COUNTER MAP STATE (fixed)
-  const [checkedDetected, setCheckedDetected] = useState<Record<string, number>>({})
-  const [checkedUndetected, setCheckedUndetected] = useState<Record<string, number>>({})
-
+  // Single source of truth: a count for every material (0 = not in inventory)
+  const [counts, setCounts] = useState<Record<string, number>>({})
   const [errorMsg, setErrorMsg] = useState('')
 
   async function handleFile(file: File) {
@@ -89,19 +121,15 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
     try {
       const mediaType = file.type as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
       const base64 = await imageFileToBase64(file)
-      const result = await scanImageWithClaude(base64, mediaType)
+      const detected = await scanImageWithClaude(base64, mediaType)
 
-      setScanResult(result)
-
-      // initialize counters
-      const detectedInit: Record<string, number> = {}
-      for (const m of result.detected) {
-        detectedInit[m] = (detectedInit[m] || 0) + 1
+      // Initialise every material to 0, then apply detected counts
+      const initial: Record<string, number> = {}
+      for (const m of ALL_MATERIALS) {
+        initial[m] = detected[m] ?? 0
       }
 
-      setCheckedDetected(detectedInit)
-      setCheckedUndetected({})
-
+      setCounts(initial)
       setPhase('confirm')
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Unknown error')
@@ -110,46 +138,26 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
   }
 
   function handleConfirm() {
-    const counts: Record<string, number> = {}
-
-    for (const m of ALL_MATERIALS) counts[m] = 0
-
-    for (const [m, c] of Object.entries(checkedDetected)) {
-      counts[m] += c
-    }
-
-    for (const [m, c] of Object.entries(checkedUndetected)) {
-      counts[m] += c
-    }
-
-    onConfirm(counts)
+    // counts already maps every material → correct number (including 0s)
+    onConfirm({ ...counts })
     onClose()
   }
 
   function handleRetake() {
     setPhase('upload')
     setImageUrl(null)
-    setScanResult(null)
-    setCheckedDetected({})
-    setCheckedUndetected({})
+    setCounts({})
     setErrorMsg('')
   }
 
-  function toggleDetected(m: string) {
-    setCheckedDetected(prev => {
-      const next = { ...prev }
-      next[m] = next[m] ? next[m] + 1 : 1
-      return next
-    })
+  function setCount(mat: string, val: number) {
+    setCounts(prev => ({ ...prev, [mat]: val }))
   }
 
-  function toggleUndetected(m: string) {
-    setCheckedUndetected(prev => {
-      const next = { ...prev }
-      next[m] = next[m] ? next[m] + 1 : 1
-      return next
-    })
-  }
+  // Split into detected (count > 0) and undetected (count === 0) for display
+  const detected = ALL_MATERIALS.filter(m => (counts[m] ?? 0) > 0)
+  const undetected = ALL_MATERIALS.filter(m => (counts[m] ?? 0) === 0)
+  const totalCards = Object.values(counts).reduce((a, b) => a + b, 0)
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
@@ -161,106 +169,157 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
           <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
         </div>
 
-        {/* UPLOAD */}
+        {/* ── UPLOAD phase ── */}
         {phase === 'upload' && (
           <div className="flex flex-col items-center justify-center gap-6 px-6 py-10">
             <p className="text-sm text-gray-500 text-center max-w-sm">
-              Take a photo or upload one. AI will detect your materials.
+              Take a photo of your material cards or upload one from your device.
+              The AI will read the card names and update your inventory.
             </p>
 
+            {/* Hidden file input — we swap the capture attribute per button */}
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
-              capture="environment"
               className="hidden"
               onChange={e => {
                 const f = e.target.files?.[0]
                 if (f) handleFile(f)
+                // Reset so the same file can be re-selected
+                e.target.value = ''
               }}
             />
 
             <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
               <button
-                onClick={() => fileInputRef.current?.click()}
-                className="flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 text-sm"
+                onClick={() => {
+                  if (!fileInputRef.current) return
+                  fileInputRef.current.removeAttribute('capture')
+                  fileInputRef.current.click()
+                }}
+                className="flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm font-medium transition-colors"
               >
-                📁 Upload / Take Photo
+                📁 Upload Photo
+              </button>
+              <button
+                onClick={() => {
+                  if (!fileInputRef.current) return
+                  fileInputRef.current.setAttribute('capture', 'environment')
+                  fileInputRef.current.click()
+                }}
+                className="flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm font-medium transition-colors"
+              >
+                📷 Take Photo
               </button>
             </div>
+
+            <p className="text-xs text-gray-400 text-center">
+              For best results, lay cards flat in good lighting with names visible.
+            </p>
           </div>
         )}
 
-        {/* SCANNING */}
+        {/* ── SCANNING phase ── */}
         {phase === 'scanning' && (
           <div className="flex flex-col items-center gap-6 px-6 py-10">
             {imageUrl && (
-              <img src={imageUrl} className="w-full max-h-64 object-contain rounded-lg border" />
+              <img
+                src={imageUrl}
+                alt="Uploaded cards"
+                className="w-full max-h-64 object-contain rounded-lg border"
+              />
             )}
-            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm text-gray-500">Scanning cards with AI…</p>
+            </div>
           </div>
         )}
 
-        {/* CONFIRM */}
-        {phase === 'confirm' && scanResult && (
+        {/* ── CONFIRM phase ── */}
+        {phase === 'confirm' && (
           <>
             <div className="overflow-y-auto flex-1 px-5 py-4 space-y-5">
-
               {imageUrl && (
-                <img src={imageUrl} className="w-full max-h-48 object-contain rounded-lg border" />
+                <img
+                  src={imageUrl}
+                  alt="Scanned cards"
+                  className="w-full max-h-48 object-contain rounded-lg border"
+                />
               )}
 
-              <div>
-                <h3 className="font-semibold text-green-700 mb-2">
-                  Detected
-                </h3>
+              <p className="text-xs text-gray-500">
+                Adjust counts below. Accepting will <strong>replace</strong> your entire inventory with these values.
+              </p>
 
-                {scanResult.detected.map(m => (
-                  <label key={m} className="flex gap-2 items-center">
-                    <input
-                      type="checkbox"
-                      checked={!!checkedDetected[m]}
-                      onChange={() => toggleDetected(m)}
+              {/* Detected */}
+              <div>
+                <h3 className="text-sm font-semibold text-green-700 mb-2">
+                  ✅ Detected ({detected.length} type{detected.length !== 1 ? 's' : ''}, {totalCards} card{totalCards !== 1 ? 's' : ''} total)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.5">
+                  {detected.length === 0 && (
+                    <p className="text-xs text-gray-400 col-span-2">No cards detected.</p>
+                  )}
+                  {detected.map(m => (
+                    <CountRow
+                      key={m}
+                      name={m}
+                      count={counts[m] ?? 0}
+                      onChange={val => setCount(m, val)}
                     />
-                    <span>{m}</span>
-                  </label>
-                ))}
+                  ))}
+                </div>
               </div>
 
+              {/* Not detected */}
               <div>
-                <h3 className="font-semibold text-red-600 mb-2">
-                  Not Detected
+                <h3 className="text-sm font-semibold text-gray-400 mb-2">
+                  ❌ Not detected — adjust if AI missed any
                 </h3>
-
-                {scanResult.undetected.map(m => (
-                  <label key={m} className="flex gap-2 items-center">
-                    <input
-                      type="checkbox"
-                      checked={!!checkedUndetected[m]}
-                      onChange={() => toggleUndetected(m)}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.5">
+                  {undetected.map(m => (
+                    <CountRow
+                      key={m}
+                      name={m}
+                      count={counts[m] ?? 0}
+                      onChange={val => setCount(m, val)}
+                      dim
                     />
-                    <span>{m}</span>
-                  </label>
-                ))}
+                  ))}
+                </div>
               </div>
-
             </div>
 
-            <div className="flex gap-3 px-5 py-4 border-t">
-              <button onClick={handleRetake} className="flex-1 border rounded-lg py-2">
-                Retake
+            {/* Footer */}
+            <div className="flex gap-3 px-5 py-4 border-t shrink-0">
+              <button
+                onClick={handleRetake}
+                className="flex-1 px-4 py-2 rounded-lg border text-sm text-gray-600 hover:bg-gray-50"
+              >
+                Retake / Reupload
               </button>
-              <button onClick={handleConfirm} className="flex-1 bg-blue-600 text-white rounded-lg py-2">
-                Confirm
+              <button
+                onClick={handleConfirm}
+                className="flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"
+              >
+                Accept ({totalCards} card{totalCards !== 1 ? 's' : ''})
               </button>
             </div>
           </>
         )}
 
-        {/* ERROR */}
+        {/* ── ERROR phase ── */}
         {phase === 'error' && (
-          <div className="p-6 text-red-600 text-center">
-            {errorMsg}
+          <div className="flex flex-col items-center gap-4 px-6 py-10">
+            <p className="text-red-600 text-sm text-center">{errorMsg || 'Something went wrong.'}</p>
+            <button
+              onClick={handleRetake}
+              className="px-4 py-2 rounded-lg border text-sm text-gray-600 hover:bg-gray-50"
+            >
+              Try Again
+            </button>
           </div>
         )}
 

@@ -1095,17 +1095,7 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
       {showPhotoScan && (
         <PhotoScanModal
           onClose={() => setShowPhotoScan(false)}
-          onConfirm={(scanned: Record<string, number>) =>
-  setMaterialCounts(prev => {
-    const updated = { ...prev }
-
-    for (const [m, c] of Object.entries(scanned)) {
-      updated[m] = (updated[m] || 0) + c
-    }
-
-    return updated
-  })
-}
+          onConfirm={(counts: Record<string, number>) => setMaterialCounts(counts)}
         />
       )}
 
