@@ -622,14 +622,7 @@ useEffect(() => {
         {modeButton('owned', viewMode, setViewMode)}
         {modeButton('needed', viewMode, setViewMode)}
         {modeButton('queued', viewMode, setViewMode)}
-        <button
-          onClick={() => setShowQueue(true)}
-          className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
-        >
-          Queue {queuedLevels.length + Object.values(queuedMaterials).filter(v => v > 0).length > 0
-            ? `(${queuedLevels.length + Object.values(queuedMaterials).filter(v => v > 0).length})`
-            : ''}
-        </button>
+        
       </div>
       <div className="flex flex-wrap gap-3 text-sm">
         <label className="flex items-center gap-1 cursor-pointer">
@@ -649,7 +642,7 @@ useEffect(() => {
           Show built levels in queue
         </label>
       </div>
-
+<div className="flex gap-2 text-sm flex-wrap">
       <button
         onClick={() =>
           setMaterialSortMode(m =>
@@ -665,6 +658,15 @@ useEffect(() => {
           : 'Sort: By Frequency'}
       </button>
 
+      <button
+          onClick={() => setShowQueue(true)}
+          className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
+        >
+          Queue {queuedLevels.length + Object.values(queuedMaterials).filter(v => v > 0).length > 0
+            ? `(${queuedLevels.length + Object.values(queuedMaterials).filter(v => v > 0).length})`
+            : ''}
+        </button>
+</div>
       <MaterialEditor
         counts={materialCounts}
         displayedMaterials={displayedMaterials}
