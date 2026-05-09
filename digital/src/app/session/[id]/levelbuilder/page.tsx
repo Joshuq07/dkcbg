@@ -674,7 +674,7 @@ useEffect(() => {
   onClick={() => setShowPhotoScan(true)}
   className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
 >
-  📷 Scan
+  Scan
 </button>
 </div>
       <MaterialEditor

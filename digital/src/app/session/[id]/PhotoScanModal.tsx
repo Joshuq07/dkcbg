@@ -6,14 +6,12 @@ import { environmentList, resourceList, animalList } from '@/lib/dkcbg/data'
 
 const ALL_MATERIALS = [...environmentList, ...resourceList, ...animalList]
 
-// ── Types ────────────────────────────────────────────────────────────────────
 
 interface Props {
   onClose: () => void
   onConfirm: (counts: Record<string, number>) => void
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
 
 function imageFileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -53,7 +51,6 @@ async function scanImageWithClaude(base64: string, mediaType: string): Promise<R
   return counts
 }
 
-// ── Counter component ─────────────────────────────────────────────────────────
 
 function CountRow({
   name,
@@ -99,7 +96,6 @@ function CountRow({
   )
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
 
 type Phase = 'upload' | 'scanning' | 'confirm' | 'error'
 
@@ -107,7 +103,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [phase, setPhase] = useState<Phase>('upload')
   const [imageUrl, setImageUrl] = useState<string | null>(null)
-  // Single source of truth: a count for every material (0 = not in inventory)
   const [counts, setCounts] = useState<Record<string, number>>({})
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -123,7 +118,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
       const base64 = await imageFileToBase64(file)
       const detected = await scanImageWithClaude(base64, mediaType)
 
-      // Initialise every material to 0, then apply detected counts
       const initial: Record<string, number> = {}
       for (const m of ALL_MATERIALS) {
         initial[m] = detected[m] ?? 0
@@ -138,7 +132,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
   }
 
   function handleConfirm() {
-    // counts already maps every material → correct number (including 0s)
     onConfirm({ ...counts })
     onClose()
   }
@@ -154,7 +147,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
     setCounts(prev => ({ ...prev, [mat]: val }))
   }
 
-  // Split into detected (count > 0) and undetected (count === 0) for display
   const detected = ALL_MATERIALS.filter(m => (counts[m] ?? 0) > 0)
   const undetected = ALL_MATERIALS.filter(m => (counts[m] ?? 0) === 0)
   const totalCards = Object.values(counts).reduce((a, b) => a + b, 0)
@@ -163,13 +155,11 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col max-h-[90vh]">
 
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b shrink-0">
           <h2 className="text-lg font-bold text-gray-900">Scan Cards</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
         </div>
 
-        {/* ── UPLOAD phase ── */}
         {phase === 'upload' && (
           <div className="flex flex-col items-center justify-center gap-6 px-6 py-10">
             <p className="text-sm text-gray-500 text-center max-w-sm">
@@ -177,7 +167,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
               The AI will read the card names and update your inventory.
             </p>
 
-            {/* Hidden file input — we swap the capture attribute per button */}
             <input
               ref={fileInputRef}
               type="file"
@@ -186,7 +175,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
               onChange={e => {
                 const f = e.target.files?.[0]
                 if (f) handleFile(f)
-                // Reset so the same file can be re-selected
                 e.target.value = ''
               }}
             />
@@ -200,7 +188,7 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
                 }}
                 className="flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm font-medium transition-colors"
               >
-                📁 Upload Photo
+                Upload Photo
               </button>
               <button
                 onClick={() => {
@@ -210,7 +198,7 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
                 }}
                 className="flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm font-medium transition-colors"
               >
-                📷 Take Photo
+                Take Photo
               </button>
             </div>
 
@@ -220,7 +208,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
           </div>
         )}
 
-        {/* ── SCANNING phase ── */}
         {phase === 'scanning' && (
           <div className="flex flex-col items-center gap-6 px-6 py-10">
             {imageUrl && (
@@ -232,12 +219,11 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
             )}
             <div className="flex flex-col items-center gap-3">
               <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-gray-500">Scanning cards with AI…</p>
+              <p className="text-sm text-gray-500">Scanning cards…</p>
             </div>
           </div>
         )}
 
-        {/* ── CONFIRM phase ── */}
         {phase === 'confirm' && (
           <>
             <div className="overflow-y-auto flex-1 px-5 py-4 space-y-5">
@@ -253,7 +239,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
                 Adjust counts below. Accepting will <strong>replace</strong> your entire inventory with these values.
               </p>
 
-              {/* Detected */}
               <div>
                 <h3 className="text-sm font-semibold text-green-700 mb-2">
                   ✅ Detected ({detected.length} type{detected.length !== 1 ? 's' : ''}, {totalCards} card{totalCards !== 1 ? 's' : ''} total)
@@ -273,10 +258,9 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
                 </div>
               </div>
 
-              {/* Not detected */}
               <div>
                 <h3 className="text-sm font-semibold text-gray-400 mb-2">
-                  ❌ Not detected — adjust if AI missed any
+                  ❌ Not detected
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.5">
                   {undetected.map(m => (
@@ -310,7 +294,6 @@ export default function PhotoScanModal({ onClose, onConfirm }: Props) {
           </>
         )}
 
-        {/* ── ERROR phase ── */}
         {phase === 'error' && (
           <div className="flex flex-col items-center gap-4 px-6 py-10">
             <p className="text-red-600 text-sm text-center">{errorMsg || 'Something went wrong.'}</p>
