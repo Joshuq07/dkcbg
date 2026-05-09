@@ -7,6 +7,21 @@ const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
+function extractJSON(text: string) {
+  try {
+    return JSON.parse(text)
+  } catch {}
+
+  const match = text.match(/\{[\s\S]*\}/)
+  if (match) {
+    try {
+      return JSON.parse(match[0])
+    } catch {}
+  }
+
+  return null
+}
+
 export async function POST(req: Request) {
   try {
     if (!process.env.ANTHROPIC_API_KEY) {
@@ -26,43 +41,67 @@ export async function POST(req: Request) {
     }
 
     const response = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
-  max_tokens: 1000,
-
-  // 👇 THIS is the key fix
-  response_format: { type: "json" },
-
-  messages: [
-    {
-      role: 'user',
-      content: [
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      temperature: 0,
+      messages: [
         {
-          type: 'image',
-          source: {
-            type: 'base64',
-            media_type: mediaType,
-            data: base64
-          }
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: {
+                type: 'base64',
+                media_type: mediaType,
+                data: base64,
+              },
+            },
+            {
+              type: 'text',
+              text: `
+Return ONLY valid JSON. No markdown. No explanation. No extra text.
+
+Task:
+Identify which card names are visible in the image.
+
+Valid names:
+${materialList}
+
+Return format:
+{"detected": ["Card Name 1", "Card Name 2"]}
+
+Rules:
+- Only use names from the list
+- If none found, return {"detected": []}
+              `.trim(),
+            },
+          ],
         },
-        {
-          type: 'text',
-          text: `Return ONLY JSON like:
-{"detected": ["Card Name 1"]}
+      ],
+    })
 
-Valid cards:
-${materialList}`
-        }
-      ]
+    const text =
+      response.content
+        .filter((b: any) => b.type === 'text')
+        .map((b: any) => b.text)
+        .join('') || ''
+
+    const parsed = extractJSON(text)
+
+    if (!parsed) {
+      console.error('RAW CLAUDE OUTPUT:', text)
+
+      return NextResponse.json({
+        text,
+        parsed: { detected: [] },
+        warning: 'Failed to parse model output'
+      })
     }
-  ]
-})
 
-    const text = response.content
-      .filter(block => block.type === 'text')
-      .map(block => block.text)
-      .join('')
-
-    return NextResponse.json({ text })
+    return NextResponse.json({
+      text,
+      parsed,
+    })
   } catch (error) {
     console.error('Scan API error:', error)
 
