@@ -1,5 +1,7 @@
 // src/lib/boxes.ts
 
+
+
 export const IMAGE_WIDTH = 3300
 export const IMAGE_HEIGHT = 4740
 
@@ -231,4 +233,47 @@ export const LEVEL_ANCHORS_IMAGE_2: LevelAnchor[] = [
   { level: 140, page: 2, x: 2050, y: 1723 },
   { level: 141, page: 2, x: 2050, y: 1788 },
   { level: 142, page: 2, x: 2050, y: 1853 }
+]
+
+
+import { environmentList, resourceList, animalList } from './dkcbg/data'
+
+
+
+// Add at bottom of boxes.ts
+export type ScrapboxEntry = {
+  material: string
+  totalBox: { x: number; y: number; w: number; h: number }
+  scrapBox: { x: number; y: number; w: number; h: number }
+}
+
+const ENV_X_TOTAL = 2132
+const ENV_X_SCRAP = 2267
+const RES_X_TOTAL = 2764
+const RES_X_SCRAP = 2899
+const ENV_RES_START_Y = 2064
+const ANIMAL_START_Y = 3563
+const ROW_SPACING = 55
+const TOTAL_W = 56
+const TOTAL_H = 52
+const SCRAP_W = 65
+const SCRAP_H = 53
+
+function generateScrapAnchors(
+  materials: string[],
+  totalX: number,
+  scrapX: number,
+  startY: number
+): ScrapboxEntry[] {
+  return materials.map((mat, i) => ({
+    material: mat,
+    totalBox: { x: totalX, y: startY + i * ROW_SPACING, w: TOTAL_W, h: TOTAL_H },
+    scrapBox: { x: scrapX, y: startY + i * ROW_SPACING, w: SCRAP_W, h: SCRAP_H },
+  }))
+}
+
+export const SCRAPBOOK_ANCHORS: ScrapboxEntry[] = [
+  ...generateScrapAnchors(environmentList, ENV_X_TOTAL, ENV_X_SCRAP, ENV_RES_START_Y),
+  ...generateScrapAnchors(resourceList, RES_X_TOTAL, RES_X_SCRAP, ENV_RES_START_Y),
+  ...generateScrapAnchors(animalList, RES_X_TOTAL, RES_X_SCRAP, ANIMAL_START_Y),
 ]

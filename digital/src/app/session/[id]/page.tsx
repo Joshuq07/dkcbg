@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/useAuth'
 import { useRouter, useParams } from 'next/navigation'
-import { useEffect, useMemo, useCallback, useState, useRef } from 'react'
+import React, { useEffect, useMemo, useCallback, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import Draggable from "react-draggable"
 
@@ -16,6 +16,8 @@ import {
 import { computePercentage } from '@/lib/percentages'
 import type { BoxEntry as BoxEntryType } from '@/lib/types'
 import SessionStats from './SessionStats'
+import { SCRAPBOOK_ANCHORS } from '@/lib/boxes'
+import { materialList } from '@/lib/dkcbg/data'
 
 type SessionData = {
   id: string
@@ -48,6 +50,8 @@ export default function SessionPage() {
   const [showStats, setShowStats] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
   const pendingNextNumber = useRef<number | null>(null)
+  const [scrapbooked, setScrapbooked] = useState<string[]>([])
+const [scrapHydrated, setScrapHydrated] = useState(false)
 
   useEffect(() => {
     function updateZoom() {
@@ -190,6 +194,35 @@ export default function SessionPage() {
     return () => { supabase.removeChannel(sub) }
   }, [sessionId])
 
+  // Load scrapbook
+useEffect(() => {
+  if (!user || !sessionId || scrapHydrated) return
+  fetch(`/api/scrapbook/${sessionId}`, {
+    headers: { 'x-user-id': user.email! }
+  })
+    .then(r => r.json())
+    .then(json => {
+      setScrapbooked(json.scrapbooked_materials || [])
+      setScrapHydrated(true)
+    })
+}, [user, sessionId, scrapHydrated])
+
+// Save scrapbook
+useEffect(() => {
+  if (!user || !sessionId || !scrapHydrated) return
+  const timeout = setTimeout(() => {
+    fetch(`/api/scrapbook/${sessionId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_email: user.email,
+        scrapbooked_materials: scrapbooked
+      })
+    })
+  }, 300)
+  return () => clearTimeout(timeout)
+}, [scrapbooked, sessionId, user, scrapHydrated])
+
   const sortedMembers = useMemo(
     () => [...members].sort((a, b) => (a.position ?? 999) - (b.position ?? 999)),
     [members]
@@ -276,6 +309,25 @@ export default function SessionPage() {
     pendingNextNumber.current = next
     return next
   }
+
+  function materialUsedCount(material: string): number {
+  const builtLevelNums = entries
+    .filter(e => e.user_email === user?.email && e.box_type === 'number' && e.value && !e.lost)
+    .map(e => e.level)
+  let count = 0
+  for (const lvl of builtLevelNums) {
+    count += (materialList[lvl - 1] || []).filter(m => m === material).length
+  }
+  return count
+}
+
+function toggleScrapbook(material: string) {
+  setScrapbooked(prev =>
+    prev.includes(material)
+      ? prev.filter(m => m !== material)
+      : [...prev, material]
+  )
+}
 
   async function handleBoxClick(box: Box) {
     if (!user) return
@@ -624,11 +676,53 @@ export default function SessionPage() {
             ))}
           </div>
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
-            <img src="/page2.png" className="w-full h-auto block" />
-            {boxesByPage[2].map(box => (
-              <div key={box.id}>{renderBox(box)}</div>
-            ))}
-          </div>
+  <img src="/page2.png" className="w-full h-auto block" />
+  {boxesByPage[2].map(box => (
+    <div key={box.id}>{renderBox(box)}</div>
+  ))}
+  {SCRAPBOOK_ANCHORS.map(anchor => {
+    const used = materialUsedCount(anchor.material)
+    const isScrapbooked = scrapbooked.includes(anchor.material)
+    const tb = anchor.totalBox
+    const sb = anchor.scrapBox
+
+    return (
+      <React.Fragment key={anchor.material}>
+        {/* Total box */}
+        <div
+          className="absolute flex items-center justify-center text-black leading-none overflow-hidden"
+          style={{
+            left: `${(tb.x / 3300) * 100}%`,
+            top: `${(tb.y / 4740) * 100}%`,
+            width: `${(tb.w / 3300) * 100}%`,
+            height: `${(tb.h / 4740) * 100}%`,
+            fontSize: 'min(1.2cqw, 0.8rem)',
+          }}
+        >
+          {used || ''}
+        </div>
+
+        {/* Scrapbook checkbox */}
+        <button
+          onClick={() => toggleScrapbook(anchor.material)}
+          className="absolute flex items-center justify-center leading-none"
+          style={{
+            left: `${(sb.x / 3300) * 100}%`,
+            top: `${(sb.y / 4740) * 100}%`,
+            width: `${(sb.w / 3300) * 100}%`,
+            height: `${(sb.h / 4740) * 100}%`,
+            fontSize: 'min(1.2cqw, 0.8rem)',
+            color: 'black',
+            background: 'transparent',
+            border: 'none',
+          }}
+        >
+          {isScrapbooked ? '✔︎' : ''}
+        </button>
+      </React.Fragment>
+    )
+  })}
+</div>
 
 
           <Draggable handle=".drag-handle" cancel="input">

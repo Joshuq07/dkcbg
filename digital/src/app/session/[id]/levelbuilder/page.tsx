@@ -206,6 +206,8 @@ export default function LevelBuilderPage({
   const [matProgressTab, setMatProgressTab] = useState<'all' | 'environments' | 'resources' | 'animals'>('all')
   const [matProgressAsc, setMatProgressAsc] = useState(true)
   const [includeInventory, setIncludeInventory] = useState(true)
+  const [includeScrapbook, setIncludeScrapbook] = useState(false)
+const [scrapbooked, setScrapbooked] = useState<string[]>([])
 
   useEffect(() => {
     if (!user || !sessionId) return
@@ -264,6 +266,15 @@ export default function LevelBuilderPage({
 
     return () => clearTimeout(timeout)
   }, [materialCounts, sessionId, user, hydrated])
+
+  useEffect(() => {
+  if (!user || !sessionId) return
+  fetch(`/api/scrapbook/${sessionId}`, {
+    headers: { 'x-user-id': user.email! }
+  })
+    .then(r => r.json())
+    .then(json => setScrapbooked(json.scrapbooked_materials || []))
+}, [user, sessionId])
 
   const remainingLevels = useMemo(() => {
     return computeRemainingLevels(userEntries as LogicEntry[] || [])
@@ -445,7 +456,8 @@ export default function LevelBuilderPage({
 
       for (const m of Object.keys(neededCounts)) {
         const have = materialCounts[m] || 0
-        const need = neededCounts[m]
+        const scrapboookBonus = (includeScrapbook && !scrapbooked.includes(m)) ? 1 : 0
+        const need = neededCounts[m] + scrapboookBonus
         const missing = Math.max(0, need - have)
         if (missing > 0) localMissingCounts[m] = missing
       }
@@ -499,7 +511,7 @@ export default function LevelBuilderPage({
     }
 
     return list
-  }, [viewMode, materialCounts, remainingLevels, materialSortMode])
+  }, [viewMode, materialCounts, remainingLevels, materialSortMode, includeScrapbook, scrapbooked])
 
   const formatLevel = (
     id: number,
@@ -542,6 +554,14 @@ export default function LevelBuilderPage({
         {modeButton('owned', viewMode, setViewMode)}
         {modeButton('needed', viewMode, setViewMode)}
       </div>
+      <label className="flex items-center gap-1 text-sm cursor-pointer">
+        <input
+          type="checkbox"
+          checked={includeScrapbook}
+          onChange={e => setIncludeScrapbook(e.target.checked)}
+        />
+        Include Scrapbook in needed
+      </label>
 
       <button
         onClick={() =>
