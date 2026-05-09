@@ -1086,15 +1086,17 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                   )
                 })
               })()}
-              {showPhotoScan && (
-  <PhotoScanModal
-    onClose={() => setShowPhotoScan(false)}
-    onConfirm={(counts: Record<string, number>) => setMaterialCounts(counts)}
-  />
-)}
+              
             </div>
           </div>
         </div>
+      )}
+
+      {showPhotoScan && (
+        <PhotoScanModal
+          onClose={() => setShowPhotoScan(false)}
+          onConfirm={(counts: Record<string, number>) => setMaterialCounts(counts)}
+        />
       )}
 
     </div>
