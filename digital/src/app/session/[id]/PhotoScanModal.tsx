@@ -34,45 +34,18 @@ function imageFileToBase64(file: File): Promise<string> {
 async function scanImageWithClaude(base64: string, mediaType: string): Promise<ScanResult> {
   const materialList = ALL_MATERIALS.join(', ')
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: { type: 'base64', media_type: mediaType, data: base64 }
-            },
-            {
-              type: 'text',
-              text: `You are scanning a photo of material cards from a board game. 
-Here is the complete list of valid card names (exact spelling matters):
-${materialList}
-
-Look at the photo and identify which card names from the list above are visible. 
-Cards will have their name printed prominently on them.
-Only return names that exactly match the list above.
-
-Respond with ONLY a JSON object in this exact format, no other text:
-{"detected": ["Card Name 1", "Card Name 2"]}`
-            }
-          ]
-        }
-      ]
-    })
+  const response = await fetch('/api/scan', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    base64,
+    mediaType,
+    materialList: ALL_MATERIALS.join(', ')
   })
+})
 
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`)
-  }
-
-  const data = await response.json()
-  const text = data.content?.map((c: { type: string; text?: string }) => c.text || '').join('') || ''
+const data = await response.json()
+const text = data.text || ''
 
   let detected: string[] = []
   try {
