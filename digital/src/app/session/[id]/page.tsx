@@ -740,7 +740,7 @@ function toggleScrapbook(material: string) {
               style={{}}
             >
               <div className="drag-handle cursor-move px-3 pt-2 pb-1 text-xs text-gray-400 select-none border-b border-gray-200">
-                ⠿ drag
+                ⠿
               </div>
               <div className="p-3 flex flex-wrap gap-4" style={{ width: `${500 * (1 / (window.devicePixelRatio || 1))}px`, maxWidth: '90vw', fontSize: `${12 * (1 / (window.devicePixelRatio || 1))}px` }}>
               {sortedMembers.map((m, idx) => {
