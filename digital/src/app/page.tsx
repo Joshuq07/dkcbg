@@ -19,7 +19,6 @@ export default function Home() {
     <main className="page-container flex flex-col items-center justify-center min-h-[80vh] gap-8">
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-3">Donkey Kong Country Board Game</h1>
-        <p className="text-gray-500 text-lg">Sign in to unlock access.</p>
       </div>
       <Image
         src="/title.png"

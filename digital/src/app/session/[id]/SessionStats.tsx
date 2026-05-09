@@ -167,7 +167,7 @@ export default function SessionStats({ members, entries, scrapbooked, onClose }:
               value={`${stats.builtCount} / 142`}
             />
             <StatRow
-              label={'! Completed'}
+              label={'"!" Completed'}
               value={`${stats.bangCount} / 142`}
             />
             <StatRow
@@ -181,7 +181,7 @@ export default function SessionStats({ members, entries, scrapbooked, onClose }:
             />
             <StatRow
               label="Worlds Fully Completed"
-              sub="All levels built + !"
+              sub="All levels built & !"
               value={`${stats.worldsFullyCompleted} / 24`}
             />
             <StatRow
