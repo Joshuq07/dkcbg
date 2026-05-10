@@ -116,7 +116,7 @@ localStorage.setItem(`joined_${data.session.id}`, 'true')
       {mode === 'create' && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="card w-full max-w-sm">
-            <h2 className="text-xl font-semibold mb-4">Create Session</h2>
+            <h2 className="text-xl font-semibold mb-4">Create New Game</h2>
             <input
               className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-3 text-sm"
               placeholder="Session name"
