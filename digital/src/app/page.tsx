@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <main
-      className="flex flex-col items-center justify-center bg-black overflow-hidden"
+      className="flex flex-col items-center justify-center bg-white overflow-hidden"
       style={{ height: 'calc(100dvh - 56px)' }}
     >
       <div className="relative">
@@ -26,7 +26,6 @@ export default function Home() {
           alt="Donkey Kong Country"
           width={256}
           height={224}
-          style={{ imageRendering: 'pixelated' }}
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <button onClick={signIn}>
@@ -35,7 +34,6 @@ export default function Home() {
               alt="Sign in with Google"
               width={162}
               height={86}
-              style={{ imageRendering: 'pixelated' }}
             />
           </button>
         </div>
