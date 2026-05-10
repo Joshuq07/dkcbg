@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <main
-      className="flex flex-col items-center justify-center gap-4 bg-black overflow-hidden"
+      className="flex flex-col items-center justify-center gap-4 bg-white overflow-hidden"
       style={{ height: 'calc(100dvh - 56px)' }}
     >
       <button onClick={signIn}>
