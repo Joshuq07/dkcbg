@@ -17,46 +17,16 @@ export default function Home() {
 
   return (
     <main
-      className="flex flex-col items-center justify-center bg-black overflow-hidden"
-      style={{ height: '100dvh' }}
+      className="relative flex flex-col items-center justify-center overflow-hidden"
+      style={{ height: 'calc(100dvh - 56px)' }}
     >
-      <div
-        className="relative"
-        style={{
-          height: 'calc(100dvh - 56px)',
-          width: 'calc((100dvh - 56px) * 256 / 224)',
-        }}
-      >
-        <Image
-          src="/DKC1.png"
-          alt="Donkey Kong Country"
-          fill
-          className="object-contain"
-          style={{ imageRendering: 'pixelated' }}
-        />
-
-        <div className="absolute inset-x-[5%] top-[5%] h-[45%]">
-          <Image
-            src="/title.png"
-            alt="Title"
-            fill
-            className="object-contain"
-            style={{ imageRendering: 'pixelated' }}
-          />
-        </div>
-
-        <div className="absolute inset-x-[25%] bottom-[8%] h-[25%]">
-          <button onClick={signIn} className="relative w-full h-full">
-            <Image
-              src="/signin.png"
-              alt="Sign in with Google"
-              fill
-              className="object-contain"
-              style={{ imageRendering: 'pixelated' }}
-            />
-          </button>
-        </div>
-      </div>
+      <Image
+        src="/DKC1.png"
+        alt="Donkey Kong Country"
+        fill
+        className="object-cover"
+        style={{ imageRendering: 'pixelated' }}
+      />
     </main>
   )
 }
