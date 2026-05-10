@@ -23,10 +23,8 @@ export default function Home() {
       <div
         className="relative"
         style={{
-          aspectRatio: '256/224',
-          height: 'calc(100dvh - var(--navbar-height, 56px))',
-          maxWidth: 'calc((100dvh - var(--navbar-height, 56px)) * 256 / 224)',
-          width: '100%',
+          height: 'calc(100dvh - 56px)',
+          width: 'calc((100dvh - 56px) * 256 / 224)',
         }}
       >
         <Image
