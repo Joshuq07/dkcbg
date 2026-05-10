@@ -16,14 +16,17 @@ export default function Home() {
   if (isLoading) return <div className="page-container">Loading...</div>
 
   return (
-    <main className="flex flex-col items-center justify-center bg-black" style={{ minHeight: '100dvh' }}>
-      {/* Container fills remaining height after navbar, maintains 256:224 aspect ratio */}
+    <main
+      className="flex flex-col items-center justify-center bg-black overflow-hidden"
+      style={{ height: '100dvh' }}
+    >
       <div
         className="relative"
         style={{
           aspectRatio: '256/224',
           height: 'calc(100dvh - var(--navbar-height, 56px))',
-          maxWidth: '100vw',
+          maxWidth: 'calc((100dvh - var(--navbar-height, 56px)) * 256 / 224)',
+          width: '100%',
         }}
       >
         <Image
@@ -31,6 +34,7 @@ export default function Home() {
           alt="Donkey Kong Country"
           fill
           className="object-contain"
+          style={{ imageRendering: 'pixelated' }}
         />
 
         <div className="absolute inset-x-[5%] top-[5%] h-[45%]">
@@ -39,6 +43,7 @@ export default function Home() {
             alt="Title"
             fill
             className="object-contain"
+            style={{ imageRendering: 'pixelated' }}
           />
         </div>
 
@@ -49,6 +54,7 @@ export default function Home() {
               alt="Sign in with Google"
               fill
               className="object-contain"
+              style={{ imageRendering: 'pixelated' }}
             />
           </button>
         </div>
