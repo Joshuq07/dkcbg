@@ -27,6 +27,15 @@ export default function Home() {
         className="object-cover"
         style={{ imageRendering: 'pixelated' }}
       />
+
+      <button onClick={signIn} className="relative z-10">
+        <Image
+          src="/signin.png"
+          alt="Sign in with Google"
+          width={162}
+          height={86}
+        />
+      </button>
     </main>
   )
 }
