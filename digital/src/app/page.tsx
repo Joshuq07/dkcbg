@@ -17,18 +17,10 @@ export default function Home() {
 
   return (
     <main
-      className="relative flex flex-col items-center justify-center overflow-hidden"
+      className="flex flex-col items-center justify-center gap-4 bg-black overflow-hidden"
       style={{ height: 'calc(100dvh - 56px)' }}
     >
-      <Image
-        src="/DKC1.png"
-        alt="Donkey Kong Country"
-        fill
-        className="object-cover"
-        style={{ imageRendering: 'pixelated' }}
-      />
-
-      <button onClick={signIn} className="relative z-10">
+      <button onClick={signIn}>
         <Image
           src="/signin.png"
           alt="Sign in with Google"
@@ -36,6 +28,13 @@ export default function Home() {
           height={86}
         />
       </button>
+
+      <Image
+        src="/DKC1.png"
+        alt="Donkey Kong Country"
+        width={256}
+        height={224}
+      />
     </main>
   )
 }
