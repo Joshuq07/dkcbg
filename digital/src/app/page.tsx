@@ -16,33 +16,39 @@ export default function Home() {
   if (isLoading) return <div className="page-container">Loading...</div>
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-black">
-      <div className="relative">
-        {/* Base game image */}
+    <main className="flex flex-col items-center justify-center bg-black" style={{ minHeight: '100dvh' }}>
+      {/* Container fills remaining height after navbar, maintains 256:224 aspect ratio */}
+      <div
+        className="relative"
+        style={{
+          aspectRatio: '256/224',
+          height: 'calc(100dvh - var(--navbar-height, 56px))',
+          maxWidth: '100vw',
+        }}
+      >
         <Image
           src="/DKC1.png"
           alt="Donkey Kong Country"
-          width={256}
-          height={224}
+          fill
+          className="object-contain"
         />
 
-        {/* Title overlaid on top, centered within DKC1 */}
-        <div className="absolute inset-0 flex flex-col items-center justify-between py-4">
+        <div className="absolute inset-x-[5%] top-[5%] h-[45%]">
           <Image
             src="/title.png"
             alt="Title"
-            width={220}
-            height={114}
+            fill
             className="object-contain"
           />
+        </div>
 
-          {/* Sign in button as image */}
-          <button onClick={signIn} className="flex items-center justify-center">
+        <div className="absolute inset-x-[25%] bottom-[8%] h-[25%]">
+          <button onClick={signIn} className="relative w-full h-full">
             <Image
               src="/signin.png"
               alt="Sign in with Google"
-              width={104}
-              height={63}
+              fill
+              className="object-contain"
             />
           </button>
         </div>
