@@ -1,7 +1,8 @@
 "use client"
 
 //@ts-ignore
-import './dkcbg_music.css'
+import './dkcbg_music.css';
+import Image from 'next/image';
 
 export default function Music() {
 
