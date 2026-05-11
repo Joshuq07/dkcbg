@@ -126,7 +126,10 @@ const characters = {
       { label: "Other", abilities: "Lot of Flexibility here, in general want to ensure you have equipped what you need, and be more willing to swap around than other characters." },
     ],
     targetItems: [
-      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
+      { label: "VR Headset", abilities: "When you have Controlled Descent, you can combine that with VR Headset to continue moving forward while still getting the effect of the additional option, or to get the forward option while still going through the path join." },
+      { label: "Wrinkly Door", abilities: "With Banana Bird Whisperer equpped, you'll activate this 2x as much and could get a lot of free ! from it." },
+      { label: "Gramophone", abilities: "If you decide to use mainly music to complete your 200pt HW/Music requirement, this item will let you get extra points on a lot of songs (Just make sure to only do the songs that give you + points)." },
+      { label: "Battle Crown", abilities: "Free money if you find yourself getting every ! already" }
     ],
   },
 
@@ -367,7 +370,8 @@ const characters = {
     targetItems: [
       { label: "One of My 7 Koopa Hotels", abilities: "If you manage to set this up inside your danger zone, it's a money printer. Look to see if it ever falls into the item discard, and then purchase it once you are on the space you want it (Requires Crocodile Isle Garbage Collector to purchase from discard)." },
       { label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space." },
-      { label: "Cage", abilities: "By placing this on a token space in your danger zone, you'll get many more tokens from this than the usual player could. (His opponenets can also do this so make sure to nab it out of the discard pile)" }
+      { label: "Cage", abilities: "By placing this on a token space in your danger zone, you'll get many more tokens from this than the usual player could. (His opponenets can also do this so make sure to nab it out of the discard pile)" },
+      { label: "Harambe Memorial", abilities: "Put this in your area where players are being warped to and while Kudgel is patrolling it he will grab all of them for you." }
     ],
   },
 
