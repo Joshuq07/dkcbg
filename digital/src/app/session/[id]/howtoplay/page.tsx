@@ -110,7 +110,7 @@ const characters = {
       { name: "Ponytail Twirl", type: "", value: "+1", imp: 4, diff: 1, desc: 'Roll an 8-side die for all "!"s instead of 6-side.', detail: 'Simple and Easy to use, keep this the whole game until you have no difficult ! left to roll for.' },
       { name: "Controlled Descent", type: "", value: "+1", imp: 4, diff: 2, desc: "When your movement goes X spaces past a path join, you can instead start moving backwards and land X spaces up the other side of the path join. Next turn, you continue forward as usual. Can't use this ability again on this path join until you reach a new path join.", detail: "Dixie doesn't have a lot of abilites that give her more options/movement and this covers both. It effectively adds extra pathsplits at all conjunctions on the board, ones that aren't balanced like normal pathsplits. Finding the best spots to use this and getting all those extra options is amazing value." },
       { name: "Kanonical Kong", type: "", value: "+1", imp: 3, diff: 3, desc: "If you build a level while you are in its world on the board, you can keep one of the materials you used to build that level. (If you built it for free from a bonus, etc., take one of the materials it normally requires.)", detail: "Taking the extra time to wait till you get into a world may well be worth the effort, especially if it lets you chain lots of levels together. The extra materials add up overtime. Try to plan when/where you build levels so you can get a lot of extra value." },
-      { name: "Dixie's Photo Album", type: "", value: "+1", imp: 2, diff: 2, desc: "When you use a camera piece to copy a card that appears in a DKC3 level, you can check that card off in your scrapbook.", detail: "While 1 card checked off doesn't seem like a lot, you use quite a few Camera Pieces throughout the game, so this if equipped for a solid chunk of time is like 20 cards you no longer need to scrapbook, and cards at that that you already really wanted since you are scrapbooking them in the first place. It's only downside is its space it holds up so wait to pick this up until you are in the mid game where you are using lots of Camera Pieces and have some extra slots to hold this ability." },
+      { name: "Dixie's Photo Album", type: "", value: "+1", imp: 2, diff: 2, desc: "When you use a camera piece to copy a card that appears in a DKC3 level, you can check that card off in your scrapbook.", detail: "While 1 card checked off doesn't seem like a lot, you use quite a few Camera Pieces throughout the game, so this if equipped for a solid chunk of time is like 20 cards you no longer need to scrapbook, and cards at that that you already really wanted since you are Camera Piecing them in the first place. Wait to pick this up until you are in the mid game where you are using lots of Camera Pieces and have some extra slots to hold this ability." },
       { name: "Banana Bird Whisperer", type: "", value: "+2", imp: 4, diff: 2, desc: 'Banana birds can change your roll by +3 through -3, and you can send them to Queen Banana Bird from anywhere on the board. Whenever you land on a banana bird space or a Wrinkly\'s Kong Kollege space, you can perform the actions from both of those space types at once.', detail: 'All 3 effects here are really nice, the +-3 lets you almost guarentee every "!", which is a big strength of Dixie. Getting access to the Queen all the time means you don\'t have to pidgeon hole yourself into the middle path or hold flipped birds, and getting the vice versa effect gives you a better stream of both birds and HW, increasing the value of both spaces.' },
       { name: "Bubblegum Bassoon", type: "Unlockable", value: "+2", imp: 4, diff: 3, desc: "[MUSIC: When you land on a material space, can visit the music pool if you skip taking 1 material. You can also visit the music pool whenever you land on Banana Bird, Queen Banana Bird, or Wrinkly.] You get 3 pieces of bubblegum. After your movement roll, you can use 1 or multiple; each decreases your roll by 1 (can't go negative; can be combined with feathers). Can be refilled at the Start space instead of taking money or saving. This max of 3 pieces is upgraded by 2 when you finish all homework/music points, by 2 when you finish your scrapbook, and by 2 when you return all banana birds, for a final max of 9.", detail: "Music effect here is self explanatory, and the slowing is really good when upgraded. Not unreasonable to be at 5 pieces by the time you pick this up if you are depositing a bunch of birds, and 5 mini golden feathers each lap of the board is very strong. Make sure you are using this ability alot to get good value and combine with Golden Feathers for Diddy-Esque movement control." },
       { name: "Hair in Your Face", type: "", value: "-1", imp: 2, diff: 3, desc: "If your movement roll is 10 or higher, you must take a random path at path splits. If you use a golden feather, you can choose your path.", detail: "Not too big a deal, use bubblegum later in the game to prevent effect from triggering and don't keep the ability late late game if you are worried it might throw chance into the mix too much." },
@@ -603,22 +603,25 @@ export default function CharacterGuidePage() {
             )}
           </div>
 
-          <div className="w-32 h-32 rounded-lg overflow-hidden bg-white/20 flex items-center justify-center">
-            <img
+  <div className="flex flex-col items-center gap-2">
+  <div className="w-32 h-32 rounded-lg overflow-hidden bg-white/20 flex items-center justify-center">
+    <img
               src={`/characters/${active}/portrait.png`}
               alt={`${active} portrait`}
               className="object-contain w-full h-full"
             />
-          </div>
-          <div className="flex flex-col gap-1.5 items-center mt-2">
-  <div className="flex items-center gap-2">
-    <span className="text-xs text-white/70 w-20 text-right">Complexity</span>
-    <ImportanceDots value={char.complexity ?? 0} max={3} color="#ffffff" />
   </div>
-  <div className="flex items-center gap-2">
-    <span className="text-xs text-white/70 w-20 text-right">Interaction</span>
-    <ImportanceDots value={char.interaction ?? 0} max={3} color={char.accent} />
+  <div className="flex flex-col gap-1.5 items-center">
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-white/70 w-20 text-right">Complexity</span>
+      <ImportanceDots value={char.complexity ?? 0} max={3} color="#ffffff" />
+    </div>
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-white/70 w-20 text-right">Interaction</span>
+      <ImportanceDots value={char.interaction ?? 0} max={3} color={char.accent} />
+    </div>
   </div>
+</div>
 </div>
         </div>
 
