@@ -17,27 +17,23 @@ export default function Home() {
 
   return (
     <main
-      className="flex flex-col items-center justify-center bg-white overflow-hidden"
-      style={{ height: 'calc(100dvh - 56px)' }}
+      className="flex items-center justify-center overflow-hidden"
+      style={{
+        height: 'calc(100dvh - 56px)',
+        backgroundImage: 'url(/DKC1.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        imageRendering: 'pixelated',
+      }}
     >
-      <div className="relative">
+      <button onClick={signIn}>
         <Image
-          src="/DKC1.png"
-          alt="Donkey Kong Country"
-          width={256}
-          height={224}
+          src="/signin.png"
+          alt="Sign in with Google"
+          width={1139}
+          height={497}
         />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button onClick={signIn}>
-            <Image
-              src="/signin.png"
-              alt="Sign in with Google"
-              width={1139}
-              height={497}
-            />
-          </button>
-        </div>
-      </div>
+      </button>
     </main>
   )
 }
