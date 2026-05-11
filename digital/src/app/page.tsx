@@ -21,7 +21,6 @@ export default function Home() {
       style={{
         height: 'calc(100dvh - 56px)',
         backgroundImage: 'url(/DKC1.png)',
-        backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
