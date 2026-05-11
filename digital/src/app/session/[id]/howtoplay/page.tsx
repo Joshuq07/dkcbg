@@ -603,6 +603,13 @@ export default function CharacterGuidePage() {
             )}
           </div>
 
+          <div className="w-32 h-32 rounded-lg overflow-hidden bg-white/20 flex items-center justify-center">
+            <img
+              src={`/characters/${active}/portrait.png`}
+              alt={`${active} portrait`}
+              className="object-contain w-full h-full"
+            />
+          </div>
           <div className="flex flex-col gap-1.5 items-center mt-2">
   <div className="flex items-center gap-2">
     <span className="text-xs text-white/70 w-20 text-right">Complexity</span>
