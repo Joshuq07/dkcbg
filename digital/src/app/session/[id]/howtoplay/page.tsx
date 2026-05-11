@@ -611,7 +611,7 @@ export default function CharacterGuidePage() {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <div className="w-32 h-32 rounded-lg overflow-hidden bg-white/20 flex items-center justify-center">
+            <div className="w-32 h-32 rounded-lg overflow-hidden bg-transparent flex items-center justify-center">
               <img
                 src={`/characters/${active}/portrait.png`}
                 alt={`${active} portrait`}
