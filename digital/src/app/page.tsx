@@ -30,8 +30,8 @@ export default function Home() {
         <Image
           src="/signin.png"
           alt="Sign in with Google"
-          width={1139}
-          height={497}
+          width={570}
+          height={249}
         />
       </button>
     </main>
