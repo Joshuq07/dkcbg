@@ -23,7 +23,6 @@ export default function Home() {
         backgroundImage: 'url(/DKC1.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        imageRendering: 'pixelated',
       }}
     >
       <button onClick={signIn}>
