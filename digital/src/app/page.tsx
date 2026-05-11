@@ -18,11 +18,7 @@ export default function Home() {
   return (
     <main
       className="flex items-center justify-center overflow-hidden"
-      style={{
-        height: 'calc(100dvh - 56px)',
-        backgroundImage: 'url(/DKC1.png)',
-        backgroundPosition: 'center',
-      }}
+      
     >
       <button onClick={signIn}>
         <Image
