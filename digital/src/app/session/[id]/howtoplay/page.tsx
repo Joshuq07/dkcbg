@@ -517,11 +517,11 @@ function AbilityCard({ ability, color, accent }: { ability: { name: string, valu
           )}
           <div className="hidden sm:flex flex-col gap-0.5 items-end">
             <div className="flex items-center gap-1.5">
-              <span className="text-xs text-gray-400 w-10 text-right">Imp</span>
+              <span className="text-xs text-gray-400 w-10 text-right">Importance</span>
               <ImportanceDots value={ability.imp ?? 0} color={color} />
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xs text-gray-400 w-10 text-right">Diff</span>
+              <span className="text-xs text-gray-400 w-10 text-right">Difficulty to Manage</span>
               <ImportanceDots value={ability.diff ?? 0} color={accent} />
             </div>
           </div>
