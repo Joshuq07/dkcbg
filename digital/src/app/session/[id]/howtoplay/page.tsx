@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const characters = {
   "General Tips": {
@@ -477,6 +477,7 @@ function ImportanceDots({ value, max = 5, color }: { value: number, max?: number
 
 function AbilityCard({ ability, color, accent }: { ability: { name: string, value: string, type: string, imp?: number, diff?: number, desc?: string, detail?: string }, color: string, accent: string }) {
   const [open, setOpen] = useState(false)
+
   const isNegative = ability.value.startsWith("-")
   const isZero = ability.value === "0" || ability.value === "+0"
   const isCore = ability.type === "Core"
@@ -572,9 +573,18 @@ export default function CharacterGuidePage() {
   const [active, setActive] = useState<keyof typeof characters>("General Tips")
   const char = characters[active]
   const [bottomTab, setBottomTab] = useState("Starter Layouts")
+  const [imgLoaded, setImgLoaded] = useState(false)
+
+  useEffect(() => { setImgLoaded(false) }, [active])
 
   return (
     <main className="min-h-screen bg-gray-50">
+      <div className="hidden">
+        {tabs.map(tab => (
+          <img key={tab} src={`/characters/${tab}/portrait.png`} alt="" />
+        ))}
+      </div>
+
       {/* HEADER */}
       <div className="bg-white border-b shadow-sm sticky top-0 z-10 w-full">
         <div className="px-4">
@@ -619,9 +629,12 @@ export default function CharacterGuidePage() {
           <div className="flex flex-col items-center gap-2">
             <div className="w-32 h-32 rounded-lg overflow-hidden bg-transparent flex items-center justify-center">
               <img
+                key={active}
                 src={`/characters/${active}/portrait.png`}
                 alt={`${active} portrait`}
-                className="object-contain w-full h-full"
+                className="object-contain w-full h-full transition-opacity duration-200"
+                style={{ opacity: imgLoaded ? 1 : 0 }}
+                onLoad={() => setImgLoaded(true)}
               />
             </div>
             <div className="flex flex-col gap-1.5 items-center">
