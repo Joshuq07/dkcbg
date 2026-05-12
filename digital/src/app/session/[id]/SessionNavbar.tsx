@@ -64,10 +64,10 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
       </Link>
 
       <Link
-        href={`/session/${sessionId}/spacealert`}
-        className={`shrink-0 ${linkClass(`/session/${sessionId}/spacealert`)}`}
+        href={`/session/${sessionId}/records`}
+        className={`shrink-0 ${linkClass(`/session/${sessionId}/records`)}`}
       >
-        Space Alert
+        Records
       </Link>
 
       <div className="ml-auto flex items-center">
