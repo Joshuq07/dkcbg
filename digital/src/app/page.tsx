@@ -3,7 +3,6 @@
 import { useAuth } from '@/lib/useAuth'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import Image from 'next/image'
 
 export default function Home() {
   const { isAuthenticated, isLoading, signIn } = useAuth()
@@ -16,28 +15,14 @@ export default function Home() {
   if (isLoading) return <div className="page-container">Loading...</div>
 
   return (
-    <main
-      className="flex flex-col items-center justify-center bg-white overflow-hidden"
-      style={{ height: 'calc(100dvh - 56px)' }}
-    >
-      <div className="relative">
-        <Image
-          src="/DKC1.png"
-          alt="Donkey Kong Country"
-          width={256}
-          height={224}
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button onClick={signIn}>
-            <Image
-              src="/signin.png"
-              alt="Sign in with Google"
-              width={162}
-              height={86}
-            />
-          </button>
-        </div>
-      </div>
+    <main className="flex items-center justify-center bg-white" style={{ height: 'calc(100dvh - 56px)' }}>
+      <button
+        onClick={signIn}
+        className="flex items-center gap-3 px-6 py-3 border border-gray-300 rounded shadow-sm bg-white hover:bg-gray-50 text-gray-700 font-medium text-base"
+      >
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width={20} height={20} />
+        Sign in with Google
+      </button>
     </main>
   )
 }
