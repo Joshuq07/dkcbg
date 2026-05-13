@@ -256,7 +256,7 @@ const characters = {
   "Taj": {
     color: "#4c51e6",
     accent: "#989bed",
-    complexity: 5,
+    complexity: 4,
     interaction: 4,
     guide: `Taj wants to warp around the board, hunting down opponents and attacking them with his powerful Balloon effects. Taj's balloons are his central ability, and maximizing your use of them is the best way to win with the character. Each balloon type has powerful effects that each present choices between effecting just yourself or your opponents. He also features an ability upgrade system with his power-up tokens that will allow him to scale past other characters at the cost of starting very weak. Try your best to mitigate your negatives making strategic decisions and planning out how you're going to deal with your objectives. Wizpig's Wrath will be haunting you all game so do your best to have a buffer of Cards, Money, and Lives that aren't detrimental to lose. If you're able to scale up in strength and aqquire a good foundation of money, items, and resources, opponents will have to band together to put a stop to you or else you'll blast into 1st place.`,
     abilities: [
