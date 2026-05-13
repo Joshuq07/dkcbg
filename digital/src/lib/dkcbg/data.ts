@@ -559,8 +559,8 @@ export const bonusDifficulties: number[] = [
 
 export const starValue: number[] = [
   // Kongo Jungle
-  2, // Jungle Hijinxs
-  1, // Ropey Rampage
+  4, // Jungle Hijinxs
+  2, // Ropey Rampage
   1, // Reptile Rumble
   2, // Coral Capers
   1, // Barrel Cannon Canyon
@@ -572,178 +572,178 @@ export const starValue: number[] = [
   3, // Bouncy Bonanza
   3, // Stop & Go Station
   3, // Millstone Mayhem
-  1, // Necky's Nuts
+  2, // Necky's Nuts
 
   // Vine Valley
   1, // Vulture Culture
   1, // Tree Top Town
   2, // Forest Frenzy
-  2, // Orang-Utan Gang
+  4, // Orang-Utan Gang
   3, // Clam City
-  4, // Temple Tempest
-  1, // Bumble B. Rumble
+  5, // Temple Tempest
+  2, // Bumble B. Rumble
 
   // Gorilla Glacier
-  3, // Snow Barrel Blast
+  2, // Snow Barrel Blast
   3, // Sliplide Ride
-  4, // Croctopus Chase
+  3, // Croctopus Chase
   4, // Ice Age Alley
   3, // Rope Bridge Rumble
   5, // Torchlight Trouble
-  1, // Really Gnawty Rampage
+  2, // Really Gnawty Rampage
 
   // Kremkroc Industries Inc.
   5, // Oil Drum Alley
-  2, // Trick Track Trek
+  3, // Trick Track Trek
   5, // Poison Pond
   5, // Elevator Antics
   3, // Blackout Basement
   3, // Mine Cart Madness
-  2, // Boss Dumb Drum
+  3, // Boss Dumb Drum
 
   // Chimp Caverns / Gang-Plank Galleon
   4, // Tanked Up Trouble
   3, // Manic Mincers
   5, // Misty Mine
-  2, // Loopy Lights
-  4, // Platform Perils
-  4, // Necky's Revenge
-  1, // Gang-Plank Galleon
+  3, // Loopy Lights
+  3, // Platform Perils
+  3, // Necky's Revenge
+  2, // Gang-Plank Galleon
 
   // Gangplank Galleon
-  4, // Pirate Panic
+  3, // Pirate Panic
   1, // Mainbrace Mayhem
   2, // Gangplank Galley
-  1, // Lockjaw's Locker
+  2, // Lockjaw's Locker
   5, // Topsail Trouble
   1, // Krow's Nest
 
   // Crocodile Cauldron
-  1, // Hot-Head Hop
+  3, // Hot-Head Hop
   2, // Kannon's Klaim
-  5, // Lava Lagoon
+  4, // Lava Lagoon
   4, // Red-Hot Ride
   3, // Squawks's Shaft
   3, // Kleever's Kiln
 
   // Krem Quay
-  4, // Barrel Bayou
-  5, // Glimmer's Galleon
-  5, // Krockhead Klamber
-  2, // Rattle Battle
-  5, // Slime Climb
-  1, // Bramble Blast
+  3, // Barrel Bayou
+  4, // Glimmer's Galleon
+  4, // Krockhead Klamber
+  3, // Rattle Battle
+  4, // Slime Climb
+  2, // Bramble Blast
   2, // Kudgel's Kontest
 
   // Krazy Kremland
   3, // Hornet Hole
-  4, // Target Terror
+  5, // Target Terror
   4, // Bramble Scramble
   3, // Rickety Race
-  4, // Mudhole Marsh
+  3, // Mudhole Marsh
   3, // Rambi Rumble
   3, // King Zing Sting
 
   // Gloomy Gulch
   2, // Ghostly Grove
   5, // Haunted Hall
-  2, // Gusty Glade
-  3, // Parrot Chute Panic
+  3, // Gusty Glade
+  4, // Parrot Chute Panic
   2, // Web Woods
   5, // Kreepy Krow
 
   // K. Rool's Keep
-  2, // Arctic Abyss
-  4, // Castle Crush
-  5, // Clapper's Cavern
+  3, // Arctic Abyss
+  5, // Castle Crush
+  4, // Clapper's Cavern
   4, // Windy Well
   4, // Chain Link Chamber
   5, // Toxic Tower
-  5, // Stronghold Showdown
+  4, // Stronghold Showdown
 
   // The Flying Krock
-  4, // Screech's Sprint
-  5, // K. Rool Duel
+  3, // Screech's Sprint
+  4, // K. Rool Duel
 
   // Lost World
-  4, // Jungle Jinx
-  2, // Black Ice Battle
-  3, // Klobber Karnage
-  2, // Fiery Furnace
+  3, // Jungle Jinx
+  1, // Black Ice Battle
+  2, // Klobber Karnage
+  1, // Fiery Furnace
   5, // Animal Antics
   4, // Krocodile Kore
 
   // Lake Orangatanga
-  2, // Lakeside Limbo
-  1, // Doorstop Dash
+  4, // Lakeside Limbo
+  3, // Doorstop Dash
   3, // Tidal Trouble
-  2, // Skidda's Row
+  1, // Skidda's Row
   3, // Murky Mill
   4, // Belcha's Barn
 
   // Kremwood Forest
-  1, // Springin' Spiders
-  2, // Riverside Race
-  4, // Squeals on Wheels
-  5, // Barrel Shield Bust-Up
-  2, // Bobbing Barrel Brawl
-  2, // Arich's Ambush
+  3, // Springin' Spiders
+  3, // Riverside Race
+  5, // Squeals on Wheels
+  3, // Barrel Shield Bust-Up
+  4, // Bobbing Barrel Brawl
+  4, // Arich's Ambush
 
   // Cotton-Top Cove
-  2, // Bazza's Blockade
-  2, // Rocket Barrel Ride
+  3, // Bazza's Blockade
+  3, // Rocket Barrel Ride
   4, // Kreeping Klasps
-  2, // Tracker Barrel Trek
-  1, // Fish Food Frenzy
-  5, // Squirt's Showdown
+  3, // Tracker Barrel Trek
+  2, // Fish Food Frenzy
+  4, // Squirt's Showdown
 
   // Mekanos
-  3, // Fire-Ball Frenzy
-  3, // Demolition Drain-Pipe
-  1, // Ripsaw Rage
+  4, // Fire-Ball Frenzy
+  4, // Demolition Drain-Pipe
+  2, // Ripsaw Rage
   4, // Blazing Bazukas
-  3, // Low-G Labyrinth
-  3, // KAOS Karnage
+  4, // Low-G Labyrinth
+  4, // KAOS Karnage
 
   // K3
   3, // Krevice Kreepers
-  3, // Tearaway Toboggan
-  1, // Barrel Drop Bounce
-  4, // Krack-Shot Kroc
-  3, // Lemguin Lunge
+  2, // Tearaway Toboggan
+  3, // Barrel Drop Bounce
+  3, // Krack-Shot Kroc
+  2, // Lemguin Lunge
   2, // Bleak's House
 
   // Razor Ridge
-  4, // Buzzer Barrage
-  5, // Kong-Fused Cliffs
+  3, // Buzzer Barrage
+  4, // Kong-Fused Cliffs
   3, // Floodlit Fish
   5, // Pot Hole Panic
-  2, // Ropey Rumpus
-  4, // Kroctopus Krush
+  3, // Ropey Rumpus
+  3, // Kroctopus Krush
 
   // Pacifica
   3, // Dingy Drain-Pipe
-  5, // Stormy Seas
+  4, // Stormy Seas
   3, // Sunken Spruce
   3, // Cliffside Blast
   3, // Ripcurl Reef
-  3, // Surf's Up
-  4, // Barbos's Barrier
+  4, // Surf's Up
+  3, // Barbos's Barrier
 
   // KAOS Kore
-  2, // Konveyor Rope Klash
-  4, // Creepy Caverns
+  3, // Konveyor Rope Klash
+  3, // Creepy Caverns
   5, // Lightning Looks-Out
   1, // Koindozer Klamber
-  3, // Poisonous Pipeline
+  4, // Poisonous Pipeline
   5, // Kastle KAOS
 
   // Krematoa
   5, // Stampede Sprint
   3, // Criss Kross Cliffs
   2, // Tyrant Twin Tussle
-  4, // Swoopy Salvo
-  4, // Rocket Rush
+  3, // Swoopy Salvo
+  3, // Rocket Rush
   5  // Knautilus
 ];
 
