@@ -16,8 +16,8 @@ export function Navbar() {
     <nav className="w-full border-b border-gray-200 bg-white px-4 py-3 flex items-center justify-between gap-3 min-w-0">
       <div className="flex items-center gap-4 min-w-0 flex-shrink-0">
         <Link href="/" className="font-semibold text-gray-900 text-lg whitespace-nowrap">
-          <span className="hidden sm:inline">Donkey Kong Board Game Digital</span>
-          <span className="sm:hidden">DK Board Game</span>
+          <span className="hidden sm:inline">Donkey Kong Country Board Game Digital</span>
+          <span className="sm:hidden">DKCBG Digital</span>
         </Link>
 
         <Link href="/sessions" className="text-sm text-gray-500 hover:text-gray-800 whitespace-nowrap flex-shrink-0">
