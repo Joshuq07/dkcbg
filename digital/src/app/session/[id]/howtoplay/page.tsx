@@ -163,6 +163,7 @@ const characters = {
       { label: "Other", abilities: "Depending on player count, spread, and strategy, Crushing the Competition could be viable allthroughout the game, but it's most releavant right at the start with tons of bunching." },
     ],
     targetItems: [
+      { label: "Gorilla Glue", abilities: "If you manage to purchase this, Long-Awaited Return becomes a much better option as you can use it off cooldown on its lowest tier and chain levels together." },
       { label: "Silver Feathers", abilities: "Stops Time Out from activating by avoiding lose a life spaces entirely." },
       { label: "Flying Surfboard", abilities: "You're already going to Funky's alot, this gives you more options when flying." },
       { label: "High-Tech Fishing Rod", abilities: "You're already going to Funky's alot, this gives you better rewards when fishing." },
@@ -271,6 +272,7 @@ const characters = {
     ],
     targetItems: [
       { label: "Gold Cogs", abilities: "Negates half the downside of your -2 Scaredy Cat." },
+      { label: "Oddly Shaped CD", abilities: "Chunky can't lose lives so this item is extra good on him, make use of this to get a lot of music points if you need them." },
       { label: "Silver Feathers", abilities: "Very safe item to pickup, when held alongside a Golden Feather, you can never lose levels" },
       { label: "Liftoff Ore", abilities: "If you know you'll have to go to a Cranky's anyways for a boss level, you could use this to fail other levels in that world to patch holes above in the level sheet so that you can skip other Cranky's." },
       { label: "Helpful Assistant", abilities: "If you like doing Quizzes when you visit Swanky's for Insulin, this can help you get more rewards that you otherwise might've missed." }
@@ -312,6 +314,8 @@ const characters = {
     targetItems: [
       { label: "Fractone (Bonus)", abilities: "Fractone gives Taj an easy way to consistently setup Wrong Warp Whistle and adds a free benefit, meaning he won't have to use Red Balloons on himself and he will warp more often." },
       { label: "Magnet", abilities: "Since you're chasing/warping to opponenets constantly, this will get you a ton of money throughout the game." },
+      { label: "Getaway", abilities: "Similarly to Fractone, can be used to setup Wrong Warp Whistle with tons of added value." },
+      { label: "White Van", abilities: "Easy way to get an opponent on your space to activate Rainbow Balloons." },
     ],
   },
 
@@ -345,7 +349,10 @@ const characters = {
       { label: "Other", abilities: "Lots of Flexibility here, Banana Plantation, Banana Ship, X to Y to Z, and Going Bananas are good at all points in the game" },
     ],
     targetItems: [
-      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
+      { label: "Banana Tree", abilities: "Good extra income plus it counts for Going Bananas" },
+      { label: "Professor Chops's Checkpoint Booth", abilities: "Xananb's 2x life loss while Molding makes him one of the best characters suited to try and make use of the Checkpoint Booth, where if you find a way to continuously lose lives (and not activate GAME OVER) you could build a lot of free levels. Probably needs to be paired with Balloon stall to actually get this strategy to work." },
+      { label: "Balloon Stall", abilities: "The second half of the lose lives on purpose strategy." },
+      { label: "Bear Coins", abilities: "If you find yourself very rich and with this item, you can use Banana Ship to consistently go to Kongo Jugnle Bazaar's and then combo that with Bananaphone to link Bazaar visits." },
     ],
   },
 
@@ -384,7 +391,8 @@ const characters = {
       { label: "One of My 7 Koopa Hotels", abilities: "If you manage to set this up inside your danger zone, it's a money printer. Look to see if it ever falls into the item discard, and then purchase it once you are on the space you want it (Requires Crocodile Isle Garbage Collector to purchase from discard)." },
       { label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space." },
       { label: "Cage", abilities: "By placing this on a token space in your danger zone, you'll get many more tokens from this than the usual player could. (His opponenets can also do this so make sure to nab it out of the discard pile)" },
-      { label: "Harambe Memorial", abilities: "Put this in your area where players are being warped to and while Kudgel is patrolling it he will grab all of them for you." }
+      { label: "Harambe Memorial", abilities: "Put this in your area where players are being warped to and while Kudgel is patrolling it he will grab all of them for you." },
+      { label: "White Van", abilities: "Funny way to drag opponents into your area of effect." },
     ],
   },
 
@@ -418,7 +426,11 @@ const characters = {
       { label: "+3", abilities: "Swap Harp, IntilleSense Specs, Wallopoid, All-Mine Remote, Inviseaux, King Crockoid, Mountain of Paperwork, False Imprisonment, King of Rot" },
     ],
     targetItems: [
-      { label: "DKC Guidebook", abilities: "asldkjfa;lksjdf" }
+      { label: "Warp Gong", abilities: "Great item to use to mixup your movement when trying to stay invisible." },
+      { label: "Clearance Shelf", abilities: "Paired with IntelliSense Specs can help you get expensive items for a solid discount consistently." },
+      { label: "Rocket Barrel", abilities: "Another helpful item to stay invisible." },
+      { label: "SNES", abilities: "Helps counter the effect of Find yer Own! and prevent you from losing a ton of materials from boss level ! failure." },
+
     ],
   },
 
@@ -456,8 +468,11 @@ const characters = {
       { label: "Other", abilities: "Very light kit here, Kremling Krunch should be avoided if you're using Share the Booty. Belly Armor/Righthand Minon can be swapped depending on game state. Main deciion for character is which minions to use and which K. Rool to be, not your other abilities" },
     ],
     targetItems: [
+      { label: "Oddly Shaped CD", abilities: "The best music item in the game, lets you get 2x points for a couple songs, can really help you get your music requirement finished if you have the lives and money to spare." },
       { label: "Magnet", abilities: "If you find yourself passing opponents constantly, especially in games with 3-4 players, this will net a lot of money if you have the space." },
       { label: "Silver Feathers", abilities: "An absolute must if you find it to avoid losing 25% of your money on Lose a Life spaces with Overripe Bananas." },
+      { label: "Candy's Headphones", abilities: "Since Kremling Krew has a huge note inventory with Koncerto, you can make really good use of this item stocking up on Music Notes to build 2 songs at once quickly." },
+      { label: "Gramophone", abilities: "Another item to help you finish your pt requirement for cheaper than Oddly Shaped CD." },
     ],
   },
 }
