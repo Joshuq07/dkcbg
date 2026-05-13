@@ -13,18 +13,20 @@ export function Navbar() {
   if (inSession) return null
 
   return (
-    <nav className="w-full border-b border-gray-200 bg-white px-6 py-3 flex items-center justify-between">
-      <div className="flex items-center gap-6">
-        <Link href="/" className="font-semibold text-gray-900 text-lg">
-          Donkey Kong Board Game Digital
+    <nav className="w-full border-b border-gray-200 bg-white px-4 py-3 flex items-center justify-between gap-3 min-w-0">
+      <div className="flex items-center gap-4 min-w-0 flex-shrink-0">
+        <Link href="/" className="font-semibold text-gray-900 text-lg whitespace-nowrap">
+          <span className="hidden sm:inline">Donkey Kong Board Game Digital</span>
+          <span className="sm:hidden">DK Board Game</span>
         </Link>
 
-        <Link href="/sessions" className="text-sm text-gray-500 hover:text-gray-800">
+        <Link href="/sessions" className="text-sm text-gray-500 hover:text-gray-800 whitespace-nowrap flex-shrink-0">
           Games
         </Link>
       </div>
 
-      <div className="flex items-center gap-3">
+      {/* Right: auth */}
+      <div className="flex items-center gap-3 flex-shrink-0">
         {isAuthenticated && user ? (
           <>
             {user.image && (
@@ -33,21 +35,23 @@ export function Navbar() {
                 alt="avatar"
                 width={32}
                 height={32}
-                className="rounded-full"
+                className="rounded-full flex-shrink-0"
               />
             )}
-            <Link href="/dashboard" className="text-sm text-gray-700 hover:underline cursor-pointer">
+            <Link
+              href="/dashboard"
+              className="text-sm text-gray-700 hover:underline cursor-pointer truncate max-w-[120px] sm:max-w-none"
+            >
               {user.name}
             </Link>
-
-
           </>
         ) : (
           <button
             onClick={signIn}
-            className="text-sm font-medium bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 transition"
+            className="text-sm font-medium bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 transition whitespace-nowrap flex-shrink-0"
           >
-            Sign in with Google
+            <span className="hidden sm:inline">Sign in with Google</span>
+            <span className="sm:hidden">Sign in</span>
           </button>
         )}
       </div>
