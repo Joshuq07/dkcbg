@@ -2,32 +2,6 @@
 import { useState, useEffect } from "react"
 
 const characters = {
-  "General Tips": {
-    color: "#070807",
-    accent: "#c0c2c0",
-    complexity: 1,
-    interaction: 1,
-    guide: `Below are general strategies to think about in the Game as well as a user guide for the digital site, checkout the individual chraacter tabs for in-depth breakdowns of each character and their unique strategies.`,
-    abilities: [
-      { name: "DKCBG Digital - Game Tab", type: "Core", value: "1", imp: 5, diff: 5, desc: "Game Tab Explanation", detail: "Game - If you're not the host or you're the host in user mode, you can only click on the level box, save box, ! box, and Scrapbook Boxes. The stats tab will show progress markers for each player. As the host you can switch to All Player mode which changes the level, !, and save boxes to fractions that show how many players have done that thing, then the 4 star boxes are how you actually build the levels for every player. If you reclick the level box you can mark a level as lost (which keeps its number) or remove it, which should only be used if you make a mistake. If somehow the star order is off, cycle through lost/rebuilt for each player till the order looks right " },
-      { name: "DKCBG Digital - Level Builder Tab", type: "Core", value: "1", imp: 5, diff: 5, desc: "Level Builder Tab Explanation", detail: "WIP" },
-      { name: "DKCBG Digital - Map/Location Finder Tab", type: "Core", value: "1", imp: 5, diff: 5, desc: "Map/Location Finder Tab Explanation", detail: "WIP" },
-      { name: "DKCBG Digital - Rules Tab", type: "Core", value: "1", imp: 5, diff: 5, desc: "Rules Explanation", detail: "WIP" },
-      { name: "DKCBG Digital - Music Tab", type: "Core", value: "1", imp: 5, diff: 5, desc: "Music", detail: "WIP" },
-      { name: "Money Conversion", type: "Core", value: "2", imp: 5, diff: 5, desc: "Translate a Wealth of Money into a Wealth of Resources", detail: "There are generally 2 options with money in this game, A - Spend all your money, always buying everything you want, never attempting to save until you are broke, and B - Making smart financial decisions and prioritizing a money making engine over other things like card collection or completion progress. You can spend lots of resources to get rich, absurdly rich, $20,000+ by turn 100, but that's not gonna help you actually win unless you no how to convert that money. Whats the point of an extra $10,000 if you ended in 2nd place. Is it possible that you could've made decisions throughout the game where you mightve not seen the value, but looking back you didn't actually need $5000 at all times and you shouldve just spent it. With all the items and cards you can buy, and all the things you could potentially waste your money on, how do you know how to actually convert money into resources? Well, in my opinion, you don't actually need to think about very much, because only materials actually matter. Bonuses, Saving, Music, Bosses, Homework, Bannaa Birds Returned, etc... are all important, but you're gonna get them all done on time. Whoever builds levels the fastest though, thats who wins 99/100 times. That's the bottleneck pretty much 100% of the time. If your level building was done, you could fill your entire inventory with items to help you do all the other requirements, but obviosly you can't becuase most of your inventory until the very end of the game will be materials. And its the end of the game that actually gives us the answer to the material conversion quesiton of what is the worth of a material that I need, cause at the end of the game, when you only need 5, 10, maybe 15 levels you start to see materials as turns. How long will it take me to get this Mines card, what kinda luck. You can't simply spend your money to get it guarenteed, you'd need to either have it as a purchase item or have some other effect trigger to let you do that. But at the end of the game, that Mines card is likely worth more than its listed price to you, probably worth more than 2x, 3x, 5x, maybe even 10x. Remember this earlier in the game then, think about every card as part of completing the game, when choosing between spaces does one give 2 things you need vs the other 3, well maybe pick the 3. Money wise, overspend on items or opportunities to get materials or levels, $1000 for a 3-4 card level might seem absurd, but when that 3 card level could be the 142th level you desperately need $1000 seems like a good deal. At bazaar's, if you've got the money, overspend. Buy as many copies of a card as you need of it, pick up items that are material positive even if they seem kinda pricey. This all assumes you have money, but if you do, don't be stingy with it once you've reached a certain point, and that point may be different depending on the gamestate, but in general, making money is easier than spending it in this game, as absurd as that sounds, especially later in the game. If you're worried about ! prices, just do the math, see how much you'll need,so you know what you can spend.  " },
-      { name: "ERA - Environment First", type: "Core", value: "3", imp: 4, diff: 2, desc: "Build levels in groups, based on their Environments.", detail: "Certain Environments will be easier to come by throughout the game, and certain Environments feature much larger levels on average than other often similarly priced or number cards. Castle levels for example often feature 5+ cards, while Ship Deck levels generally only require a 3-4 cards. Different levels with the same environment also usually share similar resoureces or animals, and might come from the same games or even worlds. By builing in groups you get quite a few advantages. First, certain worlds become extra valuable to land on, as you'll want multiple copies of spaces in a small area, meaning you can aqquire alot very quickly if you land on close material spaces. Additionally, Camera Pieces can be used more effectively as you are copying cards you struggle to get and already have a copy of so you don't need to wait on an opponent. Also, when you finish the block of levels, you're then done with that card (if you also scrapbook it), which means you can avoid that material in the future, which likely isnt a problem since it was probably a difficult environment to get your hands on. Using a Camera Piece on a common card like Ropes just isn't going to net you as much value as an environment you've found is very hard to get, likely cause its section of the board you've avoided most of the game. ERA works much better than ARE and RAE, because Environments share like cards and like locations on the board more often than the other two, and there are also a lot more environments, while some levels might not even have animals. Since there are so many environments, each indivdual one gives you less options than animals or resources, so finishing them early helps keep your level options up and save you from wasted inventory." },
-      { name: "ARE - Animal First", type: "Core", value: "4", imp: 3, diff: 2, desc: "Build levels in groups, based on their Animals.", detail: "WIP" },
-      { name: "RAE - Resource First", type: "Core", value: "5", imp: 2, diff: 4, desc: "Build levels in groups, based on their Resources.", detail: "WIP" },
-      { name: "# to ERA - Size First", type: "Core", value: "6", imp: 4, diff: 4, desc: "Prioritize building larger levels early over smaller levels.", detail: "WIP" }
-
-
-    ],
-    layouts: [
-
-    ],
-    targetItems: [
-    ],
-  },
   "Donkey Kong": {
     color: "#8c623b",
     accent: "#cfa680",
@@ -590,7 +564,7 @@ const BOTTOM_TABS = ["Starter Layouts", "Target Items"]
 
 export default function CharacterGuidePage() {
   const tabs = Object.keys(characters) as (keyof typeof characters)[]
-  const [active, setActive] = useState<keyof typeof characters>("General Tips")
+  const [active, setActive] = useState<keyof typeof characters>("Donkey Kong")
   const char = characters[active]
   const [bottomTab, setBottomTab] = useState("Starter Layouts")
   const [imgLoaded, setImgLoaded] = useState(false)
