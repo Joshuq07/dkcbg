@@ -486,7 +486,7 @@ function AbilityCard({ ability, color, accent }: { ability: { name: string, valu
       : "bg-green-100 text-green-700 border-green-200"
 
   const typeBadge = isCore
-    ? { bg: "bg-blue-50 text-blue-600 border-blue-200", label: "Core" }
+    ? { bg: "bg-gray-50 text-gray-600 border-gray-200", label: "Core" }
     : isUnlockable
       ? { bg: "bg-yellow-50 text-yellow-700 border-yellow-200", label: "Unlockable" }
       : isFullGame
