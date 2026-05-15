@@ -64,6 +64,7 @@ export type LevelStat_V3 = {
   buildOrder: number
   star: 0 | 1
   bang: 0 | 1
+  save: 0 | 1
 }
 
 export type LevelStat_V5 = {
@@ -94,13 +95,14 @@ export type PlacementStats_V5 = {
   scrapbook: string[]
 }
 
-// ─── GENERIC PLACEMENT ───────────────────────────────────────────────────────
-
-export type GamePlacement<TStats> = {
+export type GamePlacementBase = {
   playerId: string
   characterId: CharacterId
   place: Placement
-} & TStats
+  teamId?: string
+}
+
+export type GamePlacement<TStats> = GamePlacementBase & TStats
 
 // ─── DISCRIMINATED GAME UNION ────────────────────────────────────────────────
 
