@@ -9,7 +9,7 @@ import {
   CHARACTER_ORDER,
   CHARACTER_NAMES,
 } from './data'
-import type { Game, GamePlacement, Placement, CharacterId } from './types'
+import type { Game, Placement, CharacterId } from './types'
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
@@ -38,11 +38,30 @@ function getPlayerName(id: string) {
   return PLAYERS.find(p => p.id === id)?.name ?? id
 }
 
-/** All trophies for a player, sorted: 1st first, ties by game date ascending */
-function trophiesForPlayer(playerId: string): { game: Game; placement: GamePlacement }[] {
-  const result: { game: Game; placement: GamePlacement }[] = []
+// A minimal shape we can safely use across all versions
+type PlacementSummary = {
+  playerId: string
+  characterId: CharacterId
+  place: Placement
+  teamId?: string
+  turnsTaken: number
+}
+
+function getPlacementSummaries(game: Game): PlacementSummary[] {
+  return game.placements.map(p => ({
+    playerId: p.playerId,
+    characterId: p.characterId,
+    place: p.place,
+    teamId: p.teamId,
+    turnsTaken: p.turnsTaken,
+  }))
+}
+
+function trophiesForPlayer(playerId: string): { game: Game; placement: PlacementSummary }[] {
+  const result: { game: Game; placement: PlacementSummary }[] = []
   for (const game of GAMES) {
-    const p = game.placements.find(pl => pl.playerId === playerId)
+    const summaries = getPlacementSummaries(game)
+    const p = summaries.find(pl => pl.playerId === playerId)
     if (p) result.push({ game, placement: p })
   }
   return result.sort((a, b) => {
@@ -52,11 +71,11 @@ function trophiesForPlayer(playerId: string): { game: Game; placement: GamePlace
   })
 }
 
-/** All trophies for a character */
-function trophiesForCharacter(characterId: CharacterId): { game: Game; placement: GamePlacement }[] {
-  const result: { game: Game; placement: GamePlacement }[] = []
+function trophiesForCharacter(characterId: CharacterId): { game: Game; placement: PlacementSummary }[] {
+  const result: { game: Game; placement: PlacementSummary }[] = []
   for (const game of GAMES) {
-    const p = game.placements.find(pl => pl.characterId === characterId)
+    const summaries = getPlacementSummaries(game)
+    const p = summaries.find(pl => pl.characterId === characterId)
     if (p) result.push({ game, placement: p })
   }
   return result.sort((a, b) => {
@@ -75,7 +94,7 @@ function Trophy({
   onClick,
 }: {
   game: Game
-  placement: GamePlacement
+  placement: PlacementSummary
   labelTop?: string
   onClick: () => void
 }) {
@@ -91,7 +110,6 @@ function Trophy({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Trophy button */}
       <button
         onClick={onClick}
         className="relative flex items-center justify-center rounded-md transition-transform"
@@ -106,7 +124,6 @@ function Trophy({
           flexShrink: 0,
         }}
       >
-        {/* Medal icon SVG */}
         <svg width={size * 0.55} height={size * 0.55} viewBox="0 0 40 40" fill="none">
           <circle cx="20" cy="24" r="12" fill={color} opacity="0.9" />
           <circle cx="20" cy="24" r="9" fill="none" stroke="white" strokeWidth="1.5" opacity="0.5" />
@@ -117,7 +134,6 @@ function Trophy({
           <rect x="17" y="11" width="6" height="3" rx="1" fill={color} />
         </svg>
 
-        {/* Label on top of trophy */}
         {labelTop && (
           <span
             className="absolute bottom-1 left-0 right-0 text-center leading-none"
@@ -128,7 +144,6 @@ function Trophy({
         )}
       </button>
 
-      {/* Hover tooltip */}
       {hovered && (
         <div
           ref={tooltipRef}
@@ -139,14 +154,11 @@ function Trophy({
             {PLACEMENT_LABELS[placement.place]} — {game.name ?? game.id}
           </div>
           <div className="text-xs text-gray-300 mb-2">{game.date} · {game.version}</div>
-          {placement.stats && Object.entries(placement.stats).map(([k, v]) => (
-            <div key={k} className="flex justify-between text-xs gap-4">
-              <span className="text-gray-400">{k}</span>
-              <span className="text-white font-medium">{v}</span>
-            </div>
-          ))}
+          <div className="flex justify-between text-xs gap-4">
+            <span className="text-gray-400">Turns Taken</span>
+            <span className="text-white font-medium">{placement.turnsTaken}</span>
+          </div>
           <div className="mt-2 text-xs text-gray-500 italic">Click to view game</div>
-          {/* Arrow */}
           <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
             style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '6px solid #111827' }} />
         </div>
@@ -169,7 +181,6 @@ export default function RecordsPage() {
 
   const [mainTab, setMainTab] = useState<MainTab>('trophy')
   const [trophyMode, setTrophyMode] = useState<TrophyMode>('player')
-  const [selectedGameId, setSelectedGameId] = useState<string | null>(null)
 
   function goToGame(gameId: string) {
     router.push(`/session/${sessionId}/records/games/${gameId}`)
@@ -184,7 +195,6 @@ export default function RecordsPage() {
   function TrophyRoom() {
     return (
       <div>
-        {/* Mode toggle */}
         <div className="flex gap-2 mb-6">
           {(['player', 'character'] as TrophyMode[]).map(m => (
             <button
@@ -277,48 +287,50 @@ export default function RecordsPage() {
     const sorted = [...GAMES].sort((a, b) => b.date.localeCompare(a.date))
     return (
       <div className="space-y-3">
-        {sorted.map(game => (
-          <button
-            key={game.id}
-            onClick={() => goToGame(game.id)}
-            className="w-full text-left p-4 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-300 transition-all group"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="font-semibold text-gray-800 group-hover:text-black transition-colors">
-                  {game.name ?? game.id}
+        {sorted.map(game => {
+          const summaries = getPlacementSummaries(game)
+          return (
+            <button
+              key={game.id}
+              onClick={() => goToGame(game.id)}
+              className="w-full text-left p-4 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-300 transition-all group"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="font-semibold text-gray-800 group-hover:text-black transition-colors">
+                    {game.name ?? game.id}
+                  </div>
+                  <div className="text-xs text-gray-400 mt-0.5">{game.date} · {game.version}</div>
+                  {game.notes && (
+                    <div className="text-xs text-gray-500 mt-1 italic">{game.notes}</div>
+                  )}
                 </div>
-                <div className="text-xs text-gray-400 mt-0.5">{game.date} · {game.version}</div>
-                {game.notes && (
-                  <div className="text-xs text-gray-500 mt-1 italic">{game.notes}</div>
-                )}
+                <span className="text-gray-300 group-hover:text-gray-500 text-lg mt-0.5 transition-colors">→</span>
               </div>
-              <span className="text-gray-300 group-hover:text-gray-500 text-lg mt-0.5 transition-colors">→</span>
-            </div>
 
-            {/* Placements row */}
-            <div className="flex flex-wrap gap-2 mt-3">
-              {game.placements.map(p => (
-                <div
-                  key={p.playerId}
-                  className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs"
-                  style={{
-                    background: `${PLACEMENT_COLORS[p.place]}22`,
-                    border: `1px solid ${PLACEMENT_COLORS[p.place]}66`,
-                    color: '#1f2937',
-                  }}
-                >
-                  <span style={{ color: PLACEMENT_COLORS[p.place], fontWeight: 700 }}>
-                    {PLACEMENT_LABELS[p.place]}
-                  </span>
-                  <span className="text-gray-600">{getPlayerName(p.playerId)}</span>
-                  <span className="text-gray-400">·</span>
-                  <span className="text-gray-500">{CHARACTER_NAMES[p.characterId]}</span>
-                </div>
-              ))}
-            </div>
-          </button>
-        ))}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {summaries.map(p => (
+                  <div
+                    key={p.playerId}
+                    className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs"
+                    style={{
+                      background: `${PLACEMENT_COLORS[p.place]}22`,
+                      border: `1px solid ${PLACEMENT_COLORS[p.place]}66`,
+                      color: '#1f2937',
+                    }}
+                  >
+                    <span style={{ color: PLACEMENT_COLORS[p.place], fontWeight: 700 }}>
+                      {PLACEMENT_LABELS[p.place]}
+                    </span>
+                    <span className="text-gray-600">{getPlayerName(p.playerId)}</span>
+                    <span className="text-gray-400">·</span>
+                    <span className="text-gray-500">{CHARACTER_NAMES[p.characterId]}</span>
+                  </div>
+                ))}
+              </div>
+            </button>
+          )
+        })}
 
         {GAMES.length === 0 && (
           <div className="text-center text-gray-400 py-12 text-sm italic">No games recorded yet.</div>
@@ -332,9 +344,7 @@ export default function RecordsPage() {
   function VersionHistory() {
     return (
       <div className="relative">
-        {/* Timeline line */}
         <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gray-200" />
-
         <div className="space-y-1 pl-10">
           {[...VERSIONS].reverse().map((v, i) => (
             <button
@@ -342,12 +352,10 @@ export default function RecordsPage() {
               onClick={() => goToVersion(v.id)}
               className="relative w-full text-left p-4 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-300 transition-all group"
             >
-              {/* Timeline dot */}
               <div
                 className="absolute -left-7 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white"
                 style={{ background: i === 0 ? '#1f2937' : '#d1d5db' }}
               />
-
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
@@ -384,8 +392,6 @@ export default function RecordsPage() {
   return (
     <main className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
-
-        {/* Back button */}
         <button
           onClick={() => router.push(`/session/${sessionId}`)}
           className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-4 transition-colors"
@@ -395,7 +401,6 @@ export default function RecordsPage() {
 
         <h1 className="text-3xl font-bold text-gray-900 mb-6 tracking-tight">Records</h1>
 
-        {/* Main tabs */}
         <div className="flex gap-1 mb-6 bg-white border border-gray-200 rounded-xl p-1 shadow-sm w-fit">
           {(Object.keys(TAB_LABELS) as MainTab[]).map(tab => (
             <button
@@ -412,7 +417,6 @@ export default function RecordsPage() {
           ))}
         </div>
 
-        {/* Tab content */}
         {mainTab === 'trophy' && <TrophyRoom />}
         {mainTab === 'history' && <GameHistory />}
         {mainTab === 'versions' && <VersionHistory />}
