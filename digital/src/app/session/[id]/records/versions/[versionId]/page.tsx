@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams, useRouter } from 'next/navigation'
-import { VERSIONS, GAMES } from '@/app/session/[id]/records/data'
+import { VERSIONS, GAMES, PLAYERS } from '@/app/session/[id]/records/data'
 import type { VersionId } from '@/lib/types'
 
 const PLACEMENT_COLORS: Record<number, string> = {

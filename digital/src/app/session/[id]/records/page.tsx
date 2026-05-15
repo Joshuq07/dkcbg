@@ -9,7 +9,7 @@ import {
   CHARACTER_ORDER,
   CHARACTER_NAMES,
 } from './data'
-import type { Game, Placement, CharacterId } from './types'
+import type { Game, Placement, CharacterId } from '@/lib/types'
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 

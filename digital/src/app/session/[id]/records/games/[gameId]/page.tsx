@@ -5,7 +5,7 @@ import { useState, useMemo } from 'react'
 import { GAMES, PLAYERS, CHARACTER_NAMES } from '@/app/session/[id]/records/data'
 import { VERSION_LAYOUTS } from '@/lib/versionLayouts'
 import { SCRAPBOOK_ANCHORS } from '@/lib/boxes'
-import type { VersionId, GamePlacementBase } from '../../types'
+import type { VersionId, GamePlacementBase } from '@/lib/types'
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 

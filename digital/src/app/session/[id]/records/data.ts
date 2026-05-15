@@ -1,4 +1,4 @@
-import type { Player, Game, Version, CharacterId } from './types'
+import type { Player, Game, Version, CharacterId } from '@/lib/types'
 
 
 
