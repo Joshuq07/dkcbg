@@ -157,7 +157,7 @@ export default function GamePage() {
       if (!map.has(key)) map.set(key, [])
       map.get(key)!.push(p)
     }
-    return [...map.values()]
+    return Array.from(map.values())
   }, [game])
 
   return (
