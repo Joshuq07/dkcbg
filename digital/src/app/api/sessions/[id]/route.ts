@@ -34,11 +34,15 @@ export async function PATCH(
 ) {
   const sessionId = params.id
   const body = await req.json()
-  const { mode } = body
+  const { mode, rotation } = body
+
+  const updates: Record<string, unknown> = {}
+  if (mode !== undefined) updates.mode = mode
+  if (rotation !== undefined) updates.rotation = rotation
 
   const { error } = await supabase
     .from('sessions')
-    .update({ mode })
+    .update(updates)
     .eq('id', sessionId)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

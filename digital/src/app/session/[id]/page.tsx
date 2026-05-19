@@ -24,6 +24,7 @@ type SessionData = {
   name: string
   host_email: string
   mode: 'my' | 'global'
+  rotation?: number 
 }
 
 type Member = {
@@ -200,7 +201,7 @@ setAllScrapbooked(allScrap)
         },
         payload => {
           const updated = payload.new as SessionData
-          setSession(prev => (prev ? { ...prev, mode: updated.mode } : prev))
+          setSession(prev => (prev ? { ...prev, mode: updated.mode, rotation: updated.rotation } : prev))
         }
       )
       .subscribe()
@@ -544,6 +545,15 @@ function toggleScrapbook(material: string) {
     })
   }
 
+  async function saveRotation(newRotation: number) {
+  await fetch(`/api/sessions/${sessionId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rotation: newRotation }),
+  })
+  setSession(s => s ? { ...s, rotation: newRotation } : s)
+}
+
   function renderBox(box: Box) {
     const ownerEmail = getUserForBox(box)
     const entry = ownerEmail ? getEntry(box.level, box.type, ownerEmail) : undefined
@@ -635,6 +645,36 @@ function toggleScrapbook(material: string) {
         >
           Stats
         </button>
+        {/* Rotation display — visible to all */}
+<button
+  onClick={async () => {
+    if (!isHost) return
+    const input = window.prompt('Set rotation number:', String(session.rotation ?? 1))
+    if (input === null) return
+    const n = parseInt(input.trim(), 10)
+    if (!isNaN(n)) await saveRotation(n)
+  }}
+  className="bg-gray-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-gray-600"
+  style={{ cursor: isHost ? 'pointer' : 'default' }}
+>
+  Rotation: {session.rotation ?? 1}
+</button>
+
+{/* + increment button — host only */}
+{isHost && (
+  <button
+    onClick={async () => {
+      const next = (session.rotation ?? 1) + 1
+      await saveRotation(next)
+      const audio = new Audio('/rotation-ding.mp3')  // ← rename to your actual file
+      audio.play().catch(() => {})
+    }}
+    className="bg-gray-500 text-white px-3 py-2 rounded mb-4 ml-1 hover:bg-gray-600 font-bold"
+    title="Next rotation"
+  >
+    +
+  </button>
+)}
 
         {isHost && (
           <>
