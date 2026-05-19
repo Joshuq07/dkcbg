@@ -127,65 +127,83 @@ const TROPHY_IMAGES: Record<CharacterId, string> = {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <button
-        onClick={onClick}
-        className="relative transition-transform"
+
+<button
+  onClick={onClick}
+  className="relative transition-transform"
+  style={{
+    width: size,
+    height: size,
+    transform: hovered ? 'scale(1.08)' : 'scale(1)',
+    transition: 'all 0.15s ease',
+    filter: hovered
+      ? `drop-shadow(0 0 12px ${color}99)`
+      : `drop-shadow(0 0 6px ${color}66)`,
+    flexShrink: 0,
+    background: 'transparent',
+    border: 'none',
+    padding: 0,
+  }}
+>
+  {/* Base trophy image */}
+  <Image
+    src={imageSrc}
+    alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
+    fill
+    className="object-contain select-none pointer-events-none"
+    draggable={false}
+  />
+
+  {/* Tint the trophy itself (skip 2nd place because images are already silver) */}
+  {placement.place !== 2 && (
+    <>
+      {/* Apply the placement color only to the visible pixels of the PNG */}
+      <div
+        className="absolute inset-0 pointer-events-none"
         style={{
-          width: size,
-          height: size,
-          transform: hovered ? 'scale(1.08)' : 'scale(1)',
-          transition: 'all 0.15s ease',
-          filter: hovered ? `drop-shadow(0 0 12px ${color}99)` : `drop-shadow(0 0 6px ${color}66)`,
-          flexShrink: 0,
+          backgroundColor: color,
+          maskImage: `url(${imageSrc})`,
+          WebkitMaskImage: `url(${imageSrc})`,
+          maskSize: 'contain',
+          WebkitMaskSize: 'contain',
+          maskRepeat: 'no-repeat',
+          WebkitMaskRepeat: 'no-repeat',
+          maskPosition: 'center',
+          WebkitMaskPosition: 'center',
+          opacity: 0.95,
         }}
-      >
-        {/* Base silver trophy image */}
-        <Image
-          src={imageSrc}
-          alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
-          fill
-          className="object-contain select-none pointer-events-none"
-          draggable={false}
-        />
+      />
 
-        {/* Color overlay using CSS blend mode */}
-        {placement.place !== 2 && (
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundColor: color,
-              mixBlendMode: 'color',
-              opacity: 0.95,
-            }}
-          />
-        )}
+      {/* Reapply the image as a luminosity layer to preserve shading/details */}
+      <Image
+        src={imageSrc}
+        alt=""
+        fill
+        className="object-contain select-none pointer-events-none"
+        draggable={false}
+        style={{
+          mixBlendMode: 'multiply',
+          opacity: 0.85,
+        }}
+      />
+    </>
+  )}
 
-        {/* Keep image shape while preserving transparency */}
-        {placement.place !== 2 && (
-          <Image
-            src={imageSrc}
-            alt=""
-            fill
-            className="object-contain select-none pointer-events-none"
-            draggable={false}
-          />
-        )}
-
-        {/* Optional text label at bottom */}
-        {labelTop && (
-          <span
-            className="absolute bottom-1 left-0 right-0 text-center leading-none pointer-events-none"
-            style={{
-              fontSize: Math.max(8, size * 0.13),
-              color: 'white',
-              textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-              padding: '0 2px',
-            }}
-          >
-            {labelTop}
-          </span>
-        )}
-      </button>
+  {/* Optional label */}
+  {labelTop && (
+    <span
+      className="absolute bottom-1 left-0 right-0 text-center leading-none pointer-events-none"
+      style={{
+        fontSize: Math.max(8, size * 0.13),
+        color: 'white',
+        textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+        padding: '0 2px',
+      }}
+    >
+      {labelTop}
+    </span>
+  )}
+</button>
 
       {hovered && (
         <div
