@@ -666,7 +666,7 @@ function toggleScrapbook(material: string) {
     onClick={async () => {
       const next = (session.rotation ?? 1) + 1
       await saveRotation(next)
-      const audio = new Audio('/rotation-ding.mp3')  // ← rename to your actual file
+      const audio = new Audio('/rotation.mp3')  
       audio.play().catch(() => {})
     }}
     className="bg-gray-500 text-white px-3 py-2 rounded mb-4 ml-1 hover:bg-gray-600 font-bold"
