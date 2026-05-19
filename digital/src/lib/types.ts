@@ -107,7 +107,8 @@ export type PlacementStats_V4_2 = {
   turnsTaken: number
   levelStats: Record<string, LevelStat_V3>
   scrapbook: string[]
-  musicPoints: number
+  points: number
+  completed: string[]
   bananaBirdsReturned: number
 }
 
@@ -116,8 +117,8 @@ export type PlacementStats_V4_3 = {
   turnsTaken: number
   levelStats: Record<string, LevelStat_V3>
   scrapbook: string[]
-  musicPoints: number
-  songsCompleted: string[]
+  points: number
+  completed: string[]
   bananaBirdsReturned: number
 }
 
@@ -134,9 +135,7 @@ export type GamePlacementBase = {
   teamId?: string
 }
 
-export type GamePlacement<TStats> = GamePlacementBase & TStats
-
-// ─── DISCRIMINATED GAME UNION ────────────────────────────────────────────────
+export type GamePlacement<TStats extends object> = TStats & GamePlacementBase
 
 type GameBase = {
   id: string
