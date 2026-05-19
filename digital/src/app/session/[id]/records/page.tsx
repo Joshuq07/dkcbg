@@ -146,69 +146,29 @@ function Trophy({
     height: size,
     transform: hovered ? 'scale(1.08)' : 'scale(1)',
     transition: 'all 0.15s ease',
-    filter: hovered
-      ? `drop-shadow(0 0 12px ${color}99)`
-      : `drop-shadow(0 0 6px ${color}66)`,
     flexShrink: 0,
     background: 'transparent',
     border: 'none',
     padding: 0,
   }}
 >
-  {/* Base trophy image */}
   <Image
-  src={src}
-  alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
-  fill
-  className="object-contain select-none pointer-events-none"
-  draggable={false}
-/>
-
-  {/* Tint the trophy itself (skip 2nd place because images are already silver) */}
-  {placement.place !== 2 && (
-    <>
-      {/* Apply the placement color only to the visible pixels of the PNG */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundColor: color,
-          maskImage: `url(${src})`,
-WebkitMaskImage: `url(${src})`,
-          maskSize: 'contain',
-          WebkitMaskSize: 'contain',
-          maskRepeat: 'no-repeat',
-          WebkitMaskRepeat: 'no-repeat',
-          maskPosition: 'center',
-          WebkitMaskPosition: 'center',
-          opacity: 0.95,
-        }}
-      />
-
-      {/* Reapply the image as a luminosity layer to preserve shading/details */}
-      <Image
-  src={src}
-  alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
-  fill
-  className="object-contain select-none pointer-events-none"
-  draggable={false}
-/>
-    </>
-  )}
-
-  {/* Optional label */}
-  {labelTop && (
-    <span
-      className="absolute bottom-1 left-0 right-0 text-center leading-none pointer-events-none"
-      style={{
-        fontSize: Math.max(8, size * 0.13),
-        color: 'black',
-        textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-        padding: '0 2px',
-      }}
-    >
-      {labelTop}
-    </span>
-  )}
+    src={src}
+    alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
+    fill
+    className="object-contain select-none pointer-events-none"
+    draggable={false}
+    style={{
+      filter:
+        placement.place === 2
+          ? 'none'
+          : placement.place === 1
+          ? 'brightness(1.2) sepia(1) saturate(6) hue-rotate(5deg)'
+          : placement.place === 3
+          ? 'brightness(0.9) sepia(1) saturate(4) hue-rotate(-20deg)'
+          : 'brightness(0.7) grayscale(0.3)',
+    }}
+  />
 </button>
 
       {hovered && (
