@@ -163,9 +163,9 @@ function Trophy({
         placement.place === 2
           ? 'none'
           : placement.place === 1
-          ? 'brightness(1.2) sepia(1) saturate(6) hue-rotate(5deg)'
+          ? 'brightness(0.95) sepia(1) saturate(3) hue-rotate(10deg)'
           : placement.place === 3
-          ? 'brightness(0.9) sepia(1) saturate(4) hue-rotate(-20deg)'
+          ? 'brightness(0.85) sepia(0.8) saturate(2) hue-rotate(-10deg)'
           : 'brightness(0.7) grayscale(0.3)',
     }}
   />
