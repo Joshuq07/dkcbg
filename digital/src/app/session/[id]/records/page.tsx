@@ -20,6 +20,30 @@ const PLACEMENT_COLORS: Record<Placement, string> = {
   3: '#CD7F32',
   4: '#6B7280',
 }
+const TROPHY_IMAGES: Record<CharacterId, string> = {
+  'donkey-kong': '/trophies/donkey-kong.png',
+  'diddy-kong': '/trophies/diddy-kong.png',
+  'dixie-kong': '/trophies/dixie-kong.png',
+  'kiddy-kong': '/trophies/kiddy-kong.png',
+  'tiny-kong': '/trophies/tiny-kong.png',
+  'lanky-kong': '/trophies/lanky-kong.png',
+  'chunky-kong': '/trophies/chunky-kong.png',
+  'taj': '/trophies/taj.png',
+  'xananab': '/trophies/xananab.png',
+  'klubba': '/trophies/klubba.png',
+  'voidco': '/trophies/voidco.png',
+  'king-k-rool': '/trophies/king-k-rool.png',
+}
+const PLAYER_TROPHY_IMAGES: Record<string, string> = {
+  josh: '/trophies/josh.png',
+  justin: '/trophies/justin.png',
+  austin: '/trophies/austin.png',
+  tom: '/trophies/tom.png',
+  chris: '/trophies/chris.png',
+  dario: '/trophies/dario.png',
+  eddie: '/trophies/eddie.png',
+  everett: '/trophies/everett.png',
+}
 
 const PLACEMENT_LABELS: Record<Placement, string> = {
   1: '1st',
@@ -91,34 +115,20 @@ function Trophy({
   placement,
   labelTop,
   onClick,
+  imageSrc,
 }: {
   game: Game
   placement: PlacementSummary
   labelTop?: string
   onClick: () => void
+  imageSrc?: string
 }) {
   const [hovered, setHovered] = useState(false)
   const size = PLACEMENT_SIZES[placement.place]
   const color = PLACEMENT_COLORS[placement.place]
   const tooltipRef = useRef<HTMLDivElement>(null)
+  const src = imageSrc ?? TROPHY_IMAGES[placement.characterId]
 
-
-const TROPHY_IMAGES: Record<CharacterId, string> = {
-  'donkey-kong': '/trophies/donkey-kong.png',
-  'diddy-kong': '/trophies/diddy-kong.png',
-  'dixie-kong': '/trophies/dixie-kong.png',
-  'kiddy-kong': '/trophies/kiddy-kong.png',
-  'tiny-kong': '/trophies/tiny-kong.png',
-  'lanky-kong': '/trophies/lanky-kong.png',
-  'chunky-kong': '/trophies/chunky-kong.png',
-  'taj': '/trophies/taj.png',
-  'xananab': '/trophies/xananab.png',
-  'klubba': '/trophies/klubba.png',
-  'voidco': '/trophies/voidco.png',
-  'king-k-rool': '/trophies/king-k-rool.png',
-}
-
-  const imageSrc = TROPHY_IMAGES[placement.characterId]
 
   return (
     <div
@@ -147,12 +157,12 @@ const TROPHY_IMAGES: Record<CharacterId, string> = {
 >
   {/* Base trophy image */}
   <Image
-    src={imageSrc}
-    alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
-    fill
-    className="object-contain select-none pointer-events-none"
-    draggable={false}
-  />
+  src={src}
+  alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
+  fill
+  className="object-contain select-none pointer-events-none"
+  draggable={false}
+/>
 
   {/* Tint the trophy itself (skip 2nd place because images are already silver) */}
   {placement.place !== 2 && (
@@ -162,8 +172,8 @@ const TROPHY_IMAGES: Record<CharacterId, string> = {
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundColor: color,
-          maskImage: `url(${imageSrc})`,
-          WebkitMaskImage: `url(${imageSrc})`,
+          maskImage: `url(${src})`,
+WebkitMaskImage: `url(${src})`,
           maskSize: 'contain',
           WebkitMaskSize: 'contain',
           maskRepeat: 'no-repeat',
@@ -176,16 +186,12 @@ const TROPHY_IMAGES: Record<CharacterId, string> = {
 
       {/* Reapply the image as a luminosity layer to preserve shading/details */}
       <Image
-        src={imageSrc}
-        alt=""
-        fill
-        className="object-contain select-none pointer-events-none"
-        draggable={false}
-        style={{
-          mixBlendMode: 'multiply',
-          opacity: 0.85,
-        }}
-      />
+  src={src}
+  alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
+  fill
+  className="object-contain select-none pointer-events-none"
+  draggable={false}
+/>
     </>
   )}
 
@@ -195,7 +201,7 @@ const TROPHY_IMAGES: Record<CharacterId, string> = {
       className="absolute bottom-1 left-0 right-0 text-center leading-none pointer-events-none"
       style={{
         fontSize: Math.max(8, size * 0.13),
-        color: 'white',
+        color: 'black',
         textShadow: '0 1px 3px rgba(0,0,0,0.8)',
         padding: '0 2px',
       }}
@@ -311,7 +317,6 @@ export default function RecordsPage() {
                         key={game.id}
                         game={game}
                         placement={placement}
-                        labelTop={CHARACTER_NAMES[placement.characterId]}
                         onClick={() => goToGame(game.id)}
                       />
                     ))}
@@ -340,12 +345,13 @@ export default function RecordsPage() {
                     )}
                     {trophies.map(({ game, placement }) => (
                       <Trophy
-                        key={game.id}
-                        game={game}
-                        placement={placement}
-                        labelTop={getPlayerName(placement.playerId)}
-                        onClick={() => goToGame(game.id)}
-                      />
+  key={game.id}
+  game={game}
+  placement={placement}
+  labelTop={getPlayerName(placement.playerId)}
+  imageSrc={PLAYER_TROPHY_IMAGES[placement.playerId]}
+  onClick={() => goToGame(game.id)}
+/>
                     ))}
                   </div>
                 </div>
