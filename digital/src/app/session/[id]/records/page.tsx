@@ -10,6 +10,7 @@ import {
   CHARACTER_NAMES,
 } from './data'
 import type { Game, Placement, CharacterId } from '@/lib/types'
+import Image from 'next/image'
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
@@ -85,8 +86,6 @@ function trophiesForCharacter(characterId: CharacterId): { game: Game; placement
   })
 }
 
-// ─── TROPHY COMPONENT ────────────────────────────────────────────────────────
-
 function Trophy({
   game,
   placement,
@@ -103,6 +102,24 @@ function Trophy({
   const color = PLACEMENT_COLORS[placement.place]
   const tooltipRef = useRef<HTMLDivElement>(null)
 
+
+const TROPHY_IMAGES: Record<CharacterId, string> = {
+  'donkey-kong': '/trophies/donkey-kong.png',
+  'diddy-kong': '/trophies/diddy-kong.png',
+  'dixie-kong': '/trophies/dixie-kong.png',
+  'kiddy-kong': '/trophies/kiddy-kong.png',
+  'tiny-kong': '/trophies/tiny-kong.png',
+  'lanky-kong': '/trophies/lanky-kong.png',
+  'chunky-kong': '/trophies/chunky-kong.png',
+  'taj': '/trophies/taj.png',
+  'xananab': '/trophies/xananab.png',
+  'klubba': '/trophies/klubba.png',
+  'voidco': '/trophies/voidco.png',
+  'king-k-rool': '/trophies/king-k-rool.png',
+}
+
+  const imageSrc = TROPHY_IMAGES[placement.characterId]
+
   return (
     <div
       className="relative flex flex-col items-center"
@@ -112,32 +129,58 @@ function Trophy({
     >
       <button
         onClick={onClick}
-        className="relative flex items-center justify-center rounded-md transition-transform"
+        className="relative transition-transform"
         style={{
           width: size,
           height: size,
-          background: `linear-gradient(135deg, ${color}33 0%, ${color}88 100%)`,
-          border: `2px solid ${color}`,
-          boxShadow: hovered ? `0 0 16px ${color}99` : `0 0 6px ${color}44`,
           transform: hovered ? 'scale(1.08)' : 'scale(1)',
           transition: 'all 0.15s ease',
+          filter: hovered ? `drop-shadow(0 0 12px ${color}99)` : `drop-shadow(0 0 6px ${color}66)`,
           flexShrink: 0,
         }}
       >
-        <svg width={size * 0.55} height={size * 0.55} viewBox="0 0 40 40" fill="none">
-          <circle cx="20" cy="24" r="12" fill={color} opacity="0.9" />
-          <circle cx="20" cy="24" r="9" fill="none" stroke="white" strokeWidth="1.5" opacity="0.5" />
-          <text x="20" y="29" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold" fontFamily="serif">
-            {PLACEMENT_LABELS[placement.place]}
-          </text>
-          <path d="M14 12 L20 4 L26 12" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          <rect x="17" y="11" width="6" height="3" rx="1" fill={color} />
-        </svg>
+        {/* Base silver trophy image */}
+        <Image
+          src={imageSrc}
+          alt={`${CHARACTER_NAMES[placement.characterId]} trophy`}
+          fill
+          className="object-contain select-none pointer-events-none"
+          draggable={false}
+        />
 
+        {/* Color overlay using CSS blend mode */}
+        {placement.place !== 2 && (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundColor: color,
+              mixBlendMode: 'color',
+              opacity: 0.95,
+            }}
+          />
+        )}
+
+        {/* Keep image shape while preserving transparency */}
+        {placement.place !== 2 && (
+          <Image
+            src={imageSrc}
+            alt=""
+            fill
+            className="object-contain select-none pointer-events-none"
+            draggable={false}
+          />
+        )}
+
+        {/* Optional text label at bottom */}
         {labelTop && (
           <span
-            className="absolute bottom-1 left-0 right-0 text-center leading-none"
-            style={{ fontSize: Math.max(8, size * 0.13), color: 'white', textShadow: '0 1px 3px rgba(0,0,0,0.8)', padding: '0 2px' }}
+            className="absolute bottom-1 left-0 right-0 text-center leading-none pointer-events-none"
+            style={{
+              fontSize: Math.max(8, size * 0.13),
+              color: 'white',
+              textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+              padding: '0 2px',
+            }}
           >
             {labelTop}
           </span>
@@ -150,17 +193,32 @@ function Trophy({
           className="absolute z-50 bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 text-white rounded-lg shadow-xl pointer-events-none"
           style={{ minWidth: 160, maxWidth: 220, padding: '10px 12px' }}
         >
-          <div className="text-xs font-bold mb-1" style={{ color: PLACEMENT_COLORS[placement.place] }}>
+          <div
+            className="text-xs font-bold mb-1"
+            style={{ color: PLACEMENT_COLORS[placement.place] }}
+          >
             {PLACEMENT_LABELS[placement.place]} — {game.name ?? game.id}
           </div>
-          <div className="text-xs text-gray-300 mb-2">{game.date} · {game.version}</div>
+          <div className="text-xs text-gray-300 mb-2">
+            {game.date} · {game.version}
+          </div>
           <div className="flex justify-between text-xs gap-4">
             <span className="text-gray-400">Turns Taken</span>
-            <span className="text-white font-medium">{placement.turnsTaken}</span>
+            <span className="text-white font-medium">
+              {placement.turnsTaken}
+            </span>
           </div>
-          <div className="mt-2 text-xs text-gray-500 italic">Click to view game</div>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
-            style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '6px solid #111827' }} />
+          <div className="mt-2 text-xs text-gray-500 italic">
+            Click to view game
+          </div>
+          <div
+            className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
+            style={{
+              borderLeft: '6px solid transparent',
+              borderRight: '6px solid transparent',
+              borderTop: '6px solid #111827',
+            }}
+          />
         </div>
       )}
     </div>
