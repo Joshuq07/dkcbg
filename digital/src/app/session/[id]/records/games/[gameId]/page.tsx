@@ -181,36 +181,6 @@ export default function GamePage() {
           {game.notes && <div className="text-sm text-gray-500 mt-1 italic">{game.notes}</div>}
         </div>
 
-        {/* Placements summary */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          {teams.map((teamPlacements, ti) => {
-            const place = teamPlacements[0].place
-            const color = PLACEMENT_COLORS[place]
-            const isTeam = teamPlacements.length > 1
-            return (
-              <div
-                key={ti}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm"
-                style={{
-                  background: `${color}18`,
-                  border: `1.5px solid ${color}66`,
-                }}
-              >
-                <span style={{ color, fontWeight: 700 }}>{PLACEMENT_LABELS[place]}</span>
-                <span className="text-gray-700">
-                  {teamPlacements.map(p => getPlayerName(p.playerId)).join(' & ')}
-                </span>
-                <span className="text-gray-400">·</span>
-                <span className="text-gray-500">
-                  {teamPlacements.map(p => CHARACTER_NAMES[p.characterId]).join(' & ')}
-                </span>
-                {isTeam && (
-                  <span className="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full">Team</span>
-                )}
-              </div>
-            )
-          })}
-        </div>
 
         {/* Player tabs */}
         <div className="flex gap-1 mb-4 bg-white border border-gray-200 rounded-xl p-1 shadow-sm w-fit">
