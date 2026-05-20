@@ -156,7 +156,7 @@ export const VERSIONS: Version[] = [
 export const GAMES: Game[] = [
   {
     id: '1',
-    date: '',
+    date: '7/1/2013',
     version: 'v1.0',
     placements: [
       {
@@ -613,7 +613,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '2',
-    date: '',
+    date: '5/1/2015',
     version: 'v1.1',
     placements: [
       {
@@ -1527,7 +1527,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '4',
-    date: '',
+    date: '8/1/2019',
     version: 'v2.0',
     placements: [
       {
@@ -2138,7 +2138,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '5',
-    date: '',
+    date: '4/1/2020',
     version: 'v3.0',
     placements: [
       {
@@ -2598,7 +2598,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '6',
-    date: '',
+    date: '5/1/2020',
     version: 'v3.1',
     placements: [
       {
@@ -3058,7 +3058,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '7',
-    date: '',
+    date: '10/1/2021',
     version: 'v4.2',
     placements: [
       {
