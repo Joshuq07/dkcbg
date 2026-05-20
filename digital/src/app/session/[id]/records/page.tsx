@@ -231,9 +231,6 @@ function Trophy({
     </span>
   </div>
 )}
-          <div className="mt-2 text-xs text-gray-500 italic">
-            Click to view game
-          </div>
           <div
             className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
             style={{
