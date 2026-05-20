@@ -90,10 +90,26 @@ function trophiesForPlayer(playerId: string): { game: Game; placement: Placement
     if (p) result.push({ game, placement: p })
   }
   return result.sort((a, b) => {
-    if (a.placement.place !== b.placement.place)
-      return a.placement.place - b.placement.place
-    return a.game.date.localeCompare(b.game.date)
-  })
+  // 1. Sort by placement
+  if (a.placement.place !== b.placement.place) {
+    return a.placement.place - b.placement.place
+  }
+
+  // 2. Sort by character order
+  const aCharIndex = CHARACTER_ORDER.indexOf(a.placement.characterId)
+  const bCharIndex = CHARACTER_ORDER.indexOf(b.placement.characterId)
+  if (aCharIndex !== bCharIndex) {
+    return aCharIndex - bCharIndex
+  }
+
+  // 3. Sort by game number
+  const getGameNumber = (id: string) => {
+    const match = id.match(/\d+/)
+    return match ? Number(match[0]) : 0
+  }
+
+  return getGameNumber(a.game.id) - getGameNumber(b.game.id)
+})
 }
 
 function trophiesForCharacter(characterId: CharacterId): { game: Game; placement: PlacementSummary }[] {
@@ -104,10 +120,26 @@ function trophiesForCharacter(characterId: CharacterId): { game: Game; placement
     if (p) result.push({ game, placement: p })
   }
   return result.sort((a, b) => {
-    if (a.placement.place !== b.placement.place)
-      return a.placement.place - b.placement.place
-    return a.game.date.localeCompare(b.game.date)
-  })
+  // 1. Sort by placement
+  if (a.placement.place !== b.placement.place) {
+    return a.placement.place - b.placement.place
+  }
+
+  // 2. Sort by character order
+  const aCharIndex = CHARACTER_ORDER.indexOf(a.placement.characterId)
+  const bCharIndex = CHARACTER_ORDER.indexOf(b.placement.characterId)
+  if (aCharIndex !== bCharIndex) {
+    return aCharIndex - bCharIndex
+  }
+
+  // 3. Sort by game number
+  const getGameNumber = (id: string) => {
+    const match = id.match(/\d+/)
+    return match ? Number(match[0]) : 0
+  }
+
+  return getGameNumber(a.game.id) - getGameNumber(b.game.id)
+})
 }
 
 function Trophy({
@@ -178,20 +210,27 @@ function Trophy({
           style={{ minWidth: 160, maxWidth: 220, padding: '10px 12px' }}
         >
           <div
-            className="text-xs font-bold mb-1"
-            style={{ color: PLACEMENT_COLORS[placement.place] }}
-          >
-            {PLACEMENT_LABELS[placement.place]} — {game.name ?? game.id}
-          </div>
-          <div className="text-xs text-gray-300 mb-2">
-            {game.date} · {game.version}
-          </div>
-          <div className="flex justify-between text-xs gap-4">
-            <span className="text-gray-400">Turns Taken</span>
-            <span className="text-white font-medium">
-              {placement.turnsTaken}
-            </span>
-          </div>
+  className="text-xs font-bold mb-1"
+  style={{ color: PLACEMENT_COLORS[placement.place] }}
+>
+  {PLACEMENT_LABELS[placement.place]} — Game {game.id.match(/\d+/)?.[0] ?? game.id}
+</div>
+
+<div className="text-xs text-gray-200 mb-1">
+  {labelTop ?? CHARACTER_NAMES[placement.characterId]}
+</div>
+
+<div className="text-xs text-gray-300 mb-2">
+  {game.date} · {game.version}
+</div>
+          {placement.turnsTaken !== 0 && (
+  <div className="flex justify-between text-xs gap-4">
+    <span className="text-gray-400">Turns Taken</span>
+    <span className="text-white font-medium">
+      {placement.turnsTaken}
+    </span>
+  </div>
+)}
           <div className="mt-2 text-xs text-gray-500 italic">
             Click to view game
           </div>
