@@ -332,7 +332,7 @@ export default function RecordsPage() {
       return match ? Number(match[0]) : 0
     }
 
-    return getGameNumber(b.id) - getGameNumber(a.id)
+    return getGameNumber(a.id) - getGameNumber(b.id)
   })
 
   return (
