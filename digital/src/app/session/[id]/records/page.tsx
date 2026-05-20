@@ -325,61 +325,86 @@ export default function RecordsPage() {
 
   // ── GAME HISTORY ──────────────────────────────────────────────────────────
 
-  function GameHistory() {
-    const sorted = [...GAMES].sort((a, b) => b.date.localeCompare(a.date))
-    return (
-      <div className="space-y-3">
-        {sorted.map(game => {
-          const summaries = getPlacementSummaries(game)
-          return (
-            <button
-              key={game.id}
-              onClick={() => goToGame(game.id)}
-              className="w-full text-left p-4 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-300 transition-all group"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="font-semibold text-gray-800 group-hover:text-black transition-colors">
-                    {game.name ?? game.id}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-0.5">{game.date} · {game.version}</div>
-                  {game.notes && (
-                    <div className="text-xs text-gray-500 mt-1 italic">{game.notes}</div>
-                  )}
-                </div>
-                <span className="text-gray-300 group-hover:text-gray-500 text-lg mt-0.5 transition-colors">→</span>
-              </div>
+ function GameHistory() {
+  const sorted = [...GAMES].sort((a, b) => {
+    const getGameNumber = (id: string) => {
+      const match = id.match(/\d+/)
+      return match ? Number(match[0]) : 0
+    }
 
-              <div className="flex flex-wrap gap-2 mt-3">
-                {summaries.map(p => (
-                  <div
-                    key={p.playerId}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs"
+    return getGameNumber(b.id) - getGameNumber(a.id)
+  })
+
+  return (
+    <div className="space-y-3">
+      {sorted.map(game => {
+        const summaries = getPlacementSummaries(game)
+        return (
+          <button
+            key={game.id}
+            onClick={() => goToGame(game.id)}
+            className="w-full text-left p-4 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-300 transition-all group"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="font-semibold text-gray-800 group-hover:text-black transition-colors">
+                  {game.name ?? game.id}
+                </div>
+                <div className="text-xs text-gray-400 mt-0.5">
+                  {game.date} · {game.version}
+                </div>
+                {game.notes && (
+                  <div className="text-xs text-gray-500 mt-1 italic">
+                    {game.notes}
+                  </div>
+                )}
+              </div>
+              <span className="text-gray-300 group-hover:text-gray-500 text-lg mt-0.5 transition-colors">
+                →
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-3">
+              {summaries.map(p => (
+                <div
+                  key={p.playerId}
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs"
+                  style={{
+                    background: `${PLACEMENT_COLORS[p.place]}22`,
+                    border: `1px solid ${PLACEMENT_COLORS[p.place]}66`,
+                    color: '#1f2937',
+                  }}
+                >
+                  <span
                     style={{
-                      background: `${PLACEMENT_COLORS[p.place]}22`,
-                      border: `1px solid ${PLACEMENT_COLORS[p.place]}66`,
-                      color: '#1f2937',
+                      color: PLACEMENT_COLORS[p.place],
+                      fontWeight: 700,
                     }}
                   >
-                    <span style={{ color: PLACEMENT_COLORS[p.place], fontWeight: 700 }}>
-                      {PLACEMENT_LABELS[p.place]}
-                    </span>
-                    <span className="text-gray-600">{getPlayerName(p.playerId)}</span>
-                    <span className="text-gray-400">·</span>
-                    <span className="text-gray-500">{CHARACTER_NAMES[p.characterId]}</span>
-                  </div>
-                ))}
-              </div>
-            </button>
-          )
-        })}
+                    {PLACEMENT_LABELS[p.place]}
+                  </span>
+                  <span className="text-gray-600">
+                    {getPlayerName(p.playerId)}
+                  </span>
+                  <span className="text-gray-400">·</span>
+                  <span className="text-gray-500">
+                    {CHARACTER_NAMES[p.characterId]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </button>
+        )
+      })}
 
-        {GAMES.length === 0 && (
-          <div className="text-center text-gray-400 py-12 text-sm italic">No games recorded yet.</div>
-        )}
-      </div>
-    )
-  }
+      {GAMES.length === 0 && (
+        <div className="text-center text-gray-400 py-12 text-sm italic">
+          No games recorded yet.
+        </div>
+      )}
+    </div>
+  )
+}
 
   // ── VERSION HISTORY ───────────────────────────────────────────────────────
 
