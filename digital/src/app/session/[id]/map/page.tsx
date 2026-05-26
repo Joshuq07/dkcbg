@@ -621,12 +621,26 @@ export default function MapPage() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col gap-1">
-                {selected.entries.map((entry, i) => (
-                  <span key={i} className="text-white text-sm">{entry}</span>
-                ))}
-              </div>
-            )}
+  <div className="flex flex-col gap-1">
+    {selected.entries.map((entry, i) => (
+      <span key={i} className="text-white text-sm flex items-center gap-1">
+        {entry}
+        {i === 0 && (() => {
+          const pbr = getSpacePbr(selected.index)
+          if (!pbr) return null
+          return (
+            <span
+              className="text-[9px] font-bold px-1 rounded"
+              style={{ backgroundColor: pbrColor(pbr), color: '#fff' }}
+            >
+              {Number.isInteger(pbr) ? pbr : pbr.toFixed(2)}
+            </span>
+          )
+        })()}
+      </span>
+    ))}
+  </div>
+)}
           </div>
         )}
       </div>
