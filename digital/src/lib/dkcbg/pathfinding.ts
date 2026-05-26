@@ -1,7 +1,5 @@
 import { CONNECTIONS, FULL_SPACE_GUIDE, materialList } from '@/lib/dkcbg/data'
 
-// Find all paths from startSpace to endSpace using DFS
-// Returns array of paths, each path is array of space indices
 export function findAllPaths(startSpace: number, endSpace: number, maxDepth = 300): number[][] {
   const results: number[][] = []
   const visited = new Set<number>()
@@ -29,7 +27,6 @@ export function findAllPaths(startSpace: number, endSpace: number, maxDepth = 30
   return results
 }
 
-// Get all materials from a path's material spaces
 export function getMaterialsOnPath(path: number[]): Record<string, number> {
   const counts: Record<string, number> = {}
   for (const spaceIdx of path) {
@@ -42,8 +39,6 @@ export function getMaterialsOnPath(path: number[]): Record<string, number> {
   return counts
 }
 
-// Score a path against needed materials
-// neededWeights: material -> how many times it's needed (higher = more valuable)
 export function scorePath(
   path: number[],
   neededWeights: Record<string, number>
@@ -52,20 +47,18 @@ export function scorePath(
   let score = 0
   for (const [mat, weight] of Object.entries(neededWeights)) {
     if (onPath[mat]) {
-      score += Math.min(onPath[mat], weight) * weight
+      score += onPath[mat] * weight
     }
   }
-  return score
+  return score / path.length
 }
 
-// Build needed weights from remaining levels + unscrapbooked materials
 export function buildNeededWeights(
   remainingLevels: number[],
   scrapbooked: string[]
 ): Record<string, number> {
   const weights: Record<string, number> = {}
 
-  // Count how many remaining levels need each material
   for (const lvl of remainingLevels) {
     const mats = materialList[lvl - 1] || []
     for (const m of mats) {
@@ -73,7 +66,6 @@ export function buildNeededWeights(
     }
   }
 
-  // Add 1 for each unscrapbooked material
   const allMaterials = Object.keys(weights)
   for (const m of allMaterials) {
     if (!scrapbooked.includes(m)) {
@@ -84,7 +76,6 @@ export function buildNeededWeights(
   return weights
 }
 
-// Find the best path and return it with stats
 export function findBestPath(
   startSpace: number,
   endSpace: number,
@@ -112,7 +103,6 @@ export function findBestPath(
 
   const materialsOnPath = getMaterialsOnPath(bestPath)
 
-  // Find which remaining levels are covered by materials on path
   const coveredLevels: { levelId: number; materialsFound: string[] }[] = []
   for (const lvl of remainingLevels) {
     const mats = materialList[lvl - 1] || []
@@ -122,24 +112,20 @@ export function findBestPath(
     }
   }
 
-  // Sort by most materials found first
   coveredLevels.sort((a, b) => b.materialsFound.length - a.materialsFound.length)
 
   return { path: bestPath, score: bestScore, materialsOnPath, coveredLevels }
 }
 
-// Get path splits — spaces where CONNECTIONS has multiple exits
 export function getPathSplits(path: number[]): number[] {
   return path.filter(space => (CONNECTIONS[space] ?? []).length > 1)
 }
 
-// Check if a set of waypoints uniquely determines a path
 export function findPathsThroughWaypoints(
   startSpace: number,
   endSpace: number,
   waypoints: number[]
 ): number[][] {
-  // Find all paths from start to end, filter those passing through all waypoints in order
   const allPaths = findAllPaths(startSpace, endSpace)
 
   return allPaths.filter(path => {
