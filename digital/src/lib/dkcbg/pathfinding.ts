@@ -26,7 +26,7 @@ export const MATERIAL_PBR: Record<string, number> = (() => {
   }
   const result: Record<string, number> = {}
   for (const mat of Object.keys(totals)) {
-    result[mat] = Math.round(totals[mat] / counts[mat])
+    result[mat] = Math.round(totals[mat] * 100) / 100
   }
   return result
 })()

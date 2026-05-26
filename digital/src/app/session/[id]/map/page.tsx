@@ -109,6 +109,27 @@ function pbrColor(pbr: number): string {
   if (pbr >= 34) return '#eab308'
   return '#ef4444'
 }
+function getSpacePbr(spaceIndex: number): number | null {
+  const entries = FULL_SPACE_GUIDE[spaceIndex - 1]
+  if (!entries) return null
+  const isMat = entries[0] === 'M'
+  if (isMat) return null 
+
+  const label = entries[0]?.toLowerCase() ?? ''
+  const aliases = BEAR_ALIASES[label] ?? []
+  const isAlias = Object.values(BEAR_ALIASES).some(v => v.includes(label))
+
+  let total = 0
+  FULL_SPACE_GUIDE.forEach((e, i) => {
+    if (e[0] === 'M') return
+    const l = e[0]?.toLowerCase() ?? ''
+    const match = l === label
+      || (aliases.length > 0 && aliases.includes(l))
+      || (isAlias && (BEAR_ALIASES[l]?.includes(label) || l === label))
+    if (match) total += SPACE_PBR[i + 1] ?? 0
+  })
+  return Math.round(total * 100) / 100
+}
 
 export default function MapPage() {
   const [query, setQuery] = useState('')
@@ -547,17 +568,21 @@ export default function MapPage() {
                 )}
                 {/* PBR badge on selected space */}
                 {(() => {
-                  const pbr = SPACE_PBR[selected.index]
-                  if (!pbr) return null
+  const pbr = (() => {
+    const entries = FULL_SPACE_GUIDE[selected.index - 1]
+    if (entries?.[0] === 'M') return SPACE_PBR[selected.index] ?? null
+    return getSpacePbr(selected.index)
+  })()
+  if (!pbr) return null
                   return (
                     <div className="mt-1 flex items-center gap-1">
                       <span className="text-gray-400 text-xs">PBR</span>
-                      <span
-                        className="text-xs font-bold px-1.5 py-0.5 rounded text-white"
-                        style={{ backgroundColor: pbrColor(pbr) }}
-                      >
-                        {pbr}
-                      </span>
+<span
+  className="text-xs font-bold px-1.5 py-0.5 rounded text-white"
+  style={{ backgroundColor: pbrColor(pbr) }}
+>
+  {Number.isInteger(pbr) ? pbr : pbr.toFixed(2)}
+</span>
                     </div>
                   )
                 })()}
@@ -583,13 +608,13 @@ export default function MapPage() {
                       >
                         {mat}
                         {mpbr !== undefined && (
-                          <span
-                            className="text-[9px] font-bold px-1 rounded"
-                            style={{ backgroundColor: pbrColor(mpbr), color: '#fff' }}
-                          >
-                            {mpbr}
-                          </span>
-                        )}
+  <span
+    className="text-[9px] font-bold px-1 rounded"
+    style={{ backgroundColor: pbrColor(mpbr), color: '#fff' }}
+  >
+    {Number.isInteger(mpbr) ? mpbr : mpbr.toFixed(2)}
+  </span>
+)}
                       </span>
                     )
                   })}
