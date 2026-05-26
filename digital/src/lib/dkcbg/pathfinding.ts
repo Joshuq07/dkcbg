@@ -106,8 +106,8 @@ export function scorePath(
   let score = 0
   for (const [mat, weight] of Object.entries(neededWeights)) {
     if (!onPath[mat]) continue
-    const avgPbr = MATERIAL_PBR[mat] ?? 100
-    const rarityMult = 1 + PBR_WEIGHT * (1 - avgPbr / 100)
+    const avgPbr = MATERIAL_PBR_AVG[mat] ?? 100
+const rarityMult = 1 + PBR_WEIGHT * (1 - avgPbr / 100)
     score += onPath[mat] * weight * rarityMult
   }
   return score / path.length

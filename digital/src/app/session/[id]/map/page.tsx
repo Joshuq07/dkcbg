@@ -593,7 +593,7 @@ export default function MapPage() {
     if (entries?.[0] === 'M') return SPACE_PBR[selected.index] ?? null
     return getSpacePbr(selected.index)
   })()
-  if (!pbr) return null
+  if (pbr === null || pbr === undefined) return null
                   return (
                     <div className="mt-1 flex items-center gap-1">
                       <span className="text-gray-400 text-xs">PBR</span>
