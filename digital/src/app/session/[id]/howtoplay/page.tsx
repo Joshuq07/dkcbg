@@ -655,15 +655,22 @@ export default function CharacterGuidePage() {
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
         {/* Character header */}
         {/* Character header */}
+        {vsMode && (
+          <div className="w-full">
+            <img
+              src={`/wanted/${active}/portrait.png`}
+              alt={`${active} wanted`}
+              className="w-full object-cover rounded-t-xl"
+              style={{ aspectRatio: '658/950' }}
+            />
+          </div>
+        )}
         <div
-          className="rounded-xl p-5 text-white shadow flex flex-col sm:flex-row items-start sm:items-center gap-6"
+          className={`text-white shadow flex flex-col sm:flex-row items-start sm:items-center gap-6 p-5 ${vsMode ? 'rounded-b-xl' : 'rounded-xl'}`}
           style={{ backgroundColor: char.color }}
         >
           <div className="flex-1">
-            <h1 className="text-2xl font-bold mb-2">{active}</h1>
-            {(vsMode ? char.versus : char.guide) && (
-              <p className="text-sm leading-relaxed opacity-90">
-                {vsMode ? char.versus : char.guide}
+            {!vsMode && <h1 className="text-2xl font-bold mb-2">{active}</h1>}
               </p>
             )}
           </div>
