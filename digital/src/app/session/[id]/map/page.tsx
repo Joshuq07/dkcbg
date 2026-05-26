@@ -10,7 +10,7 @@ import { computeRemainingLevels, Entry as LogicEntry } from '@/lib/dkcbg/logic'
 import { CONNECTIONS, levelNames, getLevelCode, materialList } from '@/lib/dkcbg/data'
 import {
   findAllPaths, getMaterialsOnPath, buildNeededWeights, findBestPath,
-  findPathsThroughWaypoints, SPACE_PBR, MATERIAL_PBR
+  findPathsThroughWaypoints, SPACE_PBR, MATERIAL_PBR, MATERIAL_PBR_AVG
 } from '@/lib/dkcbg/pathfinding'
 
 const BOARD_WIDTH = 2976
@@ -522,7 +522,7 @@ export default function MapPage() {
                         {mpbr !== undefined && (
                           <span
                             className="text-[9px] font-bold px-1 rounded"
-                            style={{ backgroundColor: pbrColor(mpbr), color: '#fff' }}
+                            style={{ backgroundColor: pbrColor(MATERIAL_PBR_AVG[m] ?? mpbr), color: '#fff' }}
                           >
                             {mpbr}
                           </span>
@@ -610,7 +610,7 @@ export default function MapPage() {
                         {mpbr !== undefined && (
   <span
     className="text-[9px] font-bold px-1 rounded"
-    style={{ backgroundColor: pbrColor(mpbr), color: '#fff' }}
+    style={{ backgroundColor: pbrColor(MATERIAL_PBR_AVG[mat] ?? mpbr), color: '#fff' }}
   >
     {Number.isInteger(mpbr) ? mpbr : mpbr.toFixed(2)}
   </span>
