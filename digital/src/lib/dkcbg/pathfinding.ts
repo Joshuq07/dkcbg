@@ -31,6 +31,25 @@ export const MATERIAL_PBR: Record<string, number> = (() => {
   return result
 })()
 
+export const MATERIAL_PBR_AVG: Record<string, number> = (() => {
+  const totals: Record<string, number> = {}
+  const counts: Record<string, number> = {}
+  for (let i = 0; i < FULL_SPACE_GUIDE.length; i++) {
+    const entries = FULL_SPACE_GUIDE[i]
+    if (!entries || entries[0] !== 'M') continue
+    const pbr = SPACE_PBR[i + 1] ?? 0
+    for (const mat of entries.slice(1)) {
+      totals[mat] = (totals[mat] ?? 0) + pbr
+      counts[mat] = (counts[mat] ?? 0) + 1
+    }
+  }
+  const result: Record<string, number> = {}
+  for (const mat of Object.keys(totals)) {
+    result[mat] = Math.round(totals[mat] / counts[mat])
+  }
+  return result
+})()
+
 // ---------------------------------------------------------------------------
 // Path-finding
 // ---------------------------------------------------------------------------

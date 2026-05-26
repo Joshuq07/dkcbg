@@ -10,7 +10,7 @@ import { computeRemainingLevels, Entry as LogicEntry } from '@/lib/dkcbg/logic'
 import { CONNECTIONS, levelNames, getLevelCode, materialList } from '@/lib/dkcbg/data'
 import {
   findAllPaths, getMaterialsOnPath, buildNeededWeights, findBestPath,
-  findPathsThroughWaypoints, SPACE_PBR, MATERIAL_PBR, MATERIAL_PBR_AVG
+  findPathsThroughWaypoints, SPACE_PBR, MATERIAL_PBR, MATERIAL_PBR_AVG,
 } from '@/lib/dkcbg/pathfinding'
 
 const BOARD_WIDTH = 2976
@@ -129,6 +129,26 @@ function getSpacePbr(spaceIndex: number): number | null {
     if (match) total += SPACE_PBR[i + 1] ?? 0
   })
   return Math.round(total) / 100
+}
+
+function getSpacePbrAvg(spaceIndex: number): number | null {
+  const entries = FULL_SPACE_GUIDE[spaceIndex - 1]
+  if (!entries || entries[0] === 'M') return null
+
+  const label = entries[0]?.toLowerCase() ?? ''
+  const aliases = BEAR_ALIASES[label] ?? []
+  const isAlias = Object.values(BEAR_ALIASES).some(v => v.includes(label))
+
+  let total = 0, count = 0
+  FULL_SPACE_GUIDE.forEach((e, i) => {
+    if (e[0] === 'M') return
+    const l = e[0]?.toLowerCase() ?? ''
+    const match = l === label
+      || (aliases.length > 0 && aliases.includes(l))
+      || (isAlias && (BEAR_ALIASES[l]?.includes(label) || l === label))
+    if (match) { total += SPACE_PBR[i + 1] ?? 0; count++ }
+  })
+  return count === 0 ? null : Math.round(total / count)
 }
 
 export default function MapPage() {
@@ -579,7 +599,7 @@ export default function MapPage() {
                       <span className="text-gray-400 text-xs">PBR</span>
 <span
   className="text-xs font-bold px-1.5 py-0.5 rounded text-white"
-  style={{ backgroundColor: pbrColor(pbr) }}
+  style={{ backgroundColor: pbrColor(getSpacePbrAvg(selected.index) ?? pbr) }}
 >
   {Number.isInteger(pbr) ? pbr : pbr.toFixed(2)}
 </span>
@@ -623,21 +643,7 @@ export default function MapPage() {
             ) : (
   <div className="flex flex-col gap-1">
     {selected.entries.map((entry, i) => (
-      <span key={i} className="text-white text-sm flex items-center gap-1">
-        {entry}
-        {i === 0 && (() => {
-          const pbr = getSpacePbr(selected.index)
-          if (!pbr) return null
-          return (
-            <span
-              className="text-[9px] font-bold px-1 rounded"
-              style={{ backgroundColor: pbrColor(pbr), color: '#fff' }}
-            >
-              {Number.isInteger(pbr) ? pbr : pbr.toFixed(2)}
-            </span>
-          )
-        })()}
-      </span>
+      <span key={i} className="text-white text-sm">{entry}</span>
     ))}
   </div>
 )}
