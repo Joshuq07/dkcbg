@@ -619,7 +619,6 @@ export default function CharacterGuidePage() {
         ))}
       </div>
 
-      {/* HEADER */}
       <div className="bg-white border-b shadow-sm sticky top-0 z-10 w-full">
         <div className="px-4">
 
@@ -651,9 +650,7 @@ export default function CharacterGuidePage() {
         </div>
       </div>
 
-      {/* CONTENT */}
       <div className={`mx-auto px-4 py-6 ${vsMode ? '' : 'space-y-6'} ${vsMode ? 'max-w-3xl' : 'max-w-5xl'}`}>
-        {/* Character header */}
         {vsMode && (
   <div className="w-full rounded-t-xl overflow-hidden">
     <img
