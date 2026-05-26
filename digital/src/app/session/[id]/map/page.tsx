@@ -128,7 +128,7 @@ function getSpacePbr(spaceIndex: number): number | null {
       || (isAlias && (BEAR_ALIASES[l]?.includes(label) || l === label))
     if (match) total += SPACE_PBR[i + 1] ?? 0
   })
-  return Math.round(total * 100) / 100
+  return Math.round(total) / 100
 }
 
 export default function MapPage() {
