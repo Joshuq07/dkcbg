@@ -235,7 +235,6 @@ const checkPathMaterials = useMemo(() => {
     setSelected({ index: spaceIndex, entries, world, coords })
   }
 
-  // Scale factor to map board coords → rendered coords
   const scaleX = containerSize.w / BOARD_WIDTH
   const scaleY = containerSize.h / BOARD_HEIGHT
 
@@ -302,7 +301,6 @@ const checkPathMaterials = useMemo(() => {
         )}
       </div>
 
-      {/* Map area */}
       <div className="flex-1 relative overflow-hidden" ref={containerRef}>
         <Image
           src="/board.png"
@@ -313,7 +311,6 @@ const checkPathMaterials = useMemo(() => {
           style={{ filter: `brightness(${dimness}%)` }}
         />
 
-        {/* Stars */}
         {containerSize.w > 0 &&
           [...matchedSpaces, ...(randomSpace ? [randomSpace] : [])].map(spaceIndex => {
             const i = spaceIndex - 1
@@ -329,13 +326,11 @@ const checkPathMaterials = useMemo(() => {
             let renderedW: number, renderedH: number, offsetX: number, offsetY: number
 
             if (containerAspect > boardAspect) {
-              // letterbox left/right
               renderedH = containerSize.h
               renderedW = renderedH * boardAspect
               offsetX = (containerSize.w - renderedW) / 2
               offsetY = 0
             } else {
-              // letterbox top/bottom
               renderedW = containerSize.w
               renderedH = renderedW / boardAspect
               offsetX = 0
@@ -366,7 +361,6 @@ const checkPathMaterials = useMemo(() => {
               </button>
             )
           })}
-{/* Path mode overlay instruction */}
         {pathMode !== 'idle' && pathMode !== 'best-result' && pathMode !== 'check-result' && (
           <div className="absolute inset-0 z-30 pointer-events-none flex items-start justify-center pt-4">
             <div className="bg-black/80 text-white px-4 py-2 rounded-lg text-sm font-medium">
@@ -379,7 +373,6 @@ const checkPathMaterials = useMemo(() => {
           </div>
         )}
 
-        {/* Clickable spaces for path picking */}
         {containerSize.w > 0 && pathMode !== 'idle' && pathMode !== 'best-result' && pathMode !== 'check-result' && (() => {
           const BOARD_W = 2690
           const BOARD_H = 1905
@@ -412,7 +405,6 @@ const checkPathMaterials = useMemo(() => {
           })
         })()}
 
-        {/* Highlighted path spaces */}
         {containerSize.w > 0 && highlightedPath.length > 0 && (() => {
           const BOARD_W = 2690
           const BOARD_H = 1905
@@ -446,7 +438,6 @@ const checkPathMaterials = useMemo(() => {
             )
           })
         })()}
-        {/* Path stats panel */}
         {showPathStats && (bestPathResult || checkPathMaterials) && (() => {
           const stats = bestPathResult ?? checkPathMaterials!
           const mats = stats.materialsOnPath
@@ -485,7 +476,6 @@ const checkPathMaterials = useMemo(() => {
             </div>
           )
         })()}
-        {/* Info box */}
         {selected && (
           <div
             className="absolute bg-gray-900/95 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20"

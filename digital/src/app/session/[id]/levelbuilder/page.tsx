@@ -24,7 +24,7 @@ import {
   getLevelCode
 } from '@/lib/dkcbg/data'
 
-import PhotoScanModal from '../PhotoScanModal' // adjust path
+import PhotoScanModal from '../PhotoScanModal' 
 
 const ALL_MATERIALS = [
   ...environmentList,
@@ -943,7 +943,6 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
       {showQueue && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col max-h-[85vh]">
-            {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
               <h2 className="text-lg font-bold text-gray-900">Queue</h2>
               <div className="flex gap-2">
@@ -962,7 +961,6 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
               </div>
             </div>
 
-            {/* Tabs */}
             <div className="flex border-b border-gray-100 shrink-0 overflow-x-auto">
               {(['levels', 'environments', 'resources', 'animals'] as const).map(tab => (
                 <button
@@ -979,7 +977,6 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
               ))}
             </div>
 
-            {/* Search (levels tab only) */}
             {queueTab === 'levels' && (
               <div className="px-4 pt-3 shrink-0">
                 <input
@@ -992,7 +989,6 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
               </div>
             )}
 
-            {/* Content */}
             <div className="overflow-y-auto flex-1 px-4 py-3 space-y-1">
               {queueTab === 'levels' && (() => {
                 const builtSet = new Set(
