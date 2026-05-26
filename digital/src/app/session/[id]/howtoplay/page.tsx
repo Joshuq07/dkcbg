@@ -7,7 +7,10 @@ const characters = {
     accent: "#cfa680",
     complexity: 1,
     interaction: 2,
+    strength: 1,
+    threat: 1,
     guide: `Donkey Kong is the slow and steady choice. He doesn't scale much or have any crazy powerspikes, so it's important to keep your advantage by steadily getting more resources that opponents. All three negative abilities are easy pickups to hold all game long, and none of them are too punishing. Ground Slap gets lots of value in DKC worlds, try to path around the board hitting as many DKC worlds as possible while you have the ability equipped.Cargo Throw and Bwananarang both give a steady stream of material pickup, make use of both if you can to add in even more material gain. Around the midpoint, pick up Bongo Blast to get your note drawing going and to get the extra movement floor from the Bongos. Build boss levels in groups so you can have Boxing Gloves equipped as infrequently as possilble, and pick up Strong Kong whenever the game heats up, and late in the game when you have the space to spare, becuase you won't know when you'll need it until it's already too late. Try to focus on getting stars in DKC2 & 3 levels first because no one gets payments for DKC levels. Think about how you'll use Bananza Smash early in the game, as you'll have to leave those levels unsaved. The more levels you use Bananza Smash on, the more free materials that you'll get to gain a huge advantage over other players.`,
+    versus: '',
     abilities: [
       { name: "Banana Hoard", type: "Core", value: "+0", imp: 2, diff: 3, desc: "Place the Banana Hoard piece [Respawn] on the first space in Kongo Jungle. Whenever any player builds a DKC level, instead of the cash going to the usual target, it goes into the banana hoard pile on this card (it's not in your inventory). Any player who naturally lands on this piece's space gets all the banana hoard cash. [Achievement]", detail: "In a 3/4 player game, a significant amount of money will be availible within the hoard. Since you have to land on it naturally, the only way to land on it more than other players is by passing over it more  DK is not a warp heavy character, he's rather linear in his movement and generally only uses speed increasing techniques for movement, thus DK is not well positioned to actually land on this more than his opponenets. The passive effect of this ability is much more important, DKC levels do not give you $ for completing them first, so early game if two levels are identical in value other than their game of origin, always pick the non-DKC one. Simply remembering this will give you more money throughout the game than unaware opponents. This is at odds with DK's other abilities though, Ground Slap procs off of DKC worlds so you'd want to be in DKC worlds more which means DKC1 is the game you have the easiest time completing. However DKC also has the lowest percentage of only-DKC use case stuff. You'll be getting more Camera Pieces, as well as material cards that you can use on levels that aren't in DKC, like Jungle, Ropes, Rambi, Enguarde, Ect. Simply focus on your DKC materials by being in those worlds often and use those materials primarily for non-DKC levels." },
       { name: "Ground Slap", type: "", value: "+1", imp: 4, diff: 2, desc: "When you land on a material space in a DKC world, you can roll a 10-side die to find an additional prize: 1-2 = $20. 3-4 = $50. 5-6 = $100. 7-8 = You can take 2 of one of the cards from the space. 9 = You can take 2 of all cards from the space. 10 = Camera piece.", detail: "DK is relatively slow with a D10 so he is in worlds for longer than other players. DKC worlds give you bonus rewards on material spaces which are about 1/2 of each world. You want this equipped any time you are low on resources overall, including cards, money, and tokens. This is mainly the case early-mid game, when you have unlimited options of where to go and what to focus on. Taking paths that link up DKC worlds is key, Kongo Jungle -> Vine Valley -> Gorilla Glacier is a ~20 turn commitment which is an average of 10 activations. Change out Vine Valley for Monkey Mines and mix in a full Kremkroc Industires Inc path and you are getting a lot of value from this. As soon as you aren't activating this as much or you have less need for the duplicate DKC cards, swap this out." },
@@ -42,7 +45,10 @@ const characters = {
     accent: "#ff6b6b",
     complexity: 3,
     interaction: 3,
+    strength: 1,
+    threat: 1,
     guide: `Diddy needs momentum to get going, so stumbling due to Double Jeopardy or Hero mode is going to set you back many turns. Staying safe while still pushing your luck is required to get the most out of his abilities. There's not enough time in the game to be safe, so you have to find the spots when the choice between protection vs. what you want leans towards protection being the better option. At the start of the game you want to maximize boom boxing, to get Golden Feathers ready and start getting lots of materials. You don't have space for Rocketbarrel Barrage and Hat Trick/Boom Boxing, so staying away from DKC2 levels is ideal, but the DKC2 spaces you are Boom Boxing aren't giving tons of non DKC2 materials. Focus on the low "!" levels, because the value of Boom Boxing and Hat Trick outweigh Super Golden Feathers, Rocketbarrel Barrage, and Banana Peels in the early game. Later in the game as your strategy and what you need becomes more concrete, you can introduce those other abilities to get the most of their value. You want Gazump active by the mid game, so don't be scared to dump Hat Trick to prioritize it. Diddy has a lot of control, but he's got too much to worry about to take an aggressive strategy early on, stay defensive when needed and most importantly stay high on lives. His 4 negatives only punish you for overextending, towing the line of optimization will put you in a lead thats tough to catch.`,
+    versus: '',
     abilities: [
       { name: "Golden Balloon Doors", type: "Core", value: "+1", imp: 2, diff: 2, desc: "At the start of the game, Diddy chooses 11 levels to place golden balloon doors on, numbered 5, 10, 15, 25, 35, 50, 75, 85, 100, 110, 125 (none can be final boss levels; only 5 of them can be regular boss levels) and everybody marks them on their level sheets. Your opponents are barred from building those levels until they have already built that door's number of levels since the start of the game.", detail: "Lot of flexibilty here, but in general, you want to consider which levels you'd like to build first, and which ones would be worst for opponents to have to build later in the game. Larger levels like Animal Antics are a good choice for the later options, or you could block off a lot of high price levels if you want to maximize your stars on the premium priced levels. Certain matchups as well might have characters that change the value, for example in the K. Rool matchup you could block off the boss levels that you don't want him to get the boss card for. You could also just try to block off all of one type of card to be annoying, lots of potential, just make sure you are causing frustration to other players and you'll have gotten good value." },
       { name: "Stuffed in a DK Barrel", type: "Core", value: "-1", imp: 1, diff: 2, desc: "Whenever you land on a space with Banana Hoard, flip a coin. If tails, warp to the closest space with Barrels in front of another player [Forward Relative] (if a tie, pick randomly [Random]), and you can't take turns again until another player reaches you. If no one does for 3 turns [Counter], you escape and continue as normal.", detail: "Quite a hefty punishment here for landing on Banana Hoard spaces, so try your best to avoid them. Use Camera Pieces to get Banana Hoards so you don't trigger this effect and keep a Golden Feather handy if you don't want to risk the coin flip." },
@@ -77,7 +83,10 @@ const characters = {
     accent: "#f0b4ee",
     complexity: 2,
     interaction: 1,
+    strength: 1,
+    threat: 1,
     guide: `Dixie's strength comes from lessening the time she'll have to spend on each on Objectives outside of building levels. If you want a chance against the characters that scale, make sure every single ability is giving you good value at all times, keeping you ahead of all your opponents on objectives, as they will likely have a much easier time building levels than you. If you can't get the value out of your +'s, the -'s will erase any advantages you have. DK Birthday and Overachiever are very resource negative, you need to account for that and carry around extra cards you don't want. Dixie deals with objectives well but may need some help from items to get ahold of materials and money. You need to be well planned out on how you are going to tackle each objective. Banana Birds are your biggest advantage, you want to be using them often and keeping many on hand. With Whisperer, the value of spaces is different than opponents so make sure to visit Wrinkly's way more. Don't be scared to use birds very often for extra !, bonuses, and minigames. Make sure you are pathing well and building levels in a planned order to make use of Kanonical Kong, and have Controlled Descent in your mind to get access to alot more options in normally linear sections of the board. When you have Bubblegum, make sure to use it often as it gives you one of your only sources of movement control.`,
+    versus: '',
     abilities: [
       { name: "Southern Slang", type: "Core", value: "0", imp: 2, diff: 3, desc: "Bazaar products are each $50 more expensive in the north half of the board (Bazaar, Bachelor, Brash, Blunder, Bazooka, Baffle, Boomer). They are $50 cheaper in the south half of the board (Blue, Bramble, Barter, Blizzard, Benny, Bjorn, Barnacle).", detail: "Simply remember you have this ability and go to more southern Bazaars, while limiting spending in northern Bazaars." },
       { name: "Guitar Solo", type: "", value: "+1", imp: 4, diff: 3, desc: "When you land on a material space in a DKC3 world, you can roll a 10-side die to find an additional prize. 1-2 = $20. 3-4 = $50. 5-6 = $100. 7-8 = You can take 2 of one of the cards from the space. 9 = You can take 2 of all cards from the space.10 = Banana bird.", detail: "Focus on traveling through DKC3 worlds, particulalry going out of your way to hit K3, KAOS Kore, and Kremwood Forest alot as those have really good multi-game use materials. Try not to fall into the trap of doing the obvious Lake Orangatange -> Cotton Top Cove into either Pacifica or Mekanos over and over, as you won't be getting many of the multi-game use materials from those worlds." },
@@ -112,7 +121,10 @@ const characters = {
     accent: "#bde6f0",
     complexity: 2,
     interaction: 3,
+    strength: 1,
+    threat: 1,
     guide: `Kiddy wants to stay comfortably in last for most of the game, until he's ready to jump out of nowhere and steal the win. His best strategy at the start is to build levels slower than other players, so make sure to make up for this by building more valuable levels (larger and higher star value), and getting your other completion requirements done instead. Spend the first 150-200 turns of the game playing the Baby's College Fund: Start is Lava challenge, usuing all your resources to avoid reaching the start space until you've maxxed the fund. After this period, you can pivot to playing more freely, making use of Steel Barrel Riding and Uncle Funky's Help to zoom around the map. Music Box is Kiddy's other central ability, so make sure to get working on songs as fast as possilbe so you can finish some songs with very powerful music effects. Water Bounce, Time Out, and Random Lag Spikes are all abilities you want to have equipped all game long and all 3 require next to no thought or planning. While Long-Awaited Return seems like a really fun minigame, try not to think about it too much as the most value you're gonna get out of it is a couple of actiavtions of the 50turn effect at the very end of the game, so keep this in mind and save a couple high value DKC3 levels. As soon as you have some money and other resources, Uncle Funky's Help becomes your main ability, so picking up items to use with it and going out of your way to land on as many Funky's as possible will let you out-pace opponents. Fit in Crushing the Competition when possible to play more aggressively and to combo with Steel Barrel Riding later in the game.`,
+    versus: '',
     abilities: [
       { name: "Baby's College Fund", type: "Core", value: "+2", imp: 5, diff: 4, desc: "Amount of money you gain from the Start space is the number of turns since you last reached Start [Counter], squared (max of $5000 at once). [Achievement]", detail: "This gets you so much money when maxed, so it's worth the effort to not pass start. Once you have done it a couple times, and have amassed enough money (could be $10000, $15000) just stop thinking about this ability as its probably not worth it anymore." },
       { name: "Child Labor Laws", type: "Core", value: "-1", imp: 1, diff: 1, desc: "You can only build 1 level per turn.", detail: "Very easy to deal with." },
@@ -150,7 +162,10 @@ const characters = {
     accent: "#ddaaf0",
     complexity: 3,
     interaction: 4,
+    strength: 1,
+    threat: 1,
     guide: `Tiny Kong is very powerful late game, but you need to make sure you can get to the late game without falling too far behind. She struggles early game since she doesn't have a lot of resource gathering or requirement nullifying abilities, and her negatives stop her from gaining momentum. Beacuse of this Tiny Kong works best with a lighter build at the start. Your first priority is unlocking Saxophone slam, as that is your strongest ability. Early, utilize her good movement to start finding ways to make money. If you have Backstabbing equipped, you'll want to use Bonus spaces often to get this money. As the game progreses, and your debt gets paid off, you'll be able to start playing more aggressively, teleporting around with Monkeyports, stealing opponents items with Mini-Monkey Mischief, and making opponents games harder by limiting the strength of Camera Pieces and Funky's Flights with Can't Fit in Frame and Kongnapped. `,
+    versus: '',
     abilities: [
       { name: "Pigtail Twirls", type: "Core", value: "0", imp: 3, diff: 3, desc: "If you reach a Cranky space and your movement roll is X spaces ahead of it, you can lose X turns [Counter] to land on the Cranky space.", detail: "If a Crankys you pass is one of your last requirements and the turns lost are less than the turns saved to get back, always use this." },
       { name: "Shrink in Size", type: "Core", value: "0", imp: 4, diff: 2, desc: "Before each movement roll, choose whether you roll an 8-side or 20-side die. If you land on Lose a Life with the 8-side die, you lose 2 lives. If you land on Lose a Life with the 20-side die, you lose 3 inventory slots worth of stuff.", detail: "In general, use the 20-sided die unless you really like what's infront of you, in which case use the 8. Losing a life is extra brutal on Tiny, so be extra cognistent of your Life count if you risk rolling an 8 around a Lose a Life space. Keep your lives high and keep a solid buffer of cards you don't want. At some point you will just get unlucky and activate this effect twice in a short span, losing a lot of lives and/or slots of stuff." },
@@ -186,7 +201,10 @@ const characters = {
     accent: "#3887e0",
     complexity: 3,
     interaction: 2,
+    strength: 1,
+    threat: 1,
     guide: `I fear this character may be broken. Lanky has a flowchart to win (in theory), and it may just be unbeatable. All you need is money, so use Baboon Balloon at the start if an opponent gets a Token space or a minigame space you think you can profit from. Once you have money, build a bunch of tiny levels and rush to get Trombone Tremor, using Baboon Balloon to get tokens and Clowning around to trade them. Once Trombone Tremor is equipped, and you have a lot of stars, the rest of them game is easy. Use Balloon Animals and Grape Shooter for options, movement (forwards & backwards) as well as defense. They Stock up on lives and build all the 5+ card leves for 1 card cheaper with Shoddy Level Design. OrangStand is free extra spaces when moving and none of his negatives are too punishing. `,
+    versus: '',
     abilities: [
       { name: "Spitting Image of Roadkill", type: "Core", value: "0", imp: 1, diff: 2, desc: "Before your movement roll, you can play dead; the rest of your turn is skipped, and while you're playing dead, you can't be targeted or affected in any way. The problem is when you start to forget you're even alive... On your next turn, you must roll 4 or higher on a 6-side die to move, or else you stay dead another turn.", detail: "Simple defensive tool. If you're being targetted by an incoming player, and the damage is worse than losing a turn would be, go for it." },
       { name: "Clowning Around", type: "", value: "+1", imp: 4, diff: 2, desc: "You can swap your tokens for other token types at any time, for $200 each. (Can't swap out flipped-over tokens.)", detail: "One of Lanky's signature abilities, $200 is a low cost to get rid of unneeded Cocounts or Birds for much more valuable Camera Pieces and Golden Feathers. Use this early game to unlock Trombone Tremor as fast as possible." },
@@ -221,7 +239,10 @@ const characters = {
     accent: "#8ad191",
     complexity: 2,
     interaction: 3,
+    strength: 1,
+    threat: 1,
     guide: `Chunky aims to make a statement with his simple yet effective abilities, which are easy to activate and don't require much planning or setup. Against any character that like to be agressive and setup their abilities on the board, Chunky can use Sandwichium Knucklus to punch it away, making opponents quiver in fear at the sight of him. Using Gambling Man and Disco Chunky,  you'll get extra turns and movement to help keep pace will his slower dice combonation. He's Dead and Scaredy Cat alter the way you play around lives and boss levels, which require Chunky to play more adaptive and focus on Cranky's earlier. With Gorilla Gone Tax Evasion he's able to save tons of money from level building, and the combo of Pineapple Launcher and Triagle Trample will make completing levels easier. With Snack Break and Irreversible Momentum equpped, Golden Feathers will instead let you change your roll by +-1 or 0, letting you re land on good spaces instead of having the +-2. If you can make good use of the extra turns and constantly annoy opponents with your punch, you'll be able to schmoove into 1st place.`,
+    versus: '',
     abilities: [
       { name: "Snack Break", type: "Core", value: "+1", imp: 2, diff: 2, desc: "Instead of rolling for movement, you can choose to spend a golden feather to land on the same space you're currently on (can't do this on 2 consecutive turns).", detail: "Can be used to double up on extremely valuable spaces." },
       { name: "He's Dead", type: "Core", value: "-1", imp: 3, diff: 3, desc: "Lives and saving don't apply to you. Whenever you land on a Lose a Life space (not losing a life for other reasons), flip a coin and call a side; if you chose wrong, lose a level of choice. Each level can only be lost once, so keep track of any ones you've lost. (In team mode, you can save your team's levels, which only matters for when your partner gets a game over. For you, things still work as above, and can pick a level even if it's saved.)", detail: "Try to negate this by carrying around a 2 card level at all times, rotating which one as you lose more levels. You can expect about 5-10 activations of this and there are more than enough easy 2 card levels last all game. If you are worried, purchase items to help you avoid lose a life spaces like silver feathers." },
@@ -258,7 +279,10 @@ const characters = {
     accent: "#989bed",
     complexity: 4,
     interaction: 4,
+    strength: 1,
+    threat: 1,
     guide: `Taj wants to warp around the board, hunting down opponents and attacking them with his powerful Balloon effects. Taj's balloons are his central ability, and maximizing your use of them is the best way to win with the character. Each balloon type has powerful effects that each present choices between effecting just yourself or your opponents. He also features an ability upgrade system with his power-up tokens that will allow him to scale past other characters at the cost of starting very weak. Try your best to mitigate your negatives making strategic decisions and planning out how you're going to deal with your objectives. Wizpig's Wrath will be haunting you all game so do your best to have a buffer of Cards, Money, and Lives that aren't detrimental to lose. If you're able to scale up in strength and aqquire a good foundation of money, items, and resources, opponents will have to band together to put a stop to you or else you'll blast into 1st place.`,
+    versus: '',
     abilities: [
       { name: "Land, Sea, or Sky", type: "Core", value: "+1", imp: 3, diff: 3, desc: "Each turn before movement, you can choose which 1 of 3 different movement roll options you will use: Car (default): 6-side die.  Hovercraft: 10-side die, but goes down a random path at path splits. [Random] Plane: 2 10-side die added together, but instead of moving forward [Forward Relative] to land on the space, you warp there and the space has no effect. The plane is 3-time use [Counter], then you have to visit Funky and pay $150 to refuel.", detail: "At the start of the game, you'll be moving pretty slow. The plane's main use is to avoid risky pass/land situations, and to move really fast, neither of which you'll be utilizing until very late in the game. The car is very slow but at the start of the game that's not too big of a deal. If you aren't near a path split, default to using the boat. For upgrading order, focus on the car/boat, making sure the boat is ready for the final fight vs Wizpig. Upgrade the plane if you find yourself using it often." },
       { name: "Weapon Balloons", type: "Core", value: "+2", imp: 5, diff: 4, desc: "You have a shuffled deck of 27 balloon cards (9 blue, 6 red, 6 green, 3 yellow, 3 rainbow). Whenever you land on a material space, you can draw the top card from this deck instead of one of the material cards you'd receive. Once the deck runs out, reshuffle them. Balloon cards can be discarded or traded, but not sold or stolen. Only you can spend them to use their abilities (for details, see their ability cards), and only if you're holding them.", detail: "A lot to consider here, but always take a balloon unless you NEED all 3 cards, even at the start of the game." },
@@ -298,7 +322,10 @@ const characters = {
     accent: "#f5eb9d",
     complexity: 3,
     interaction: 2,
+    strength: 1,
+    threat: 1,
     guide: `Xananab want to optimize the spaces he lands on, with the ability to pass up mediocre spaces with Peg Climbing. The extra movement from Going Bananas, Banana Ship, and Crystal Star will all be needed to keep a safe distance from opponents as he is very frail due to Climbing Collision, Molding, and Mmmmm Banana. X to Y to Z and Banana Plantation give him good access to Material Transformation and income while Bananaphone allows him to chain valuable Activity spaces together. The extra challenge of Missing Spirowarps can be dealt with if you focus on it as an extra objective throughout the game, while Molding presents a minigame you're forced to play all game long so that you don't have to start dropping materials. Xananab Jr. gives him a helper to pick up resources in valuable areas of the board, while Mysterious Wormholes adds some randomness to Bonus spaces that makes them less enticing. If you are able to play your own game and finish the challenge of the Missing Spriowarps, you will be able to win versus your opponents.`,
+    versus: '',
     abilities: [
       { name: "Peg Climbing", type: "Core", value: "+2", imp: 5, diff: 3, desc: "Use 3 dice to roll for movement: green 6-side, yellow 4-side, and orange 4-side. Take the following steps when moving: 1. Roll the green die. You can land on this space, use a golden feather (can't use in other steps), or keep rolling. 2. Roll the yellow die and add that to the previous total. You can land on this space, or keep rolling. 3. Roll the orange die and add that to the previous total. You can land on this space, or take what you rolled in step 2. If this roll is a 1, you slip and go to the space from step 1, but don't land on it. If any of your roll options land on Lose a Life (unless the roll was a 1), you must take it.", detail: "Built in push your luck movement, keep rolling if you don't like what you got in step 1, or want to move quicker out of the area." },
       { name: "Climbing Collision", type: "Core", value: "-1", imp: 2, diff: 3, desc: "If one of your steps during Peg Climbing lands on an opponent's space (can't use a feather to dodge), you stop rolling, don't move, and lose this turn. Whenever you land on Lose a Life, on your next turn you can't do steps 2 and 3 for Peg Climbing.", detail: "Avoid areas with oppoents to protect yourself, and be careful about which dice you are rolling around Lose a Life spaces to minimize your chances of landing on it." },
@@ -335,7 +362,10 @@ const characters = {
     accent: "#5e4822",
     complexity: 5,
     interaction: 5,
+    strength: 1,
+    threat: 1,
     guide: `Klubba aims to take control of the whole map and constantly take from and attack other players. If you aren't willing to play mean and keep track of a lot of moving elements, steer clear of the Klub. At the same time, if you spend all your turns plotting and mapping like a super villain, you're not going to be able to complete the objectives that actually let you win the game. You want to find a good mix of playing into your traps/setup as well as actually working on objectives. You want Klubba's Klub up as early as possible, so focus on getting the Crystal Coconuts needed. You'll have Kuttrhoat attached all game, so make sure to retry levels when possible to have to revisit Cranky's and spend more money as little as possible, you might have to retry a 6 10 times, but that's fine if you've got the inventory. Photagrapher and Bear-Hater are simple to work around so just put less emphasis on using Camera Pieces and Bazaar's spaces and you'll be fine. You can hit a pretty big powerspike at 50 levels built, as you'll be able to equip the combo of Kudgel, Booby-Traps, Klubba's Klub, and Golden Warp Barrel. But this requires commitement and money. Make sure you have the money at this point in the game to fund your traps, as well as some useful items to make movement easier, all so you can terrorize opponetns. Path them into your danger zone which is likely Lost World + Pacifica, which is 30 spaces of pure desolation. Throw all the traps you've got in the area, and have Kudgel patrol it. Slip in and hit them with blunderbuss to keep them in there, and collect all they've lost with kudgel. You can swap the warp barrels around at kiosks for a token, so make sure to do that if you want to trap opponents for longer. Utilize Garbage collector to get powerful items for cheap as well as valuable materials, and fund this with the money from your kiosks. Get Out My Swamp requires some setup, but once the bog has spread a bit it can be a great way to get opponents into the lost world from more areas of the board. Most importantly, have fun, because the rest of the table likely won't be able to with you in control.`,
+    versus: '',
     abilities: [
       { name: "Klubba's Kiosks", type: "Core", value: "+1", imp: 4, diff: 3, desc: "+3 kiosks. When you get an ability that includes additional kiosks, you can place those kiosks on any space in a world. 2 kiosks can't be placed right next to each other, nor in the same world, and you can't place them in the Lost World. Whenever an opponent lands on a kiosk, they must pay you $50 and play the Bag a Bug minigame (see its ability card); after the space's normal effects apply for them, you can then warp them to the first space of the Lost World.", detail: "Decide where you want to be the danger zone, Lost World is an easy candidate because its fed by 2 worlds directly and has only 1 exit, meaning players must traverse it's entirity. You cannot place kiosks in the lost world, so make sure you have one right after, in pacifica. The rest can be spread out in high traffic zones, like in Cotton-Top Cove, the start of Kongo Jungle, the end of Krem Quay, before the split in KII, or before the split in Vine Valley." },
       { name: "Warp Barrel Bayou", type: "Core", value: "0", imp: 5, diff: 3, desc: "At the start of the game, decide where to place your excess warp barrels to drastically alter the board's path flow. Place each barrel between 2 regular spaces on the board. When any player (or other moving piece) reaches a barrel during movement, they warp to the other barrel and continue from it in the direction they were going. Any combos which result in an unescapable loop (either forward or backward) aren't allowed. You can replace/move the warp barrels if you land on a kiosk and spend a token.", detail: "For most of the game you'll want to trap opponents in a semi-loop with these barrels, while later in the game you can use this in other ways to get opponents into/out of specific areas or to route yourself to where you want to go. The default option is having one at the end of Gloomy Gulch, as that means opponents who go in the other warp will end up in Lost World. With the other barrel placed at the end of the two final DKC3 worlds as then they have to take 1 specific path to get out." },
@@ -375,7 +405,10 @@ const characters = {
     accent: "#ffe330",
     complexity: 3,
     interaction: 5,
+    strength: 1,
+    threat: 1,
     guide: `VoidCo wants to win by stealing away bonuses before opponents can get them. You come with a couple of general use positives and negatives like Wallopoid to make levels more annoying for opponents to build, IntelliSense Specs to draw extra stuff at Bazaar's, and Property of VoidCo to stop opponents from building levels in specific areas of the board. Your negatives like Mountain of Paperwork, Downloadable Kongtent, and False Imprisonment aren't too punishing and don't restrict you too much from your main strategy, which is going invisible. Inviseaux allows you to hide your space on the board so you can sneak up on opponents with 3-in-1, All-Mine Remote, and Swap Harp to attack them. Find Yer Own! and Pay-Dirt Piledriver both play into this by making ! harder to comeby for yourself and opponents. Finally, The King of Rot Returns makes your final bosses much tougher, so make sure you're prepared to face them and have a solid lead going into the endgame.`,
+    versus: '',
     abilities: [
       { name: "3-in-1", type: "Core", value: "+1", imp: 3, diff: 3, desc: 'Choose 1 of the 3 VoidCo character pieces to be the company president (they all have the same stats). By default, you only have that 1 Kong on the board. But, at the start of your turn, you can split into 3 separate Kongs. If they\'re split up, before you do a movement roll on your turn, choose which Kong you\'ll move; if it\'s not the president, must spend 1 banandium gem. Each time you get a "!" (that you haven\'t gotten before), gain 1 gem. [Counter] The 3 Kongs\' inventory is shared, and position-based effects (passing, range, etc.) for all 3 of them apply to you. Once you\'ve gotten 3 "!"s [Counter], remove all your Kongs except the president from the board, and place them in jail (on this card). They can be retrieved from jail when you reach Start as an option instead of taking cash, saving, etc.', detail: "Try to limit your use of gems and mainly use this to split up the kongs when invisible. If you're able to keep 1-2 invisble, it'll be a lot easier for you to activate All-Mine Remote and Swap Harp." },
       { name: "Property of VoidCo", type: "Core", value: "+1", imp: 1, diff: 1, desc: "Your opponents can't build levels while they're standing on a purple space, meaning either Bazaar or in a purple world. [Priority]", detail: "Minor detriment to your opponents, make sure to remind them of this effect." },
@@ -413,7 +446,10 @@ const characters = {
     accent: "#47d657",
     complexity: 5,
     interaction: 4,
+    strength: 1,
+    threat: 1,
     guide: `K. Rool's gotta be saved, and to do so you have to scale, using rogue-like deckbuilding with your Minions and Bosses. Money is your biggest weakness, and you'll be starting off the game much weaker than other characters. Try your best to manage the Kremling Krew Phase, and then go wild as the K. Rools. All 3 K. Rool Costumes come with a unique set of abilities that are each powerful and tailored to different playstyles. Switch between them whenever you'd like to get the most value out of the character. Aside from his financial negative abilities liek Share the Booty, Overripe Bananas, and Unionized Underlings, his other two negatives Steal the Crystal Coconut and Video Game Villain give him alternate objectives to do from his opponents, so make sure to focus on them so that you can defeat your opponents.`,
+    versus: '',
     abilities: [
       { name: "Kremling Rekruitment", type: "Core", value: "+2", imp: 5, diff: 4, desc: 'You have a deck of enemies who give effects you can use during your turn (you can only do 1 Move action per turn; all effects are 1 use per turn unless specified). Begin the game with Kritter in your hand, and the other 5 starter minions in your draw pile. At start of turn, draw until you have 5 Krew cards, then roll to see how many Krew actions you get this turn. (From the start of the game, you\'ll roll a 1-side die for this; upgrade to 3-side if you\'ve beaten 1 boss, 4-side at 5 bosses [Counter], and a 5-side at 10 bosses. Can banana bird this roll, but can\'t go above max for that die.) At end of your turn (not earlier), put all enemy cards you used and any others you want from your hand into the Krew discard pile. When you run out of cards in your draw pile and need to draw another, shuffle and reuse the discard pile. The Krew enemies that are available for you to get are sorted into 4 piles on your Krew mat: DKC, 2, 3, and bosses. Whenever you build a non-boss level from a game, draw 3 minions from that game\'s Krew pile. Must purchase 1, then put it in your Krew discard pile. Whenever you build a regular boss level, purchase that boss\'s Krew card for $500 and unlock it for the rest of the game; at this time, you can search all your Krew and add in or remove any unlocked bosses you want, then fully reshuffle. Only up to 20% of your currently-used Krew deck can be bosses. Money you pay to buy Krew cards replaces the level\'s usual price for you (but goes to the same place). Final boss levels don\'t cost you money. Lose this ability when you become K. Rool.', detail: "There are over a hundered Minion and Boss effects to remember, so instead focus on the Bosses as those you'll have to work for while the minions you can learn as you see them as options. Building boss levels not only gives you more Boss options for your deck but also allows you to roll better action die. Once you have a strategy with your Bosses that you're working towards, try to pickup minions that help you with it or provide value that makes them good uses of your actions. See the bottom tab of K. Rool's How to Play guide for some suggestions on what Bosses to target (WIP NOT DONE YET)." },
       { name: "K. Rool Kaptured", type: "Core", value: "-2", imp: 5, diff: 5, desc: "[Always Enabled] Queen Banana Bird has sealed K. Rool away, and you need to get all 4 barrier keys to set him free and lead your Krew once again. The requirements for each key are: 70 levels built (5 of which must be the final boss levels), 100 homework/music points, 30 cards scrapbooked, and 10 banana birds returned. As soon as you fulfill a key's requirement, write it down on your level sheet; you can no longer progress in that category until you become K. Rool. [Priority] (If a homework assignment or song gets you above 100 points, that's fine, but can't turn in another.) When you have all 4 keys and visit Queen Banana Bird, permanently switch to K. Rool and lose this ability.", detail: "These barriers can be tough, as its hard to do your requirements evenly. Make sure you are pacing yourself in all of these keys so you don't get soft-locked in progressing. K. Rool is very powerful, so you want to get to him as fast as possible even if it means building less valuable levels or overspending your limited money." },
@@ -568,14 +604,18 @@ export default function CharacterGuidePage() {
   const char = characters[active]
   const [bottomTab, setBottomTab] = useState("Starter Layouts")
   const [imgLoaded, setImgLoaded] = useState(false)
+  const [vsMode, setVsMode] = useState(false)
 
   useEffect(() => { setImgLoaded(false) }, [active])
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className={`min-h-screen ${vsMode ? 'bg-black' : 'bg-gray-50'}`}>
       <div className="hidden">
         {tabs.map(tab => (
-          <img key={tab} src={`/characters/${tab}/portrait.png`} alt="" />
+          <>
+            <img key={`char-${tab}`} src={`/characters/${tab}/portrait.png`} alt="" />
+            <img key={`wanted-${tab}`} src={`/wanted/${tab}/portrait.png`} alt="" />
+          </>
         ))}
       </div>
 
@@ -599,6 +639,14 @@ export default function CharacterGuidePage() {
                 {tab}
               </button>
             ))}
+            <button
+              onClick={() => setVsMode(v => !v)}
+              className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap shrink-0 font-semibold transition-all ${
+                vsMode ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Vs.
+            </button>
           </div>
         </div>
       </div>
@@ -613,9 +661,9 @@ export default function CharacterGuidePage() {
         >
           <div className="flex-1">
             <h1 className="text-2xl font-bold mb-2">{active}</h1>
-            {char.guide && (
+            {(vsMode ? char.versus : char.guide) && (
               <p className="text-sm leading-relaxed opacity-90">
-                {char.guide}
+                {vsMode ? char.versus : char.guide}
               </p>
             )}
           </div>
@@ -624,7 +672,7 @@ export default function CharacterGuidePage() {
             <div className="w-32 h-32 rounded-lg overflow-hidden bg-transparent flex items-center justify-center">
               <img
                 key={active}
-                src={`/characters/${active}/portrait.png`}
+                src={vsMode ? `/wanted/${active}/portrait.png` : `/characters/${active}/portrait.png`}
                 alt={`${active} portrait`}
                 className="object-contain w-full h-full transition-opacity duration-200"
                 style={{ opacity: imgLoaded ? 1 : 0 }}
@@ -633,12 +681,12 @@ export default function CharacterGuidePage() {
             </div>
             <div className="flex flex-col gap-1.5 items-center">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-white/70 w-20 text-right">Complexity</span>
-                <ImportanceDots value={char.complexity ?? 0} max={5} color="#ffffff" />
+                <span className="text-xs text-white/70 w-20 text-right">{vsMode ? 'Strength' : 'Complexity'}</span>
+                <ImportanceDots value={(vsMode ? char.strength : char.complexity) ?? 0} max={5} color="#ffffff" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-white/70 w-20 text-right">Interaction</span>
-                <ImportanceDots value={char.interaction ?? 0} max={5} color="#ffffff" />
+                <span className="text-xs text-white/70 w-20 text-right">{vsMode ? 'Threat Level' : 'Interaction'}</span>
+                <ImportanceDots value={(vsMode ? char.threat : char.interaction) ?? 0} max={5} color="#ffffff" />
               </div>
             </div>
           </div>
@@ -646,7 +694,7 @@ export default function CharacterGuidePage() {
 
 
 
-        <div>
+        {!vsMode && <div>
           <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Abilities</h2>
           <div className="space-y-2">
             {char.abilities.map(ability => (
@@ -658,9 +706,9 @@ export default function CharacterGuidePage() {
               />
             ))}
           </div>
-        </div>
+        </div>}
 
-        <div>
+        {!vsMode && <div>
           <div className="flex gap-2 mb-3">
             {BOTTOM_TABS.map(t => (
               <button
@@ -714,7 +762,7 @@ export default function CharacterGuidePage() {
               ))}
             </div>
           )}
-        </div>
+        </div>}
       </div>
     </main>
   )
