@@ -7,8 +7,6 @@ import { VERSION_LAYOUTS } from '@/lib/versionLayouts'
 import { SCRAPBOOK_ANCHORS } from '@/lib/boxes'
 import type { VersionId, GamePlacementBase } from '@/lib/types'
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-
 const PLACEMENT_LABELS: Record<number, string> = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th' }
 const PLACEMENT_COLORS: Record<number, string> = {
   1: '#FFD700', 2: '#C0C0C0', 3: '#CD7F32', 4: '#6B7280',
@@ -17,8 +15,6 @@ const PLACEMENT_COLORS: Record<number, string> = {
 function getPlayerName(id: string) {
   return PLAYERS.find(p => p.id === id)?.name ?? id
 }
-
-// ─── STATIC LEVEL SHEET ───────────────────────────────────────────────────────
 
 function StaticLevelSheet({
   levelStats,
@@ -36,7 +32,6 @@ function StaticLevelSheet({
   const layout = VERSION_LAYOUTS[versionId]
   if (!layout) return <div className="text-gray-400 text-sm italic">No layout config for {versionId}</div>
 
-  // Map level name → level number using anchor order
   const levelNames = Object.keys(levelStats)
 
   function getDisplay(levelNum: number, colType: string): string {
@@ -99,7 +94,6 @@ function StaticLevelSheet({
       {renderPage(1, layout.pages[1])}
       {layout.pages[2] && renderPage(2, layout.pages[2])}
 
-      {/* Scrapbook — only for versions that have it */}
       {layout.hasScrapbook && scrapbook && scrapbook.length > 0 && (
         <div className="mt-4 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
           <div className="text-sm font-semibold text-gray-700 mb-2">
@@ -121,7 +115,6 @@ function StaticLevelSheet({
   )
 }
 
-// ─── PAGE ─────────────────────────────────────────────────────────────────────
 
 export default function GamePage() {
   const params = useParams()
@@ -205,7 +198,6 @@ export default function GamePage() {
           ))}
         </div>
 
-        {/* Active player stats bar */}
         <div className="flex flex-wrap gap-4 mb-6 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wide">Character</div>
@@ -239,7 +231,6 @@ export default function GamePage() {
           )}
         </div>
 
-        {/* Level sheet */}
         <StaticLevelSheet
           levelStats={activePlacement.levelStats}
           scrapbook={'scrapbook' in activePlacement ? (activePlacement as any).scrapbook : undefined}
