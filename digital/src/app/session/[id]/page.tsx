@@ -841,7 +841,7 @@ function toggleScrapbook(material: string) {
   function getRankColor(userEmail: string, getValue: (email: string) => number): string {
   const scores = sortedMembers.map(m => ({ email: m.user_email, val: getValue(m.user_email) }))
   const myVal = getValue(userEmail)
-  const uniqueScores = [...new Set(scores.map(s => s.val))].sort((a, b) => b - a)
+  const uniqueScores = Array.from(new Set(scores.map(s => s.val))).sort((a, b) => b - a)
   const rank = uniqueScores.indexOf(myVal)
   const colors = ['#fff59f', '#e7e7e7', '#f7dec5', '#d7e6d8']
   return colors[rank] ?? 'transparent'
