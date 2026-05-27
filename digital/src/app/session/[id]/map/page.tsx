@@ -538,7 +538,19 @@ export default function MapPage() {
                   Unique materials on path ({Object.keys(mats).length})
                 </div>
                 <div className="flex flex-wrap gap-1">
-                  {Object.keys(mats).map(m => {
+                  {Object.keys(mats).sort((a, b) => {
+  // 1. count descending
+  const countDiff = mats[b] - mats[a]
+  if (countDiff !== 0) return countDiff
+  // 2. color: red first, then yellow, then green
+  const colorOrder: Record<string, number> = { '#ef4444': 0, '#eab308': 1, '#22c55e': 2 }
+  const aColor = colorOrder[UNIFIED_PBR_COLOR[`mat:${a}`] ?? '#22c55e'] ?? 2
+  const bColor = colorOrder[UNIFIED_PBR_COLOR[`mat:${b}`] ?? '#22c55e'] ?? 2
+  const colorDiff = aColor - bColor
+  if (colorDiff !== 0) return colorDiff
+  // 3. alphabetical
+  return a.localeCompare(b)
+}).map(m => {
                     const mpbr = MATERIAL_PBR[m]
                     return (
                       <span
@@ -547,8 +559,8 @@ export default function MapPage() {
                         style={{ backgroundColor: '#374151' }}
                         title={`Material PBR: ${mpbr}`}
                       >
-                        {m}
-                        {mpbr !== undefined && (
+                        {m}{mats[m] > 1 ? ` (${mats[m]})` : ''}{' '}
+        {mpbr !== undefined && (
                           <span
                             className="text-[9px] font-bold px-1 rounded"
                             style={{ backgroundColor: UNIFIED_PBR_COLOR[`mat:${m}`] ?? '#22c55e', color: '#fff' }}
