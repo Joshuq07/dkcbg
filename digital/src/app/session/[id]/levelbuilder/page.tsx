@@ -1052,11 +1052,17 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                           className="mt-0.5 shrink-0"
                         />
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium">
-                            <span className="text-gray-400 mr-1">{code}</span>
-                            {name}
-                            {isBuilt && <span className="ml-1 text-xs text-green-600">(built)</span>}
-                          </div>
+                          <div className="text-sm font-medium flex items-center gap-2 flex-wrap">
+  <span className="text-gray-400">{code}</span>
+
+  {name}
+
+  <Stars value={starValue[id - 1] || 0} />
+
+  {isBuilt && (
+    <span className="text-xs text-green-600">(built)</span>
+  )}
+</div>
                           <div className="text-xs text-gray-400 truncate">
                             {mats.join(', ')}
                           </div>

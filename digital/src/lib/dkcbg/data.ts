@@ -545,195 +545,7 @@ export const bonusDifficulties: number[] = [
   6  // Knautilus
 ]
 
-export const starValue: number[] = [
-  // Kongo Jungle
-  4, // Jungle Hijinxs
-  2, // Ropey Rampage
-  1, // Reptile Rumble
-  2, // Coral Capers
-  1, // Barrel Cannon Canyon
-  1, // Very Gnawty's Lair
 
-  // Monkey Mines
-  4, // Winky's Walkway
-  2, // Mine Cart Carnage
-  3, // Bouncy Bonanza
-  3, // Stop & Go Station
-  3, // Millstone Mayhem
-  2, // Necky's Nuts
-
-  // Vine Valley
-  1, // Vulture Culture
-  1, // Tree Top Town
-  2, // Forest Frenzy
-  4, // Orang-Utan Gang
-  3, // Clam City
-  5, // Temple Tempest
-  2, // Bumble B. Rumble
-
-  // Gorilla Glacier
-  2, // Snow Barrel Blast
-  3, // Sliplide Ride
-  3, // Croctopus Chase
-  4, // Ice Age Alley
-  3, // Rope Bridge Rumble
-  5, // Torchlight Trouble
-  2, // Really Gnawty Rampage
-
-  // Kremkroc Industries Inc.
-  5, // Oil Drum Alley
-  3, // Trick Track Trek
-  5, // Poison Pond
-  5, // Elevator Antics
-  3, // Blackout Basement
-  3, // Mine Cart Madness
-  3, // Boss Dumb Drum
-
-  // Chimp Caverns / Gang-Plank Galleon
-  4, // Tanked Up Trouble
-  3, // Manic Mincers
-  5, // Misty Mine
-  3, // Loopy Lights
-  3, // Platform Perils
-  3, // Necky's Revenge
-  2, // Gang-Plank Galleon
-
-  // Gangplank Galleon
-  3, // Pirate Panic
-  1, // Mainbrace Mayhem
-  2, // Gangplank Galley
-  2, // Lockjaw's Locker
-  5, // Topsail Trouble
-  1, // Krow's Nest
-
-  // Crocodile Cauldron
-  3, // Hot-Head Hop
-  2, // Kannon's Klaim
-  4, // Lava Lagoon
-  4, // Red-Hot Ride
-  3, // Squawks's Shaft
-  3, // Kleever's Kiln
-
-  // Krem Quay
-  3, // Barrel Bayou
-  4, // Glimmer's Galleon
-  4, // Krockhead Klamber
-  3, // Rattle Battle
-  4, // Slime Climb
-  2, // Bramble Blast
-  2, // Kudgel's Kontest
-
-  // Krazy Kremland
-  3, // Hornet Hole
-  5, // Target Terror
-  4, // Bramble Scramble
-  3, // Rickety Race
-  3, // Mudhole Marsh
-  3, // Rambi Rumble
-  3, // King Zing Sting
-
-  // Gloomy Gulch
-  2, // Ghostly Grove
-  5, // Haunted Hall
-  3, // Gusty Glade
-  4, // Parrot Chute Panic
-  2, // Web Woods
-  5, // Kreepy Krow
-
-  // K. Rool's Keep
-  3, // Arctic Abyss
-  5, // Castle Crush
-  4, // Clapper's Cavern
-  4, // Windy Well
-  4, // Chain Link Chamber
-  5, // Toxic Tower
-  4, // Stronghold Showdown
-
-  // The Flying Krock
-  3, // Screech's Sprint
-  4, // K. Rool Duel
-
-  // Lost World
-  3, // Jungle Jinx
-  1, // Black Ice Battle
-  2, // Klobber Karnage
-  1, // Fiery Furnace
-  5, // Animal Antics
-  4, // Krocodile Kore
-
-  // Lake Orangatanga
-  4, // Lakeside Limbo
-  3, // Doorstop Dash
-  3, // Tidal Trouble
-  1, // Skidda's Row
-  3, // Murky Mill
-  4, // Belcha's Barn
-
-  // Kremwood Forest
-  3, // Springin' Spiders
-  3, // Riverside Race
-  5, // Squeals on Wheels
-  3, // Barrel Shield Bust-Up
-  4, // Bobbing Barrel Brawl
-  4, // Arich's Ambush
-
-  // Cotton-Top Cove
-  3, // Bazza's Blockade
-  3, // Rocket Barrel Ride
-  4, // Kreeping Klasps
-  3, // Tracker Barrel Trek
-  2, // Fish Food Frenzy
-  4, // Squirt's Showdown
-
-  // Mekanos
-  4, // Fire-Ball Frenzy
-  4, // Demolition Drain-Pipe
-  2, // Ripsaw Rage
-  4, // Blazing Bazukas
-  4, // Low-G Labyrinth
-  4, // KAOS Karnage
-
-  // K3
-  3, // Krevice Kreepers
-  2, // Tearaway Toboggan
-  3, // Barrel Drop Bounce
-  3, // Krack-Shot Kroc
-  2, // Lemguin Lunge
-  2, // Bleak's House
-
-  // Razor Ridge
-  3, // Buzzer Barrage
-  4, // Kong-Fused Cliffs
-  3, // Floodlit Fish
-  5, // Pot Hole Panic
-  3, // Ropey Rumpus
-  3, // Kroctopus Krush
-
-  // Pacifica
-  3, // Dingy Drain-Pipe
-  4, // Stormy Seas
-  3, // Sunken Spruce
-  3, // Cliffside Blast
-  3, // Ripcurl Reef
-  4, // Surf's Up
-  3, // Barbos's Barrier
-
-  // KAOS Kore
-  3, // Konveyor Rope Klash
-  3, // Creepy Caverns
-  5, // Lightning Looks-Out
-  1, // Koindozer Klamber
-  4, // Poisonous Pipeline
-  5, // Kastle KAOS
-
-  // Krematoa
-  5, // Stampede Sprint
-  3, // Criss Kross Cliffs
-  2, // Tyrant Twin Tussle
-  3, // Swoopy Salvo
-  3, // Rocket Rush
-  5  // Knautilus
-];
 
 
 export const totalLevels = Array.from({ length: 142 }, (_, i) => i + 1)
@@ -2130,3 +1942,367 @@ export const CONNECTIONS: Record<number, number[]> = {
   411: [412],
   412: [233],
 };
+
+export const CARD_PBR = {
+  Barn: { pbr: 1.07, color: 'yellow' },
+  Beehive: { pbr: 0.94, color: 'yellow' },
+  Brambles: { pbr: 1.58, color: 'green' },
+  Castle: { pbr: 1.03, color: 'red' },
+  Cliffs: { pbr: 2.0, color: 'green' },
+  Docks: { pbr: 1.35, color: 'yellow' },
+  Factory: { pbr: 1.58, color: 'yellow' },
+  Forest: { pbr: 1.14, color: 'yellow' },
+  Glacier: { pbr: 1.63, color: 'yellow' },
+  Gunship: { pbr: 0.79, color: 'green' },
+  'Ice Cave': { pbr: 1.52, color: 'yellow' },
+  Library: { pbr: 0.16, color: 'yellow' },
+  Pipes: { pbr: 1.55, color: 'yellow' },
+  River: { pbr: 0.64, color: 'yellow' },
+  Swamp: { pbr: 0.95, color: 'yellow' },
+  Temple: { pbr: 0.5, color: 'yellow' },
+  'Theme Park': { pbr: 0.52, color: 'yellow' },
+  Trees: { pbr: 2.41, color: 'yellow' },
+  Volcano: { pbr: 1.0, color: 'yellow' },
+  Waterfall: { pbr: 1.86, color: 'green' },
+
+  Chase: { pbr: 3.95, color: 'yellow' },
+  Conveyors: { pbr: 2.84, color: 'green' },
+  Doors: { pbr: 1.16, color: 'yellow' },
+  Electricity: { pbr: 1.38, color: 'yellow' },
+  Fire: { pbr: 3.5, color: 'yellow' },
+  Ghosts: { pbr: 0.87, color: 'yellow' },
+  Krockheads: { pbr: 1.14, color: 'yellow' },
+  Millstones: { pbr: 0.67, color: 'yellow' },
+  Mincers: { pbr: 0.91, color: 'yellow' },
+  Poison: { pbr: 2.26, color: 'green' },
+  'Rising Danger': { pbr: 1.31, color: 'yellow' },
+  Wind: { pbr: 2.84, color: 'green' },
+
+  Clapper: { pbr: 0.41, color: 'yellow' },
+  Ellie: { pbr: 2.35, color: 'green' },
+  Expresso: { pbr: 0.96, color: 'yellow' },
+  Glimmer: { pbr: 0.11, color: 'yellow' },
+  Parry: { pbr: 1.42, color: 'yellow' },
+  Quawks: { pbr: 0.68, color: 'yellow' },
+  Rattly: { pbr: 1.38, color: 'yellow' },
+  Squawks: { pbr: 5.12, color: 'green' },
+  Squitter: { pbr: 3.84, color: 'yellow' },
+
+  Barrels: { pbr: 6.71, color: 'red' },
+  'Barrel Cannons': { pbr: 5.57, color: 'green' },
+  Water: { pbr: 9.24, color: 'green' },
+  Hooks: { pbr: 3.52, color: 'yellow' },
+  Boss: { pbr: 7.42, color: 'yellow' },
+  Ropes: { pbr: 6.51, color: 'red' },
+  Spawners: { pbr: 3.58, color: 'green' },
+  Caves: { pbr: 3.42, color: 'green' },
+  Storm: { pbr: 3.48, color: 'green' },
+  'Coral Reef': { pbr: 2.94, color: 'green' },
+  Rambi: { pbr: 3.05, color: 'green' },
+  Carts: { pbr: 2.38, color: 'yellow' },
+  Drums: { pbr: 2.49, color: 'yellow' },
+  Enguarde: { pbr: 5.62, color: 'green' },
+  Lights: { pbr: 2.17, color: 'yellow' },
+  Rigging: { pbr: 1.3, color: 'yellow' },
+  Scaffolding: { pbr: 1.32, color: 'yellow' },
+  Balloons: { pbr: 1.34, color: 'yellow' },
+  'Ship Deck': { pbr: 0.87, color: 'yellow' },
+  'Ship Hold': { pbr: 0.92, color: 'yellow' },
+  Tires: { pbr: 2.39, color: 'yellow' },
+  Mines: { pbr: 1.52, color: 'red' },
+  Jungle: { pbr: 3.33, color: 'green' },
+  'Banana Hoard': { pbr: 2.09, color: 'yellow' },
+  Winky: { pbr: 0.81, color: 'red' },
+  Altar: { pbr: 0.42, color: 'yellow' },
+  Gauntlet: { pbr: 10.43, color: 'red' },
+};
+
+export const StarValue = [
+2.5, //Jungle Hijinxs
+2.0, //Ropey Rampage
+1.25, //Reptile Rumble
+1.5, //Coral Capers
+1.0, //Barrel Cannon Canyon
+1.5, //Very Gnawty's Lair
+3.0, //Winky's Walkway
+1.75, //Mine Cart Carnage
+2.25, //Bouncy Bonanza
+3.75, //Stop & Go Station
+2.5, //Millstone Mayhem
+2.25, //Necky's Nuts
+1.25, //Vulture Culture
+1.25, //Tree Top Town
+2.75, //Forest Frenzy
+3.0, //Orang-Utan Gang
+2.5, //Clam City
+4.0, //Temple Tempest
+2.5, //Bumble B. Rumble
+1.75, //Snow Barrel Blast
+2.25, //Sliplide Ride
+2.25, //Croctopus Chase
+3.0, //Ice Age Alley
+2.5, //Rope Bridge Rumble
+4.0, //Torchlight Trouble
+2.0, //Really Gnawty Rampage
+3.5, //Oil Drum Alley
+2.25, //Trick Track Trek
+3.75, //Poison Pond
+3.25, //Elevator Antics
+2.0, //Blackout Basement
+2.25, //Mine Cart Madness
+2.75, //Boss Dumb Drum
+2.75, //Tanked Up Trouble
+1.75, //Manic Mincers
+4.0, //Misty Mine
+2.75, //Loopy Lights
+2.25, //Platform Perils
+3.0, //Necky's Revenge
+2.5, //Gang-Plank Galleon
+2.0, //Pirate Panic
+1.75, //Mainbrace Mayhem
+1.5, //Gangplank Galley
+1.75, //Lockjaw's Locker
+3.75, //Topsail Trouble
+1.5, //Krow's Nes
+2.25, //Hot-Head Hop
+2.5, //Kannon's Klaim
+3.25, //Lava Lagoon
+2.5, //Red-Hot Ride
+3.0, //Squawks's Shaft
+3.0, //Kleever's Kiln
+2.75, //Barrel Bayou
+3.75, //Glimmer's Galleon
+4.25, //Krockhead Klamber
+2.5, //Rattle Battle
+3.75, //Slime Climb
+1.5, //Bramble Blast
+2.5, //Kudgel's Kontest
+2.25, //Hornet Hole
+3.75, //Target Terror
+3.75, //Bramble Scramble
+2.25, //Rickety Race
+3.25, //Mudhole Marsh
+2.75, //Rambi Rumble
+3.0, //King Zing Sting
+2.5, //Ghostly Grove
+4.75, //Haunted Hall
+2.0, //Gusty Glade
+3.0, //Parrot Chute Panic
+2.5, //Web Woods
+5.5, //Kreepy Krow
+2.75, //Arctic Abyss
+3.75, //Castle Crush
+3.25, //Clapper's Cavern
+3.75, //Windy Well
+4.25, //Chain Link Chamber
+4.25, //Toxic Tower
+3.25, //Stronghold Showdown
+2.75, //Screech's Sprint
+3.25, //K. Rool Duel
+1.75, //Jungle Jinx
+1.75, //Black Ice Battle
+2.0, //Klobber Karnage
+1.25, //Fiery Furnace
+6.75, //Animal Antics
+3.0, //Krocodile Kore
+2.5, //Lakeside Limbo
+2.25, //Doorstop Dash
+2.25, //Tidal Trouble
+1.25, //Skidda's Row
+3.0, //Murky Mill
+3.75, //Belcha's Barn
+1.75, //Springin' Spiders
+2.0, //Riverside Race
+4.0, //Squeals on Wheels
+3.75, //Barrel Shield Bust-Up
+3.5, //Bobbing Barrel Brawl
+3.0, //Arich's Ambush
+2.0, //Bazza's Blockade
+1.75, //Rocket Barrel Ride
+4.0, //Kreeping Klasps
+2.25, //Tracker Barrel Trek
+1.75, //Fish Food Frenzy
+2.75, //Squirt's Showdown
+4.25, //Fire-Ball Frenzy
+3.25, //Demolition Drain-Pipe
+1.5, //Ripsaw Rage
+4.0, //Blazing Bazukas
+3.5, //Low-G Labyrinth
+3.0, //KAOS Karnage
+2.5, //Krevice Kreepers
+2.0, //Tearaway Toboggan
+2.25, //Barrel Drop Bounce
+3.0, //Krack-Shot Kroc
+1.75, //Lemguin Lunge
+2.5, //Bleak's House
+3.25, //Buzzer Barrage
+3.5, //Kong-Fused Cliffs
+2.25, //Floodlit Fish
+4.25, //Pot Hole Panic
+2.25, //Ropey Rumpus
+2.5, //Kroctopus Krush
+2.75, //Dingy Drain-Pipe
+3.25, //Stormy Seas
+1.75, //Sunken Spruce
+2.0, //Cliffside Blast
+2.0, //Ripcurl Reef
+3.75, //Surf's Up
+3.25, //Barbos's Barrier
+2.0, //Konveyor Rope Klash
+2.5, //Creepy Caverns
+3.5, //Lightning Looks-Out
+1.5, //Koindozer Klamber
+3.25, //Poisonous Pipeline
+5.75, //Kastle KAOS
+4.75, //Stampede Sprint
+2.5, //Criss Kross Cliffs
+2.25, //Tyrant Twin Tussle
+2.75, //Swoopy Salvo
+2.0, //Rocket Rush
+4.5, //Knautilus
+];
+
+export const starValue = [
+3, //Jungle Hijinxs
+2, //Ropey Rampage
+1, //Reptile Rumble
+1, //Coral Capers
+1, //Barrel Cannon Canyon
+1, //Very Gnawty's Lair
+3, //Winky's Walkway
+2, //Mine Cart Carnage
+2, //Bouncy Bonanza
+4, //Stop & Go Station
+3, //Millstone Mayhem
+2, //Necky's Nuts
+1, //Vulture Culture
+1, //Tree Top Town
+3, //Forest Frenzy
+3, //Orang-Utan Gang
+3, //Clam City
+5, //Temple Tempest
+3, //Bumble B. Rumble
+2, //Snow Barrel Blast
+2, //Sliplide Ride
+2, //Croctopus Chase
+3, //Ice Age Alley
+3, //Rope Bridge Rumble
+5, //Torchlight Trouble
+2, //Really Gnawty Rampage
+4, //Oil Drum Alley
+2, //Trick Track Trek
+4, //Poison Pond
+4, //Elevator Antics
+2, //Blackout Basement
+2, //Mine Cart Madness
+3, //Boss Dumb Drum
+3, //Tanked Up Trouble
+2, //Manic Mincers
+5, //Misty Mine
+3, //Loopy Lights
+2, //Platform Perils
+3, //Necky's Revenge
+3, //Gang-Plank Galleon
+2, //Pirate Panic
+2, //Mainbrace Mayhem
+1, //Gangplank Galley
+2, //Lockjaw's Locker
+4, //Topsail Trouble
+1, //Krow's Nes
+2, //Hot-Head Hop
+3, //Kannon's Klaim
+4, //Lava Lagoon
+3, //Red-Hot Ride
+3, //Squawks's Shaft
+3, //Kleever's Kiln
+3, //Barrel Bayou
+4, //Glimmer's Galleon
+5, //Krockhead Klamber
+3, //Rattle Battle
+4, //Slime Climb
+1, //Bramble Blast
+3, //Kudgel's Kontest
+2, //Hornet Hole
+4, //Target Terror
+4, //Bramble Scramble
+2, //Rickety Race
+4, //Mudhole Marsh
+3, //Rambi Rumble
+3, //King Zing Sting
+3, //Ghostly Grove
+5, //Haunted Hall
+2, //Gusty Glade
+3, //Parrot Chute Panic
+3, //Web Woods
+5, //Kreepy Krow
+3, //Arctic Abyss
+4, //Castle Crush
+4, //Clapper's Cavern
+4, //Windy Well
+5, //Chain Link Chamber
+5, //Toxic Tower
+4, //Stronghold Showdown
+3, //Screech's Sprint
+4, //K. Rool Duel
+2, //Jungle Jinx
+2, //Black Ice Battle
+2, //Klobber Karnage
+1, //Fiery Furnace
+5, //Animal Antics
+3, //Krocodile Kore
+3, //Lakeside Limbo
+2, //Doorstop Dash
+2, //Tidal Trouble
+1, //Skidda's Row
+3, //Murky Mill
+4, //Belcha's Barn
+2, //Springin' Spiders
+2, //Riverside Race
+5, //Squeals on Wheels
+4, //Barrel Shield Bust-Up
+4, //Bobbing Barrel Brawl
+3, //Arich's Ambush
+2, //Bazza's Blockade
+2, //Rocket Barrel Ride
+5, //Kreeping Klasps
+2, //Tracker Barrel Trek
+2, //Fish Food Frenzy
+3, //Squirt's Showdown
+5, //Fire-Ball Frenzy
+4, //Demolition Drain-Pipe
+1, //Ripsaw Rage
+5, //Blazing Bazukas
+4, //Low-G Labyrinth
+3, //KAOS Karnage
+3, //Krevice Kreepers
+2, //Tearaway Toboggan
+2, //Barrel Drop Bounce
+3, //Krack-Shot Kroc
+2, //Lemguin Lunge
+3, //Bleak's House
+4, //Buzzer Barrage
+4, //Kong-Fused Cliffs
+2, //Floodlit Fish
+5, //Pot Hole Panic
+2, //Ropey Rumpus
+3, //Kroctopus Krush
+3, //Dingy Drain-Pipe
+4, //Stormy Seas
+2, //Sunken Spruce
+2, //Cliffside Blast
+2, //Ripcurl Reef
+4, //Surf's Up
+4, //Barbos's Barrier
+2, //Konveyor Rope Klash
+3, //Creepy Caverns
+4, //Lightning Looks-Out
+1, //Koindozer Klamber
+4, //Poisonous Pipeline
+5, //Kastle KAOS
+5, //Stampede Sprint
+3, //Criss Kross Cliffs
+2, //Tyrant Twin Tussle
+3, //Swoopy Salvo
+2, //Rocket Rush
+5  //Knautilus
+];
