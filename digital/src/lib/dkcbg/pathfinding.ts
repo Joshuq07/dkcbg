@@ -117,7 +117,7 @@ export function scorePath(
   for (const [mat, weight] of Object.entries(neededWeights)) {
     if (!onPath[mat]) continue
     // Only count up to what's needed (weight represents how many times it's needed)
-    const covered = Math.min(onPath[mat], weight)
+    const covered = onPath[mat]
     coverage += covered
 
     const color = unifiedPbrColor[`mat:${mat}`] ?? '#22c55e'
