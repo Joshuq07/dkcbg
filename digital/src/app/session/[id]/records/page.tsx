@@ -12,7 +12,6 @@ import {
 import type { Game, Placement, CharacterId } from '@/lib/types'
 import Image from 'next/image'
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
 
 const PLACEMENT_COLORS: Record<Placement, string> = {
   0: '#000000',
@@ -248,12 +247,10 @@ function Trophy({
   )
 }
 
-// ─── TABS ────────────────────────────────────────────────────────────────────
 
 type MainTab = 'trophy' | 'history' | 'versions'
 type TrophyMode = 'player' | 'character'
 
-// ─── MAIN PAGE ───────────────────────────────────────────────────────────────
 
 export default function RecordsPage() {
   const params = useParams()
@@ -271,7 +268,6 @@ export default function RecordsPage() {
     router.push(`/session/${sessionId}/records/versions/${versionId}`)
   }
 
-  // ── TROPHY ROOM ────────────────────────────────────────────────────────────
 
   function TrophyRoom() {
     return (
@@ -370,7 +366,6 @@ if (trophies.length === 0) return null
     )
   }
 
-  // ── GAME HISTORY ──────────────────────────────────────────────────────────
 
  function GameHistory() {
   const sorted = [...GAMES].sort((a, b) => {
@@ -492,7 +487,6 @@ if (trophies.length === 0) return null
     )
   }
 
-  // ── RENDER ────────────────────────────────────────────────────────────────
 
   const TAB_LABELS: Record<MainTab, string> = {
     trophy: 'Trophy Room',
@@ -503,12 +497,6 @@ if (trophies.length === 0) return null
   return (
     <main className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
-        <button
-          onClick={() => router.push(`/session/${sessionId}`)}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-4 transition-colors"
-        >
-          ← Back to Session
-        </button>
 
         <h1 className="text-3xl font-bold text-gray-900 mb-6 tracking-tight">Records</h1>
 

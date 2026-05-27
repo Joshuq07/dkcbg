@@ -141,7 +141,6 @@ export default function GamePage() {
 
   const activePlacement = game.placements[activePlayerIndex]
 
- // Group by teamId for display
   const teams = useMemo(() => {
     const map = new Map<string, GamePlacementBase[]>()
     const placements = game.placements as GamePlacementBase[]
@@ -157,15 +156,7 @@ export default function GamePage() {
     <main className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
 
-        {/* Back */}
-        <button
-          onClick={() => router.push(`/session/${sessionId}/records`)}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-4 transition-colors"
-        >
-          ← Back to Records
-        </button>
 
-        {/* Header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
             {game.name ?? game.id}
@@ -175,7 +166,6 @@ export default function GamePage() {
         </div>
 
 
-        {/* Player tabs */}
         <div className="flex gap-1 mb-4 bg-white border border-gray-200 rounded-xl p-1 shadow-sm w-fit">
           {game.placements.map((p, i) => (
             <button

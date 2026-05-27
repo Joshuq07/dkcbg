@@ -42,15 +42,6 @@ export default function VersionPage() {
     <main className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
 
-        {/* Back */}
-        <button
-          onClick={() => router.push(`/session/${sessionId}/records`)}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-4 transition-colors"
-        >
-          ← Back to Records
-        </button>
-
-        {/* Header */}
         <div className="flex items-center gap-3 mb-1">
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{version.displayName}</h1>
           {isLatest && (
@@ -79,7 +70,6 @@ export default function VersionPage() {
           )}
         </div>
 
-        {/* Full timeline */}
         <div className="mb-8">
           <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">All Versions</div>
           <div className="relative">

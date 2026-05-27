@@ -292,7 +292,7 @@ export const VERSION_LAYOUTS: Record<VersionId, VersionLayout> = {
   },
   'v5.0': {
     versionId: 'v5.0',
-    pages: { 1: '/page1.png', 2: '/page2.png' },
+    pages: { 1: '/v5/page1.png', 2: '/v5/page2.png' },
     imageWidth: 3300,
     imageHeight: 4740,
     levelCount: 142,
