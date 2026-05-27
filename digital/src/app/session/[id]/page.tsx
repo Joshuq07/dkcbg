@@ -521,11 +521,6 @@ function toggleScrapbook(material: string) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ session_id: sessionId, level, box_type: 'check', user_email: starOwner }),
         })
-        await fetch('/api/box_entries', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ session_id: sessionId, level, box_type: 'bang', user_email: starOwner }),
-        })
         return
       }
 
