@@ -333,11 +333,16 @@ useEffect(() => {
       }
     }
     const counts: Record<string, number> = {}
-    for (const mat of ALL_MATERIALS) {
-      counts[mat] = Math.max(0, (requiredTotals[mat] || 0) - (materialCounts[mat] || 0))
-    }
+for (const mat of ALL_MATERIALS) {
+  const required = requiredTotals[mat] || 0
+  const have = materialCounts[mat] || 0
+  const isScrapbooked = scrapbooked.includes(mat)
+  const scrapbookRequired = isScrapbooked ? 0 : 1  // need 1 extra unless already scrapbooked
+  const totalRequired = required + scrapbookRequired
+  counts[mat] = Math.max(0, required + 1 - have - (isScrapbooked ? 1 : 0))
+}
     return counts
-  }, [remainingLevels, materialCounts])
+  }, [remainingLevels, materialCounts, scrapbooked])
 
   const stats = useMemo(() => {
     const base = computeStats(userEntries as LogicEntry[] || [])

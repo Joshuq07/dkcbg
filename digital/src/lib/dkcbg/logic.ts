@@ -1,5 +1,3 @@
-// src/lib/dkcbg/logic.ts
-
 import {
   materialList,
   levelNames,
@@ -8,9 +6,6 @@ import {
   totalLevels
 } from "./data"
 
-// -----------------------------
-// Types
-// -----------------------------
 export interface Entry {
   level: number
   box_type: string
@@ -25,9 +20,6 @@ export interface InventoryResult {
   money: number
 }
 
-// -----------------------------
-// Compute Inventory From Session Entries
-// -----------------------------
 export function computeInventory(entries: Entry[]): InventoryResult {
   const materials: string[] = []
   let bonusCoins = 0
@@ -40,12 +32,10 @@ export function computeInventory(entries: Entry[]): InventoryResult {
     // Material
     materials.push(e.value)
 
-    // Bonus coins (Python logic: levels 82–87, 137–142)
     if (e.value === "BonusCoin") {
       bonusCoins += 1
     }
 
-    // Money (placeholder — depends on your session rules)
     if (e.value === "Money") {
       money += 1
     }
@@ -54,9 +44,6 @@ export function computeInventory(entries: Entry[]): InventoryResult {
   return { materials, bonusCoins, money }
 }
 
-// -----------------------------
-// Compute Which Levels Are Already Built
-// -----------------------------
 export function computeBuiltLevels(entries: Entry[]): number[] {
   const built = new Set<number>()
 
@@ -69,17 +56,10 @@ export function computeBuiltLevels(entries: Entry[]): number[] {
   return Array.from(built)
 }
 
-// -----------------------------
-// Compute Which Levels Are Still Available
-// -----------------------------
 export function computeRemainingLevels(entries: Entry[]): number[] {
   const built = computeBuiltLevels(entries)
   return totalLevels.filter(lvl => !built.includes(lvl))
 }
-
-// -----------------------------
-// Check if a Level is Buildable
-// -----------------------------
 export function canBuildLevel(
   levelId: number,
   inventory: InventoryResult
@@ -87,20 +67,19 @@ export function canBuildLevel(
   const requiredMaterials = materialList[levelId - 1]
   const { materials, bonusCoins } = inventory
 
-  // Check material requirements
   for (const req of requiredMaterials) {
     if (!materials.includes(req)) {
       return false
     }
   }
 
-  // Special boss rule (Python logic)
+
   if (levelId === 39 || levelId === 136) {
     const bossCount = materials.filter(m => m === "Boss").length
     if (bossCount <= 1) return false
   }
 
-  // Bonus coin rule (Python logic)
+
   if (
     [82, 83, 84, 85, 86, 87, 137, 138, 139, 140, 141, 142].includes(levelId)
   ) {
@@ -110,9 +89,7 @@ export function canBuildLevel(
   return true
 }
 
-// -----------------------------
-// Compute All Buildable Levels
-// -----------------------------
+
 export function computeBuildableLevels(
   entries: Entry[],
   inventory: InventoryResult
@@ -121,9 +98,7 @@ export function computeBuildableLevels(
   return remaining.filter(levelId => canBuildLevel(levelId, inventory))
 }
 
-// -----------------------------
-// Compute Missing Materials For a Level
-// -----------------------------
+
 export function computeMissingMaterials(
   levelId: number,
   inventory: InventoryResult
@@ -132,9 +107,7 @@ export function computeMissingMaterials(
   return required.filter(req => !inventory.materials.includes(req))
 }
 
-// -----------------------------
-// Compute Closest Levels (Fewest Missing Materials)
-// -----------------------------
+
 export function computeClosestLevels(
   entries: Entry[],
   inventory: InventoryResult
@@ -146,15 +119,12 @@ export function computeClosestLevels(
     return { levelId, missing }
   })
 
-  // Sort by fewest missing materials
   scored.sort((a, b) => a.missing.length - b.missing.length)
 
   return scored
 }
 
-// -----------------------------
-// Compute Stats (Completion %, Difficulty, Stars, etc.)
-// -----------------------------
+
 export function computeStats(entries: Entry[]) {
   const built = computeBuiltLevels(entries)
   const remaining = totalLevels.length - built.length

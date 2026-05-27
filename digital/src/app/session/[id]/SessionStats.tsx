@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { LEVEL_CODE, bonusDifficulties } from '@/lib/dkcbg/data'
 import type { BoxEntry } from '@/lib/types'
 
-// Final boss level numbers
+
 const FINAL_BOSS_LEVELS = new Set([40, 81, 87, 136, 142])
 const FINAL_BOSS_NAMES: Record<number, string> = {
   40: 'Gang-Plank Galleon',
@@ -20,7 +20,6 @@ const WORLD_NAMES: Record<string, Record<number, string>> = {
   '3': { 1: 'Lake Orangatanga', 2: 'Kremwood Forest', 3: 'Cotton-Top Cove', 4: 'Mekanos', 5: 'K3', 6: 'Razor Ridge', 7: 'Pacifica', 8: 'KAOS Kore', 9: 'Krematoa' },
 }
 
-// Build level → world name, and world → levels[] maps from LEVEL_CODE
 const LEVEL_TO_WORLD: Record<number, string> = {}
 const WORLD_LEVELS: Record<string, number[]> = {}
 
@@ -75,7 +74,6 @@ function computeStatsForUser(userEmail: string, entries: BoxEntry[]) {
     userEntries.filter(e => e.box_type === 'check' && e.value).map(e => e.level)
   )
 
-  // Worlds completed (all levels built)
   let worldsCompleted = 0
   let worldsFullyCompleted = 0
   for (const world of ALL_WORLDS) {
@@ -86,12 +84,10 @@ function computeStatsForUser(userEmail: string, entries: BoxEntry[]) {
     if (allBuilt && allBang) worldsFullyCompleted++
   }
 
-  // Final bosses completed (built + bang)
   const finalBossesCompleted = Array.from(FINAL_BOSS_LEVELS).filter(
     l => builtLevels.has(l) && bangLevels.has(l)
   )
 
-  // Failed "!" cost — built levels without bang, excluding final bosses
   let failedBangCost = 0
   for (const level of Array.from(builtLevels)) {
     if (FINAL_BOSS_LEVELS.has(level)) continue
@@ -130,7 +126,6 @@ export default function SessionStats({ members, entries, scrapbooked, onClose }:
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2 className="text-lg font-bold text-gray-900">Player Stats</h2>
           <button
@@ -141,7 +136,6 @@ export default function SessionStats({ members, entries, scrapbooked, onClose }:
           </button>
         </div>
 
-        {/* Tabs */}
         {members.length > 1 && (
           <div className="flex border-b border-gray-100 overflow-x-auto">
             {members.map(m => (
@@ -159,7 +153,6 @@ export default function SessionStats({ members, entries, scrapbooked, onClose }:
           </div>
         )}
 
-        {/* Stats */}
         {stats && (
           <div className="px-5 py-3 max-h-[70vh] overflow-y-auto">
             <StatRow
