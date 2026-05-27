@@ -40,6 +40,18 @@ const BEAR_ALIASES: Record<string, string[]> = {
   "bazaar's general store": ["bazaar"],
 }
 
+function getCanonicalLabel(label: string): string {
+  const l = label.toLowerCase()
+
+  for (const [key, aliases] of Object.entries(BEAR_ALIASES)) {
+    if (key === l || aliases.includes(l)) {
+      return 'bazaar'
+    }
+  }
+
+  return l
+}
+
 function getMatchingSpaces(query: string): number[] {
   if (!query.trim()) return []
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean)
@@ -124,7 +136,7 @@ const UNIFIED_PBR_COLOR = (() => {
         totals[`mat:${mat}`] = (totals[`mat:${mat}`] ?? 0) + pbr
       }
     } else {
-      const l = e[0]?.toLowerCase() ?? ''
+      const l = getCanonicalLabel(e[0] ?? '')
       counts[`space:${l}`] = (counts[`space:${l}`] ?? 0) + 1
       totals[`space:${l}`] = (totals[`space:${l}`] ?? 0) + pbr
     }
@@ -146,17 +158,14 @@ function getSpacePbr(spaceIndex: number): number | null {
   const entries = FULL_SPACE_GUIDE[spaceIndex - 1]
   if (!entries || entries[0] === 'M') return null
 
-  const label = entries[0]?.toLowerCase() ?? ''
-  const aliases = BEAR_ALIASES[label] ?? []
+  const label = getCanonicalLabel(entries[0] ?? '')
   const isAlias = Object.values(BEAR_ALIASES).some(v => v.includes(label))
 
   let total = 0
   FULL_SPACE_GUIDE.forEach((e, i) => {
     if (e[0] === 'M') return
-    const l = e[0]?.toLowerCase() ?? ''
-    const match = l === label
-      || (aliases.length > 0 && aliases.includes(l))
-      || (isAlias && (BEAR_ALIASES[l]?.includes(label) || l === label))
+    const l = getCanonicalLabel(e[0] ?? '')
+const match = l === label
     if (match) total += SPACE_PBR[i + 1] ?? 0
   })
   return Math.round(total) / 100
