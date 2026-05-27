@@ -50,7 +50,6 @@ export default function SessionPage() {
   const [zoomScale, setZoomScale] = useState(1)
   const [showStats, setShowStats] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
-  const pendingNextNumber = useRef<number | null>(null)
   const [scrapbooked, setScrapbooked] = useState<string[]>([])
 const [scrapHydrated, setScrapHydrated] = useState(false)
 const [allScrapbooked, setAllScrapbooked] = useState<Record<string, string[]>>({})
@@ -115,9 +114,6 @@ setAllScrapbooked(allScrap)
     loadEntries()
   }, [loadSession, loadEntries])
 
-  useEffect(() => {
-    pendingNextNumber.current = null
-  }, [entries])
 
   useEffect(() => {
     if (!sessionId) return
@@ -314,16 +310,13 @@ useEffect(() => {
     return entries.some(e => e.level === level && e.lost)
   }
 
-  function nextNumberForUser(userEmail: string) {
-    const nums = entries
-      .filter(e => e.user_email === userEmail && e.box_type === 'number' && e.value)
-      .map(e => parseInt(e.value!, 10))
-      .filter(n => !Number.isNaN(n))
-    const fromState = nums.length === 0 ? 1 : Math.max(...nums) + 1
-    const next = Math.max(fromState, (pendingNextNumber.current ?? 0) + 1)
-    pendingNextNumber.current = next
-    return next
-  }
+function nextNumberForUser(userEmail: string) {
+  const nums = entries
+    .filter(e => e.user_email === userEmail && e.box_type === 'number' && e.value && !e.lost)
+    .map(e => parseInt(e.value!, 10))
+    .filter(n => !Number.isNaN(n))
+  return nums.length === 0 ? 1 : Math.max(...nums) + 1
+}
 
   function materialUsedCount(material: string): number {
   const builtLevelNums = entries
