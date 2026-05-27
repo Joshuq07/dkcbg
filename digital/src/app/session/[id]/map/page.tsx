@@ -161,7 +161,24 @@ function getSpacePbr(spaceIndex: number): number | null {
   })
   return Math.round(total) / 100
 }
+function useDraggable(initialPos: { x: number; y: number }) {
+  const [pos, setPos] = useState(initialPos)
+  const dragging = useRef(false)
+  const offset = useRef({ x: 0, y: 0 })
 
+  const onPointerDown = (e: React.PointerEvent) => {
+    dragging.current = true
+    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragging.current) return
+    setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y })
+  }
+  const onPointerUp = () => { dragging.current = false }
+
+  return { pos, onPointerDown, onPointerMove, onPointerUp }
+}
 export default function MapPage() {
   const [query, setQuery] = useState('')
   const [matchedSpaces, setMatchedSpaces] = useState<number[]>([])
@@ -177,7 +194,8 @@ export default function MapPage() {
   const { user } = useAuth()
   const { userEntries } = useSessionData(sessionId, user?.email)
   const [scrapbooked, setScrapbooked] = useState<string[]>([])
-
+  const dragCard = useDraggable({ x: 16, y: 16 })
+  const dragStats = useDraggable({ x: 16, y: 16 })
   useEffect(() => {
     if (!user || !sessionId) return
     fetch(`/api/scrapbook/${sessionId}`, {
@@ -485,7 +503,7 @@ export default function MapPage() {
         )}
 
         {/* ── clickable space pickers (path modes) ── */}
-        {containerSize.w > 0 && isPicking &&
+        {containerSize.w > 0 &&
           allSpaceIndices.map(spaceIndex => {
             const coords = SPACE_COORDINATES[spaceIndex - 1] as [number, number]
             if (!coords) return null
@@ -493,9 +511,13 @@ export default function MapPage() {
             return (
               <button
                 key={`pick-${spaceIndex}`}
-                onClick={() => handlePathSpaceClick(spaceIndex)}
-                className="absolute rounded-full bg-white/20 hover:bg-yellow-400/60 transition-colors"
-                style={{ left: x, top: y, transform: 'translate(-50%,-50%)', width: 18, height: 18, zIndex: 25 }}
+                onClick={() => isPicking ? handlePathSpaceClick(spaceIndex) : handleStarClick(spaceIndex)}
+                className="absolute rounded-full transition-colors"
+                style={{
+                  left: x, top: y, transform: 'translate(-50%,-50%)',
+                  width: 18, height: 18, zIndex: 25,
+                  backgroundColor: isPicking ? 'rgba(255,255,255,0.2)' : 'transparent',
+                }}
               />
             )
           })
@@ -508,13 +530,14 @@ export default function MapPage() {
             if (!coords) return null
             const { x, y } = boardToCanvas(coords, containerSize)
             return (
-              <div
+              <button
                 key={`path-${spaceIndex}`}
-                className="absolute flex items-center justify-center rounded-full bg-yellow-400 text-black text-xs font-bold shadow-lg"
+                onClick={() => handleStarClick(spaceIndex)}
+                className="absolute flex items-center justify-center rounded-full bg-yellow-400 text-black text-xs font-bold shadow-lg hover:scale-110 transition-transform"
                 style={{ left: x, top: y, transform: 'translate(-50%,-50%)', width: 22, height: 22, zIndex: 15, opacity: 0.9 }}
               >
                 {order + 1}
-              </div>
+              </button>
             )
           })
         }
@@ -525,7 +548,13 @@ export default function MapPage() {
           const mats = stats.materialsOnPath
           const covered = stats.coveredLevels
           return (
-            <div className="absolute top-4 right-4 bg-gray-900/95 border border-yellow-400 rounded-xl shadow-2xl p-4 w-80 z-20 max-h-[80vh] overflow-y-auto">
+           <div
+              className="absolute bg-gray-900/95 border border-yellow-400 rounded-xl shadow-2xl p-4 w-80 z-20 max-h-[80vh] overflow-y-auto cursor-grab active:cursor-grabbing"
+              style={{ left: dragStats.pos.x, top: dragStats.pos.y, touchAction: 'none' }}
+              onPointerDown={dragStats.onPointerDown}
+              onPointerMove={dragStats.onPointerMove}
+              onPointerUp={dragStats.onPointerUp}
+            >
               <div className="flex justify-between items-start mb-3">
                 <div className="text-yellow-400 text-xs font-semibold uppercase tracking-widest">
                   {pathMode === 'best-result' ? 'Best Path' : 'Check Path'} — {highlightedPath.length} spaces
@@ -596,8 +625,11 @@ export default function MapPage() {
         {/* ── space info card ── */}
         {selected && (
           <div
-            className="absolute bg-gray-900/95 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20"
-            style={{ top: 16, right: 16 }}
+            className="absolute bg-gray-900/95 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20 cursor-grab active:cursor-grabbing"
+            style={{ left: dragCard.pos.x, top: dragCard.pos.y, touchAction: 'none' }}
+            onPointerDown={dragCard.onPointerDown}
+            onPointerMove={dragCard.onPointerMove}
+            onPointerUp={dragCard.onPointerUp}
           >
             <div className="flex justify-between items-start mb-3">
               <div>
@@ -613,7 +645,7 @@ export default function MapPage() {
                   if (pbr === null) return null
                   return (
                     <div className="mt-1 flex items-center gap-1">
-                      <span className="text-gray-400 text-xs">PBR</span>
+                      <span className="text-gray-400 text-xs">PBP</span>
                       <span
                         className="text-xs font-bold px-1.5 py-0.5 rounded text-white"
                         style={{ backgroundColor: spacePbrColor(pbr) }}
