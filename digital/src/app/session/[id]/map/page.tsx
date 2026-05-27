@@ -341,6 +341,7 @@ export default function MapPage() {
   )
 
   const isPicking = pathMode !== 'idle' && pathMode !== 'best-result' && pathMode !== 'check-result'
+  const markerSize = Math.max(14, Math.min(28, containerSize.w * 0.012))
 
   return (
     <div className="flex flex-col h-screen bg-white">
@@ -448,9 +449,9 @@ export default function MapPage() {
                   left: x,
                   top: y,
                   transform: 'translate(-50%, -50%)',
-                  width: 28,
-                  height: 28,
-                  fontSize: 9,
+                  width: markerSize,
+                  height: markerSize,
+                  fontSize: markerSize * 0.35,
                   backgroundColor: spacePbrColor(pbr),
                   border: '1.5px solid rgba(255,255,255,0.6)',
                   zIndex: 10,
@@ -479,7 +480,7 @@ export default function MapPage() {
                 <img
                   src="/star.png"
                   alt={`Space ${spaceIndex}`}
-                  style={{ width: 28, height: 28 }}
+                  style={{ width: markerSize, height: markerSize }}
                   className="drop-shadow-lg hover:scale-125 transition-transform"
                 />
               </button>
@@ -514,7 +515,7 @@ export default function MapPage() {
                 className="absolute rounded-full transition-colors"
                 style={{
                   left: x, top: y, transform: 'translate(-50%,-50%)',
-                  width: 18, height: 18, zIndex: 25,
+                  width: markerSize * 0.65, height: markerSize * 0.65, zIndex: 25,
                   backgroundColor: isPicking ? 'rgba(255,255,255,0.2)' : 'transparent',
                 }}
               />
@@ -533,7 +534,7 @@ export default function MapPage() {
                 key={`path-${spaceIndex}`}
                 onClick={() => handleStarClick(spaceIndex)}
                 className="absolute flex items-center justify-center rounded-full bg-yellow-400 text-black text-xs font-bold shadow-lg hover:scale-110 transition-transform"
-                style={{ left: x, top: y, transform: 'translate(-50%,-50%)', width: 22, height: 22, zIndex: 15, opacity: 0.9 }}
+                style={{ left: x, top: y, transform: 'translate(-50%,-50%)', width: markerSize * 0.8, height: markerSize * 0.8, zIndex: 15, opacity: 0.9 }}
               >
                 {order + 1}
               </button>
