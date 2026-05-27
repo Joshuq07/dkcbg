@@ -79,9 +79,25 @@ function boardToCanvas(
 ): { x: number; y: number } {
   const BOARD_W = 2690
   const BOARD_H = 1905
+  const containerAspect = containerSize.w / containerSize.h
+  const boardAspect = BOARD_W / BOARD_H
+  let renderedW: number, renderedH: number, offsetX: number, offsetY: number
+
+  if (containerAspect > boardAspect) {
+    renderedH = containerSize.h
+    renderedW = renderedH * boardAspect
+    offsetX = (containerSize.w - renderedW) / 2
+    offsetY = 0
+  } else {
+    renderedW = containerSize.w
+    renderedH = renderedW / boardAspect
+    offsetX = 0
+    offsetY = (containerSize.h - renderedH) / 2
+  }
+
   return {
-    x: (coords[0] / BOARD_W) * containerSize.w,
-    y: (coords[1] / BOARD_H) * containerSize.h,
+    x: offsetX + (coords[0] / BOARD_W) * renderedW,
+    y: offsetY + (coords[1] / BOARD_H) * renderedH,
   }
 }
 
@@ -168,7 +184,6 @@ export default function MapPage() {
   const [matchedSpaces, setMatchedSpaces] = useState<number[]>([])
   const [selected, setSelected] = useState<SpaceInfo | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const boardRef = useRef<HTMLDivElement>(null)
   const [containerSize, setContainerSize] = useState({ w: 0, h: 0 })
   const [dimness, setDimness] = useState(100)
   const [randomSpace, setRandomSpace] = useState<number | null>(null)
@@ -284,7 +299,7 @@ export default function MapPage() {
         setContainerSize({ w: entry.contentRect.width, h: entry.contentRect.height })
       }
     })
-    if (boardRef.current) ro.observe(boardRef.current)
+    if (containerRef.current) ro.observe(containerRef.current)
     return () => ro.disconnect()
   }, [])
 
@@ -326,7 +341,6 @@ export default function MapPage() {
   )
 
   const isPicking = pathMode !== 'idle' && pathMode !== 'best-result' && pathMode !== 'check-result'
-  const markerSize = 18
 
   return (
     <div className="flex flex-col h-screen bg-white">
@@ -408,13 +422,11 @@ export default function MapPage() {
       </div>
 
       {/* ── board ── */}
-<div className="flex-1 relative overflow-auto" ref={containerRef}>
-        <div ref={boardRef} style={{ position: 'relative', width: '100%', paddingBottom: `${(1905/2690)*100}%` }}>
-        <Image
+<div className="flex-1 relative" ref={containerRef} style={{ overflow: 'hidden' }}>        <Image
           src="/board.png"
           alt="Board"
           fill
-          className="object-cover"
+          className="object-contain"
           priority
           style={{ filter: `brightness(${dimness}%)` }}
         />
@@ -436,9 +448,9 @@ export default function MapPage() {
                   left: x,
                   top: y,
                   transform: 'translate(-50%, -50%)',
-                  width: markerSize,
-                  height: markerSize,
-                  fontSize: markerSize * 0.35,
+                  width: 28,
+                  height: 28,
+                  fontSize: 9,
                   backgroundColor: spacePbrColor(pbr),
                   border: '1.5px solid rgba(255,255,255,0.6)',
                   zIndex: 10,
@@ -467,7 +479,7 @@ export default function MapPage() {
                 <img
                   src="/star.png"
                   alt={`Space ${spaceIndex}`}
-                  style={{ width: markerSize, height: markerSize }}
+                  style={{ width: 28, height: 28 }}
                   className="drop-shadow-lg hover:scale-125 transition-transform"
                 />
               </button>
@@ -502,7 +514,7 @@ export default function MapPage() {
                 className="absolute rounded-full transition-colors"
                 style={{
                   left: x, top: y, transform: 'translate(-50%,-50%)',
-                  width: markerSize * 0.65, height: markerSize * 0.65, zIndex: 25,
+                  width: 18, height: 18, zIndex: 25,
                   backgroundColor: isPicking ? 'rgba(255,255,255,0.2)' : 'transparent',
                 }}
               />
@@ -521,7 +533,7 @@ export default function MapPage() {
                 key={`path-${spaceIndex}`}
                 onClick={() => handleStarClick(spaceIndex)}
                 className="absolute flex items-center justify-center rounded-full bg-yellow-400 text-black text-xs font-bold shadow-lg hover:scale-110 transition-transform"
-                style={{ left: x, top: y, transform: 'translate(-50%,-50%)', width: markerSize * 0.8, height: markerSize * 0.8, zIndex: 15, opacity: 0.9 }}
+                style={{ left: x, top: y, transform: 'translate(-50%,-50%)', width: 22, height: 22, zIndex: 15, opacity: 0.9 }}
               >
                 {order + 1}
               </button>
@@ -706,7 +718,6 @@ export default function MapPage() {
           </div>
         )}
       </div>
-    </div>
     </div>
   )
 }
