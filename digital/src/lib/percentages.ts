@@ -1,8 +1,5 @@
 import type { BoxEntry } from './types'
 
-/**
- * Compute % of members who have a number on this level.
- */
 export function computePercentage(
   entries: BoxEntry[],
   memberEmails: string[],

@@ -2,8 +2,8 @@ import type { VersionId } from '@/lib/types'
 
 export type BoxColumn =
   | 'number'
-  | 'star'        // single 0|1 star (v1-v4)
-  | 'star1' | 'star2' | 'star3' | 'star4'  // multi star order (v5)
+  | 'star'        
+  | 'star1' | 'star2' | 'star3' | 'star4'  
   | 'check'
   | 'bang'
   | 'save'
@@ -27,8 +27,8 @@ export type VersionBoxColumn = {
 export type VersionLayout = {
   versionId: VersionId
   pages: {
-    1: string   // image path
-    2: string | null  // null if single-page version
+    1: string   
+    2: string | null  
   }
   imageWidth: number
   imageHeight: number
@@ -38,8 +38,7 @@ export type VersionLayout = {
   anchors: VersionLevelAnchor[]
 }
 
-// ─── SHARED ANCHOR HELPERS ────────────────────────────────────────────────────
-// These are the v5 anchors — copy and adjust per version as needed
+
 
 const V5_ANCHORS_PAGE1: VersionLevelAnchor[] = [
   { level: 1, page: 1, x: 533, y: 445 },
@@ -189,7 +188,7 @@ const V5_ANCHORS_PAGE2: VersionLevelAnchor[] = [
   { level: 142, page: 2, x: 2051, y: 1853 },
 ]
 
-// ─── V5 COLUMNS ───────────────────────────────────────────────────────────────
+
 
 const V5_COLUMNS: VersionBoxColumn[] = [
   { type: 'number', dx: 0,   dy: 0, w: 62, h: 62 },
@@ -202,8 +201,7 @@ const V5_COLUMNS: VersionBoxColumn[] = [
   { type: 'save',   dx: 327, dy: 0, w: 62, h: 62 },
 ]
 
-// ─── V3 COLUMNS (single star, no save) ───────────────────────────────────────
-// TODO: adjust dx values to match your v3 sheet image
+
 
 const V3_COLUMNS: VersionBoxColumn[] = [
   { type: 'number', dx: 0,   dy: 0, w: 62, h: 62 },
@@ -212,8 +210,7 @@ const V3_COLUMNS: VersionBoxColumn[] = [
   { type: 'bang',   dx: 162, dy: 0, w: 62, h: 62 },
 ]
 
-// ─── V1 COLUMNS (no star, no save, no scrapbook) ─────────────────────────────
-// TODO: adjust dx values to match your v1 sheet image
+
 
 const V1_COLUMNS: VersionBoxColumn[] = [
   { type: 'number', dx: 0,   dy: 0, w: 62, h: 62 },
@@ -221,18 +218,17 @@ const V1_COLUMNS: VersionBoxColumn[] = [
   { type: 'bang',   dx: 130, dy: 0, w: 62, h: 62 },
 ]
 
-// ─── VERSION LAYOUTS ──────────────────────────────────────────────────────────
 
 export const VERSION_LAYOUTS: Record<VersionId, VersionLayout> = {
   'v1.0': {
     versionId: 'v1.0',
-    pages: { 1: '/v1/page1.png', 2: '/v1/page2.png' },  // TODO: replace with real images
+    pages: { 1: '/v1/page1.png', 2: '/v1/page2.png' },  
     imageWidth: 3300,
     imageHeight: 4740,
-    levelCount: 40,   // TODO: confirm level count
+    levelCount: 40,   
     hasScrapbook: false,
     columns: V1_COLUMNS,
-    anchors: V5_ANCHORS_PAGE1.filter(a => a.level <= 40), // TODO: adjust
+    anchors: V5_ANCHORS_PAGE1.filter(a => a.level <= 40),
   },
   'v1.1': {
     versionId: 'v1.1',
@@ -249,7 +245,7 @@ export const VERSION_LAYOUTS: Record<VersionId, VersionLayout> = {
     pages: { 1: '/v2/page1.png', 2: '/v2/page2.png' },
     imageWidth: 3300,
     imageHeight: 4740,
-    levelCount: 87,   // TODO: confirm
+    levelCount: 87,  
     hasScrapbook: false,
     columns: V1_COLUMNS,
     anchors: V5_ANCHORS_PAGE1,

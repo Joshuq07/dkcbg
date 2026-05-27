@@ -1,8 +1,3 @@
-// src/lib/dkcbg/data.ts
-
-// -----------------------------
-// Level Names
-// -----------------------------
 export const levelNames: string[] = [
   "Jungle Hijinxs",
   "Ropey Rampage",
@@ -148,9 +143,6 @@ export const levelNames: string[] = [
   "Knautilus"
 ]
 
-// -----------------------------
-// Material Requirements Per Level
-// -----------------------------
 export const materialList: string[][] = [
   // Kongo Jungle
   ["Jungle", "Balloons", "Banana Hoard", "Rambi"], // Jungle Hijinxs
@@ -341,9 +333,7 @@ export const materialList: string[][] = [
   ["Ship Hold", "Barrels", "Boss", "Conveyors", "Electricity", "Fire"] // Knautilus
 ];
 
-// -----------------------------
-// Material Categories
-// -----------------------------
+
 export const animalList = [
   "Clapper", "Ellie", "Enguarde", "Expresso", "Glimmer", "Parry",
   "Quawks", "Rambi", "Rattly", "Squawks", "Squitter", "Winky"
@@ -364,9 +354,7 @@ export const environmentList = [
   "Swamp", "Temple", "Theme Park", "Trees", "Volcano", "Waterfall"
 ]
 
-// -----------------------------
-// Difficulty & Star Values OUTDATED
-// -----------------------------
+
 export const bonusDifficulties: number[] = [
   // Kongo Jungle
   2, // Jungle Hijinxs
@@ -747,14 +735,11 @@ export const starValue: number[] = [
   5  // Knautilus
 ];
 
-// -----------------------------
-// Level IDs
-// -----------------------------
+
 export const totalLevels = Array.from({ length: 142 }, (_, i) => i + 1)
 
 
 
-// GAME → WORLD → LEVEL INDEX
 export const LEVEL_CODE = {
   1: { // Game 1
     1: { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6 },                     // Kongo Jungle

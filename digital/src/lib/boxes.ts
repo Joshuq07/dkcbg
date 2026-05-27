@@ -1,6 +1,3 @@
-// src/lib/boxes.ts
-
-
 
 export const IMAGE_WIDTH = 3300
 export const IMAGE_HEIGHT = 4740
@@ -31,11 +28,9 @@ export type LevelAnchor = {
   page: 1 | 2
   x: number
   y: number
-  // optional override for level 86
   hOverride?: number
 }
 
-// Each entry defines the shape of one of the 7 boxes.
 export const BOX_LAYOUT = [
   { type: 'number', dx: 0, dy: 0, w: 62, h: 62 },
   { type: 'star1', dx: 66, dy: 0, w: 29, h: 62 },
@@ -238,8 +233,6 @@ export const LEVEL_ANCHORS_IMAGE_2: LevelAnchor[] = [
 import { environmentList, resourceList, animalList } from './dkcbg/data'
 
 
-
-// Add at bottom of boxes.ts
 export type ScrapboxEntry = {
   material: string
   totalBox: { x: number; y: number; w: number; h: number }

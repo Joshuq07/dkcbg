@@ -53,21 +53,17 @@ export type Version = {
   statsSchema: StatDefinition[]
 }
 
-// ─── PER-VERSION LEVEL STAT SHAPES ───────────────────────────────────────────
 
-/** v1.0, v1.1 — only build order tracked; checkmark = 1, blank = 0 */
 export type LevelStat_V1 = {
   buildOrder: number
 }
 
-/** v2.0 — build order + bonus (was "bang") + save */
 export type LevelStat_V2 = {
   buildOrder: number
   bonus: 0 | 1
   save: 0 | 1
 }
 
-/** v3.0, v3.1, v4.2, v4.3 — build order + star + bonus + save */
 export type LevelStat_V3 = {
   buildOrder: number
   star: 0 | 1
@@ -75,15 +71,12 @@ export type LevelStat_V3 = {
   save: 0 | 1
 }
 
-/** v5.0 — build order + ordered star (1-4) + bonus + save */
 export type LevelStat_V5 = {
   buildOrder: number
   starOrder: 0 | 1 | 2 | 3 | 4
   bonus: 0 | 1
   save: 0 | 1
 }
-
-// ─── PER-VERSION PLACEMENT STAT SHAPES ───────────────────────────────────────
 
 export type PlacementStats_V1 = {
   turnsTaken: number
@@ -95,14 +88,12 @@ export type PlacementStats_V2 = {
   levelStats: Record<string, LevelStat_V2>
 }
 
-/** v3.0, v3.1 */
 export type PlacementStats_V3 = {
   turnsTaken: number
   levelStats: Record<string, LevelStat_V3>
   scrapbook: string[]
 }
 
-/** v4.2 — adds musicPoints and bananaBirdsReturned */
 export type PlacementStats_V4_2 = {
   turnsTaken: number
   levelStats: Record<string, LevelStat_V3>
@@ -112,7 +103,6 @@ export type PlacementStats_V4_2 = {
   bananaBirdsReturned: number
 }
 
-/** v4.3 — adds songsCompleted */
 export type PlacementStats_V4_3 = {
   turnsTaken: number
   levelStats: Record<string, LevelStat_V3>
@@ -126,6 +116,9 @@ export type PlacementStats_V5 = {
   turnsTaken: number
   levelStats: Record<string, LevelStat_V5>
   scrapbook: string[]
+  points: number
+  completed: string[]
+  bananaBirdsReturned: number
 }
 
 export type GamePlacementBase = {

@@ -1,19 +1,6 @@
-// src/lib/starLogic.ts
 import { supabase } from '@/lib/supabase'
 
-/**
- * Recomputes star entries for a level WITHOUT scrambling existing order.
- *
- * Strategy:
- * - Existing builders keep their current rank (read from existing star rows)
- * - Newly added builders are appended at the end in member-column order
- * - Removed builders (lost/deleted) are dropped and remaining ranks close up
- *
- * This means we never re-sort by value or created_at — we just diff
- * who is currently ranked vs who should be ranked.
- */
 export async function recomputeStars(session_id: string, level: number) {
-  // 1. Get all session members ordered by column position
   const { data: members, error: memErr } = await supabase
     .from('session_members')
     .select('user_email, position')
@@ -30,7 +17,6 @@ export async function recomputeStars(session_id: string, level: number) {
 
   const memberEmails = orderedMembers.map(m => m.user_email)
 
-  // 2. Get current active (non-lost) number entries for this level
   const { data: numbers, error: numErr } = await supabase
     .from('box_entries')
     .select('user_email, value, lost')
@@ -41,14 +27,12 @@ export async function recomputeStars(session_id: string, level: number) {
 
   if (numErr || !numbers) return
 
-  // Who is currently an active builder for this level
   const activeBuilders = new Set(
     numbers
       .filter(n => !n.lost && n.value)
       .map(n => n.user_email)
   )
 
-  // 3. Get existing star rows so we can preserve their rank order
   const { data: existingStars } = await supabase
     .from('box_entries')
     .select('user_email, value')
@@ -56,8 +40,6 @@ export async function recomputeStars(session_id: string, level: number) {
     .eq('level', level)
     .in('box_type', ['star1', 'star2', 'star3', 'star4'])
 
-  // Build an ordered list of currently-ranked emails (rank 1 first)
-  // by reading the existing star values (★ = rank 1, "2" = rank 2, etc.)
   const existingRanked: { email: string; rank: number }[] = (existingStars ?? [])
     .map(s => ({
       email: s.user_email,
@@ -66,9 +48,7 @@ export async function recomputeStars(session_id: string, level: number) {
     .filter(s => !isNaN(s.rank))
     .sort((a, b) => a.rank - b.rank)
 
-  // 4. Compute new ordered builder list:
-  //    - Keep existing ranked builders who are still active (preserve order)
-  //    - Append any newly active builders not yet ranked (in member-column order)
+
   const kept = existingRanked
     .map(s => s.email)
     .filter(email => activeBuilders.has(email))
@@ -79,9 +59,8 @@ export async function recomputeStars(session_id: string, level: number) {
     .map(m => m.user_email)
     .filter(email => activeBuilders.has(email) && !alreadyRanked.has(email))
 
-  const finalOrder = [...kept, ...newlyAdded] // rank 1 = index 0
+  const finalOrder = [...kept, ...newlyAdded] 
 
-  // 5. Delete all existing star entries for this level
   await supabase
     .from('box_entries')
     .delete()
@@ -91,8 +70,7 @@ export async function recomputeStars(session_id: string, level: number) {
 
   if (finalOrder.length === 0) return
 
-  // 6. Re-insert star entries — column slot = member's position index,
-  //    star value = rank in build order
+
   const rankByEmail = new Map<string, number>()
   finalOrder.forEach((email, idx) => {
     rankByEmail.set(email, idx + 1)
