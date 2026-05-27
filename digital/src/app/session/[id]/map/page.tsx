@@ -559,7 +559,9 @@ export default function MapPage() {
                 <div className="text-yellow-400 text-xs font-semibold uppercase tracking-widest">
                   {pathMode === 'best-result' ? 'Best Path' : 'Check Path'} — {highlightedPath.length} spaces
                 </div>
-                <button onClick={() => setShowPathStats(false)} className="text-gray-500 hover:text-white text-lg leading-none ml-2">✕</button>
+                <button
+  onPointerDown={(e) => e.stopPropagation()}
+  onClick={() => setShowPathStats(false)} className="text-gray-500 hover:text-white text-lg leading-none ml-2">✕</button>
               </div>
 
               <div className="mb-3">
@@ -657,7 +659,8 @@ export default function MapPage() {
                 })()}
               </div>
               <button
-                onClick={() => setSelected(null)}
+  onPointerDown={(e) => e.stopPropagation()}
+  onClick={() => setSelected(null)}
                 className="text-gray-500 hover:text-white text-lg leading-none ml-2"
               >
                 ✕
