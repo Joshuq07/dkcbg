@@ -685,13 +685,14 @@ export default function CharacterGuidePage() {
           <div className="flex flex-col items-center gap-2">
             <div className="w-32 h-32 rounded-lg overflow-hidden bg-transparent flex items-center justify-center">
               <img
-                key={active}
-                src={`/characters/${active}/portrait.png`}
-                alt={`${active} portrait`}
-                className="object-contain w-full h-full transition-opacity duration-200"
-                style={{ opacity: imgLoaded ? 1 : 0 }}
-                onLoad={() => setImgLoaded(true)}
-              />
+  key={active}
+  src={`/characters/${active}/portrait.png`}
+  alt={`${active} portrait`}
+  className="object-contain w-full h-full transition-opacity duration-200"
+  style={{ opacity: imgLoaded ? 1 : 0 }}
+  onLoad={() => setImgLoaded(true)}
+  ref={el => { if (el?.complete) setImgLoaded(true) }}
+/>
             </div>
             <div className="flex flex-col gap-1.5 items-center">
               {!vsMode && (
