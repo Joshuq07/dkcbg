@@ -51,9 +51,8 @@ export const VERSIONS: Version[] = [
   {
     id: 'v1.0',
     displayName: 'v1.0',
-    date: '2022-01-01',
-    summary: '',
-    highlights: [],
+    date: 'July 2013',
+    summary: "The first prototype of the game was developed by Justin in high school. The board included generic spaces like \"Receiving Money\", \"Trading\", and \"Unlucky\", and was drawn by hand on a simple piece of blue posterboard. We've come a long way since then!",
     statsSchema: [
       { key: 'turnsTaken', label: 'Turns Taken', type: 'number' },
       { key: 'levelsBuilt', label: 'Levels Built', type: 'number' },
@@ -62,9 +61,8 @@ export const VERSIONS: Version[] = [
   {
     id: 'v1.1',
     displayName: 'v1.1',
-    date: '2022-03-01',
-    summary: '',
-    highlights: [],
+    date: 'May 2015',
+    summary: 'The level checklist was redesigned from vertical into horizontal, showing images of each world\'s gameplay, and introducing a resources wish list.',
     statsSchema: [
       { key: 'turnsTaken', label: 'Turns Taken', type: 'number' },
       { key: 'levelsBuilt', label: 'Levels Built', type: 'number' },
@@ -73,9 +71,8 @@ export const VERSIONS: Version[] = [
   {
     id: 'v2.0',
     displayName: 'v2.0',
-    date: '2022-07-01',
-    summary: '',
-    highlights: [],
+    date: 'August 2018',
+    summary: 'In this version, the complete board with colors and images was designed and printed out. Tokens were given new abilities (instead of being simply income), Kongs were given some new differences, "!"s and extra lives were added, and the various spaces were reworked to be related to various Kong family members. The Hacksaw resource was removed, and Ghosts and Rising Danger were added. And, a new, cleaner rules document was made.',
     statsSchema: [
       { key: 'turnsTaken', label: 'Turns Taken', type: 'number' },
       { key: 'levelsBuilt', label: 'Levels Built', type: 'number' },
@@ -86,9 +83,8 @@ export const VERSIONS: Version[] = [
   {
     id: 'v3.0',
     displayName: 'v3.0',
-    date: '2023-01-01',
-    summary: '',
-    highlights: [],
+    date: 'April 2020',
+    summary: 'Josh joined in collaborating the board game\'s design starting here. He introduced the concept of items, boss levels, and character abilities, and created a few new special space minigames. The Banana Hoard, Boss, Storm, and Gunship resources were added, and to fit all of these, some spaces on the board were taped over. This version also marked the debut of Tiny, Lanky, Chunky, the bonus coin system, $5000 bills, and a lot of new colorful dice.',
     statsSchema: [
       { key: 'turnsTaken', label: 'Turns Taken', type: 'number' },
       { key: 'levelsBuilt', label: 'Levels Built', type: 'number' },
@@ -101,9 +97,8 @@ export const VERSIONS: Version[] = [
   {
     id: 'v3.1',
     displayName: 'v3.1',
-    date: '2023-04-01',
-    summary: '',
-    highlights: [],
+    date: 'May 2020',
+    summary: 'Swanky\'s bonus quizzes were modified to be more fair. Animal tokens were introduced to make bonus cards more appealing (collect 1 each time you draw a bonus card, 3 = resource of choice). However, they wouldn\'t stick around long, due to the complete bonus card reworking in the near future.',
     statsSchema: [
       { key: 'turnsTaken', label: 'Turns Taken', type: 'number' },
       { key: 'levelsBuilt', label: 'Levels Built', type: 'number' },
@@ -116,9 +111,8 @@ export const VERSIONS: Version[] = [
   {
     id: 'v4.2',
     displayName: 'v4.2',
-    date: '2023-08-01',
-    summary: '',
-    highlights: [],
+    date: 'September 2021',
+    summary: 'A very big update! Wrinkly moved from her Save Cave back into Kong Kollege, and Candy has taken over saving duties, as well as managing a whole new ability-swapping system with crystal coconuts. The board has been re-worked and re-printed, most notably with Queen Banana Bird added, and K3 moving in the opposite direction. All the bonus cards were adjusted, with lots of new ones added, in order for the whole bonus card system to be more intrinsically enticing. Lots of items and bonus items were added, as well as whole new sets of cards for Wrinkly and Swanky\'s spaces. "Level materials" is now the generic term for animals, environments, and resources, in order to be less confusing, and all the materials\' counts and prices have been re-balanced. The Angry Foe and Race materials were combined into Chase, $1 bills were removed, and Taj and Xananab have joined as characters. And finally, all the cards were re-printed on higher-quality glossy cardstock, the level sheets were updated with material icons and re-printed on larger paper, and the rules document has been updated from 6 pages into a whopping, comprehensive 33 pages.',
     statsSchema: [
       { key: 'turnsTaken', label: 'Turns Taken', type: 'number' },
       { key: 'levelsBuilt', label: 'Levels Built', type: 'number' },
@@ -126,17 +120,16 @@ export const VERSIONS: Version[] = [
       { key: 'bonus', label: 'Bonus Completed', type: 'number' },
       { key: 'save', label: 'Save Completed', type: 'number' },
       { key: 'scrapbook', label: 'Scrapbook', type: 'array' },
-      { key: 'points', label: 'Music Points', type: 'number' },
-      { key: 'completed', label: 'Songs Completed', type: 'array' },
+      { key: 'points', label: 'Homework Points', type: 'number' },
+      { key: 'completed', label: 'Homework Completed', type: 'array' },
       { key: 'bananaBirdsReturned', label: 'Banana Birds Returned', type: 'number' },
     ],
   },
   {
     id: 'v4.3',
     displayName: 'v4.3',
-    date: '2023-11-01',
-    summary: '',
-    highlights: [],
+    date: 'December 2023',
+    summary: 'Another hefty update - the manipulative Klubba makes his debut, bringing along his painful K. Rool\'s Krap cards. The all-new team mode appears, a long time in the works, and includes a whole host of special duo abilities for each combo of characters. (With most games being solely Austin, Josh, and Justin, we\'re hoping to scout out some unsuspecting new victims to join us for an exciting 2-on-2 battle.) Cranky\'s space gains the competitive Expresso Racing minigame. Bonus spaces are made even more enticing with "!" rerolls and the return of animal tokens. Besides that, several new abilities for all the characters have been added, existing abilities and items have been balanced with help from Austin\'s judgment, and various little rule adjustments have been made, hopefully making things more clear and fair - but won\'t be surprised if more unforseen changes are needed down the road.',
     statsSchema: [
       { key: 'turnsTaken', label: 'Turns Taken', type: 'number' },
       { key: 'levelsBuilt', label: 'Levels Built', type: 'number' },
@@ -144,8 +137,25 @@ export const VERSIONS: Version[] = [
       { key: 'bonus', label: 'Bonus Completed', type: 'number' },
       { key: 'save', label: 'Save Completed', type: 'number' },
       { key: 'scrapbook', label: 'Scrapbook', type: 'array' },
-      { key: 'points', label: 'Music Points', type: 'number' },
-      { key: 'completed', label: 'Songs Completed', type: 'array' },
+      { key: 'points', label: 'Homework Points', type: 'number' },
+      { key: 'completed', label: 'Homework Completed', type: 'array' },
+      { key: 'bananaBirdsReturned', label: 'Banana Birds Returned', type: 'number' },
+    ],
+  },
+  {
+    id: 'v5.0',
+    displayName: 'v5.0',
+    date: 'May 2026',
+    summary: 'No bigger update has come before, and likely none this massive shall come again...! Loads of complex new features and characters arrive, along with a fresh coat of paint (literally, for tokens) and the rebalancing and reprinting of every single card in the game. Say hello to VoidCo, the Kremling Krew, and K. Rool himself, each characters with a unique system of getting things done. Wrinkly\'s homework assignments are now supplemented by Candy\'s songs: players collect music notes and gain special effects. Swanky\'s opening new casino minigames, complete with a deck of flashy playing cards to up the ante. Final bosses are revamped to be more interesting than simply rolling a die. Bazaar\'s shop is balanced with separate material and item stacks. New colors and categories of items are introduced, including gray, utility, and special materials. That brings us to special worlds: separate boards you can travel to if you\'re lucky, obtaining and doing cool things you can\'t get anywhere else. Altar and Electricity are now promoted from fake materials to real, and in the spirit of equality, Gunship is no longer special. A boatload of exciting new bonuses, items, and abilities abound, including new gray abilities that can be purchased by any character - just one part of the new progressive system of gaining more ability points as you build more levels. There are new carefully-worded definitions for common terms in the game, colorful symbols that compactly refer to certain rules, and mini rule cards to give quick guides without needing to search in the rulebook. The board has been re-worked yet again, this time with mathematically balanced material spaces, and re-printed in a professional foldable form. Gone are the simple boxes to hold all material cards in one big stack to dig through, and gone are the dozens of piles taking up excessive table space, since Josh has now constructed a tower of drawers to efficiently store and grab any supplies in the game. And to top it all off, a new computer program is introduced to assist with keeping track of information throughout the game. High-polish, high-technical, and even stacked higher up above the table - we hope this update brings the DKC Board Game to new heights of quality!',
+    statsSchema: [
+      { key: 'turnsTaken', label: 'Turns Taken', type: 'number' },
+      { key: 'levelsBuilt', label: 'Levels Built', type: 'number' },
+      { key: 'star', label: 'Star', type: 'number' },
+      { key: 'bonus', label: 'Bonus Completed', type: 'number' },
+      { key: 'save', label: 'Save Completed', type: 'number' },
+      { key: 'scrapbook', label: 'Scrapbook', type: 'array' },
+      { key: 'points', label: 'Points', type: 'number' },
+      { key: 'completed', label: 'Homework/Songs Completed', type: 'array' },
       { key: 'bananaBirdsReturned', label: 'Banana Birds Returned', type: 'number' },
     ],
   },
@@ -1070,7 +1080,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '3',
-    date: '2018-08-01',
+    date: '1/8/2018',
     version: 'v2.0',
     placements: [
       {
@@ -1534,7 +1544,7 @@ export const GAMES: Game[] = [
         playerId: "josh",
         teamId: "team-1",
         characterId: "diddy-kong",
-        place: 1,
+        place: 0,
         turnsTaken: 63,
         levelStats: {
           "Jungle Hijinxs": { buildOrder: 54, bonus: 1, save: 0 },
@@ -1685,7 +1695,7 @@ export const GAMES: Game[] = [
         playerId: "justin",
         teamId: "team-3",
         characterId: "kiddy-kong",
-        place: 3,
+        place: 0,
         turnsTaken: 34,
         levelStats: {
           "Jungle Hijinxs": { buildOrder: 0, bonus: 0, save: 0 },
@@ -1836,7 +1846,7 @@ export const GAMES: Game[] = [
         playerId: "austin",
         teamId: "team-2",
         characterId: "donkey-kong",
-        place: 2,
+        place: 0,
         turnsTaken: 57,
         levelStats: {
           "Jungle Hijinxs": { buildOrder: 45, bonus: 1, save: 0 },
@@ -1987,7 +1997,7 @@ export const GAMES: Game[] = [
         playerId: "tom",
         teamId: "team-4",
         characterId: "dixie-kong",
-        place: 4,
+        place: 0,
         turnsTaken: 21,
         levelStats: {
           "Jungle Hijinxs": { buildOrder: 0, bonus: 0, save: 0 },
@@ -3527,7 +3537,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '8',
-    date: '2023-05-08',
+    date: '5/8/2023',
     version: 'v4.2',
     placements: [
       {
@@ -3996,14 +4006,14 @@ export const GAMES: Game[] = [
   },
   {
     id: '9',
-    date: '2023-10-01',
+    date: '1/10/2023',
     version: 'v4.2',
     placements: [
       {
         playerId: "josh",
         teamId: "team-1",
         characterId: "tiny-kong",
-        place: 1,
+        place: 0,
         turnsTaken: 38,
         levelStats: {
           "Jungle Hijinxs": { buildOrder: 21, star: 0, bonus: 1, save: 1 },
@@ -4158,7 +4168,7 @@ export const GAMES: Game[] = [
         playerId: "dario",
         teamId: "team-4",
         characterId: "diddy-kong",
-        place: 4,
+        place: 0,
         turnsTaken: 29,
         levelStats: {
           "Jungle Hijinxs": { buildOrder: 2, star: 1, bonus: 1, save: 1 },
@@ -4313,7 +4323,7 @@ export const GAMES: Game[] = [
         playerId: "chris",
         teamId: "team-2",
         characterId: "kiddy-kong",
-        place: 2,
+        place: 0,
         turnsTaken: 37,
         levelStats: {
           "Jungle Hijinxs": { buildOrder: 0, star: 0, bonus: 0, save: 0 },
@@ -4468,7 +4478,7 @@ export const GAMES: Game[] = [
         playerId: "eddie",
         teamId: "team-3",
         characterId: "donkey-kong",
-        place: 3,
+        place: 0,
         turnsTaken: 41,
         levelStats: {
           "Jungle Hijinxs": { buildOrder: 0, star: 0, bonus: 0, save: 0 },
@@ -4623,7 +4633,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '10',
-    date: '2024-03-20',
+    date: '3/20/2024',
     version: 'v4.2',
     placements: [
       {
@@ -4938,7 +4948,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '11',
-    date: '2024-04-24',
+    date: '4/24/2024',
     version: 'v4.3',
     placements: [
       {
@@ -5407,7 +5417,7 @@ export const GAMES: Game[] = [
   },
   {
     id: '12',
-    date: '2024-07-14',
+    date: '7/14/2024',
     version: 'v4.3',
     placements: [
       {

@@ -136,25 +136,16 @@ export default function VersionPage() {
           </div>
         </div>
 
-        {/* Version detail */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
 
-          {/* Summary + highlights */}
           <div className="p-5 bg-white rounded-xl border border-gray-100 shadow-sm">
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Summary</div>
             <p className="text-sm text-gray-700 mb-4">{version.summary}</p>
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Highlights</div>
             <ul className="space-y-1.5">
-              {version.highlights.map(h => (
-                <li key={h} className="flex items-start gap-2 text-sm text-gray-700">
-                  <span className="mt-0.5 text-gray-300">—</span>
-                  {h}
-                </li>
-              ))}
             </ul>
           </div>
 
-          {/* Stats schema */}
           <div className="p-5 bg-white rounded-xl border border-gray-100 shadow-sm">
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Tracked Stats</div>
             <div className="space-y-2">
@@ -171,7 +162,6 @@ export default function VersionPage() {
           </div>
         </div>
 
-        {/* Games played on this version */}
         <div>
           <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
             Games on {version.displayName} ({gamesOnVersion.length})

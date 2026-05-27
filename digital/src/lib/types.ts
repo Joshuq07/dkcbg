@@ -1,4 +1,4 @@
-export type Placement = 1 | 2 | 3 | 4
+export type Placement = 0 | 1 | 2 | 3 | 4
 
 export type Player = {
   id: string
@@ -49,7 +49,6 @@ export type Version = {
   displayName: string
   date: string
   summary: string
-  highlights: string[]
   statsSchema: StatDefinition[]
 }
 

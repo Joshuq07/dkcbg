@@ -15,6 +15,7 @@ import Image from 'next/image'
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
 const PLACEMENT_COLORS: Record<Placement, string> = {
+  0: '#000000',
   1: '#FFD700',
   2: '#C0C0C0',
   3: '#CD7F32',
@@ -46,6 +47,7 @@ const PLAYER_TROPHY_IMAGES: Record<string, string> = {
 }
 
 const PLACEMENT_LABELS: Record<Placement, string> = {
+  0: 'Unfinished',
   1: '1st',
   2: '2nd',
   3: '3rd',
@@ -53,6 +55,7 @@ const PLACEMENT_LABELS: Record<Placement, string> = {
 }
 
 const PLACEMENT_SIZES: Record<Placement, number> = {
+  0: 0,
   1: 72,
   2: 58,
   3: 48,
@@ -117,7 +120,7 @@ function trophiesForCharacter(characterId: CharacterId): { game: Game; placement
   for (const game of GAMES) {
     const summaries = getPlacementSummaries(game)
     const p = summaries.find(pl => pl.characterId === characterId)
-    if (p) result.push({ game, placement: p })
+    if (p && p.place !== 0) result.push({ game, placement: p })  
   }
   return result.sort((a, b) => {
   // 1. Sort by placement
@@ -293,7 +296,11 @@ export default function RecordsPage() {
         {trophyMode === 'player' ? (
           <div className="space-y-4">
             {PLAYERS.map(player => {
-              const trophies = trophiesForPlayer(player.id)
+              const trophies = trophiesForPlayer(player.id).filter(
+  t => t.placement.place !== 0
+)
+
+if (trophies.length === 0) return null
               return (
                 <div key={player.id} className="flex items-center gap-4 p-4 rounded-xl bg-white border border-gray-100 shadow-sm">
                   <div className="w-36 shrink-0">
@@ -308,14 +315,16 @@ export default function RecordsPage() {
                     {trophies.length === 0 && (
                       <span className="text-xs text-gray-300 italic">No games yet</span>
                     )}
-                    {trophies.map(({ game, placement }) => (
-                      <Trophy
-                        key={game.id}
-                        game={game}
-                        placement={placement}
-                        onClick={() => goToGame(game.id)}
-                      />
-                    ))}
+                    {trophies
+  .filter(({ placement }) => placement.place !== 0)
+  .map(({ game, placement }) => (
+    <Trophy
+      key={game.id}
+      game={game}
+      placement={placement}
+      onClick={() => goToGame(game.id)}
+    />
+))}
                   </div>
                 </div>
               )
@@ -339,16 +348,18 @@ export default function RecordsPage() {
                     {trophies.length === 0 && (
                       <span className="text-xs text-gray-300 italic">No games yet</span>
                     )}
-                    {trophies.map(({ game, placement }) => (
-                      <Trophy
-  key={game.id}
-  game={game}
-  placement={placement}
-  labelTop={getPlayerName(placement.playerId)}
-  imageSrc={PLAYER_TROPHY_IMAGES[placement.playerId]}
-  onClick={() => goToGame(game.id)}
-/>
-                    ))}
+                    {trophies
+  .filter(({ placement }) => placement.place !== 0)
+  .map(({ game, placement }) => (
+    <Trophy
+      key={game.id}
+      game={game}
+      placement={placement}
+      labelTop={getPlayerName(placement.playerId)}
+      imageSrc={PLAYER_TROPHY_IMAGES[placement.playerId]}
+      onClick={() => goToGame(game.id)}
+    />
+))}
                   </div>
                 </div>
               )
@@ -470,9 +481,6 @@ export default function RecordsPage() {
                   <div className="text-xs text-gray-400 mt-0.5">{v.date}</div>
                   <div className="text-sm text-gray-600 mt-1">{v.summary}</div>
                   <div className="flex flex-wrap gap-1 mt-2">
-                    {v.highlights.map(h => (
-                      <span key={h} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{h}</span>
-                    ))}
                   </div>
                 </div>
                 <span className="text-gray-300 group-hover:text-gray-500 text-lg mt-0.5 transition-colors shrink-0">→</span>
