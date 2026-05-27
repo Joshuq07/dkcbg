@@ -381,7 +381,7 @@ export default function MapPage() {
               : 'border-gray-200 text-gray-700 bg-white hover:bg-gray-50'
           }`}
         >
-          {showPbr ? 'Hide PBR' : 'Show PBP'}
+          {showPbr ? 'Hide PBP' : 'Show PBP'}
         </button>
         <button
           onClick={() => { resetPathMode(); setPathMode('best-picking-start') }}
