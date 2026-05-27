@@ -113,6 +113,8 @@ function spacePbrColor(pbr: number): string {
 
 // Unified relative color map: materials and space types compared together,
 // grouped by occurrence count, ranked by avg PBR within each tier.
+const AVG_SPACE_PBR = 0.28
+
 const UNIFIED_PBR_COLOR = (() => {
   const counts: Record<string, number> = {}
   const totals: Record<string, number> = {}
@@ -131,25 +133,14 @@ const UNIFIED_PBR_COLOR = (() => {
     }
   })
 
-  const byCount: Record<number, string[]> = {}
-  for (const [key, count] of Object.entries(counts)) {
-    if (!byCount[count]) byCount[count] = []
-    byCount[count].push(key)
-  }
-
   const result: Record<string, string> = {}
-  for (const [, keys] of Object.entries(byCount)) {
-    if (keys.length === 1) {
-      result[keys[0]] = '#22c55e'
-      continue
-    }
-    const ranked = [...keys].sort((a, b) =>
-      (totals[b] / counts[b]) - (totals[a] / counts[a])
-    )
-    ranked.forEach((key, idx) => {
-      const pct = idx / (ranked.length - 1)
-      result[key] = pct <= 0.33 ? '#22c55e' : pct <= 0.66 ? '#eab308' : '#ef4444'
-    })
+  for (const key of Object.keys(counts)) {
+    const avg = totals[key] / counts[key]
+    const expected = counts[key] * AVG_SPACE_PBR
+    const diff = avg - expected
+    if (diff > AVG_SPACE_PBR) result[key] = '#22c55e'       // green: easier than expected
+    else if (diff >= -AVG_SPACE_PBR) result[key] = '#eab308' // yellow: about average
+    else result[key] = '#ef4444'                              // red: harder than expected
   }
   return result
 })()
@@ -229,7 +220,7 @@ export default function MapPage() {
       setPathMode('best-picking-end')
     } else if (pathMode === 'best-picking-end') {
       setPathEnd(spaceIndex)
-      const result = findBestPath(pathStart!, spaceIndex, neededWeights, remainingLevels)
+      const result = findBestPath(pathStart!, spaceIndex, neededWeights, remainingLevels, UNIFIED_PBR_COLOR)
       setBestPathResult(result)
       setHighlightedPath(result?.path ?? [])
       setPathMode('best-result')

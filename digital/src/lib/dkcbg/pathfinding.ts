@@ -96,21 +96,37 @@ export function getMaterialsOnPath(path: number[]): Record<string, number> {
 // 0 = ignore rarity entirely, 1 = full inverse-PBR weighting.
 const PBR_WEIGHT = 0.5
 
-// Score = sum over needed materials of (count_on_path * need_weight * rarity_mult)
-// divided by path length. Rare materials (low avg PBR) earn a higher rarity_mult.
+// Rarity multipliers per bracket
+const BRACKET_MULT: Record<string, number> = {
+  '#ef4444': 1.5, // red — rare, hard to land
+  '#eab308': 1.2, // yellow — average
+  '#22c55e': 1.0, // green — common
+}
+
 export function scorePath(
   path: number[],
-  neededWeights: Record<string, number>
+  neededWeights: Record<string, number>,
+  unifiedPbrColor: Record<string, string>
 ): number {
   const onPath = getMaterialsOnPath(path)
-  let score = 0
+
+  // Coverage: count unique needed materials on path (capped at need of 1 per mat)
+  let coverage = 0
+  let rarityMultiplier = 1.0
+
   for (const [mat, weight] of Object.entries(neededWeights)) {
     if (!onPath[mat]) continue
-    const avgPbr = MATERIAL_PBR_AVG[mat] ?? 100
-const rarityMult = 1 + PBR_WEIGHT * (1 - avgPbr / 100)
-    score += onPath[mat] * weight * rarityMult
+    // Only count up to what's needed (weight represents how many times it's needed)
+    const covered = Math.min(onPath[mat], weight)
+    coverage += covered
+
+    const color = unifiedPbrColor[`mat:${mat}`] ?? '#22c55e'
+    const mult = BRACKET_MULT[color] ?? 1.0
+    // Apply multiplier once per unique needed mat found, not per copy
+    rarityMultiplier *= mult
   }
-  return score / path.length
+
+  return (coverage / path.length) * rarityMultiplier
 }
 
 export function buildNeededWeights(
@@ -139,7 +155,8 @@ export function findBestPath(
   startSpace: number,
   endSpace: number,
   neededWeights: Record<string, number>,
-  remainingLevels: number[]
+  remainingLevels: number[],
+  unifiedPbrColor: Record<string, string>
 ): {
   path: number[]
   score: number
@@ -150,10 +167,10 @@ export function findBestPath(
   if (paths.length === 0) return null
 
   let bestPath = paths[0]
-  let bestScore = scorePath(paths[0], neededWeights)
+  let bestScore = scorePath(paths[0], neededWeights, unifiedPbrColor)
 
   for (const path of paths.slice(1)) {
-    const s = scorePath(path, neededWeights)
+    const s = scorePath(path, neededWeights, unifiedPbrColor)
     if (s > bestScore) {
       bestScore = s
       bestPath = path
