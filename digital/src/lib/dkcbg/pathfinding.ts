@@ -214,3 +214,33 @@ export function findPathsThroughWaypoints(
     return waypointIdx === waypoints.length
   })
 }
+
+export const UNIFIED_PBR_COLOR: Record<string, string> = (() => {
+  const counts: Record<string, number> = {}
+  const totals: Record<string, number> = {}
+
+  FULL_SPACE_GUIDE.forEach((e, i) => {
+    const pbr = SPACE_PBR[i + 1] ?? 0
+    if (e[0] === 'M') {
+      for (const mat of e.slice(1)) {
+        counts[`mat:${mat}`] = (counts[`mat:${mat}`] ?? 0) + 1
+        totals[`mat:${mat}`] = (totals[`mat:${mat}`] ?? 0) + pbr
+      }
+    } else {
+      const l = e[0]?.toLowerCase() ?? ''
+      counts[`space:${l}`] = (counts[`space:${l}`] ?? 0) + 1
+      totals[`space:${l}`] = (totals[`space:${l}`] ?? 0) + pbr
+    }
+  })
+
+  const result: Record<string, string> = {}
+  for (const key of Object.keys(counts)) {
+    const individualPbr = totals[key] / 100
+    const expected = counts[key] * 0.28
+    const diff = individualPbr - expected
+    if (diff > 0.28) result[key] = '#22c55e'
+    else if (diff >= -0.28) result[key] = '#eab308'
+    else result[key] = '#ef4444'
+  }
+  return result
+})()
