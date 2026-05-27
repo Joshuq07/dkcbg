@@ -10,7 +10,7 @@ import { computeRemainingLevels, Entry as LogicEntry } from '@/lib/dkcbg/logic'
 import { CONNECTIONS, levelNames, getLevelCode, materialList } from '@/lib/dkcbg/data'
 import {
   findAllPaths, getMaterialsOnPath, buildNeededWeights, findBestPath,
-  findPathsThroughWaypoints, SPACE_PBR, MATERIAL_PBR, MATERIAL_PBR_AVG,
+  findPathsThroughWaypoints, SPACE_PBR, MATERIAL_PBR,
 } from '@/lib/dkcbg/pathfinding'
 
 const BOARD_WIDTH = 2976
@@ -73,7 +73,6 @@ function getMatchingSpaces(query: string): number[] {
   return results
 }
 
-// Shared helper: compute canvas position from board coords
 function boardToCanvas(
   coords: [number, number],
   containerSize: { w: number; h: number }
@@ -102,7 +101,7 @@ function boardToCanvas(
   }
 }
 
-// For space PBR (whole numbers 0-100)
+// Space PBR: absolute scale 0-100
 function spacePbrColor(pbr: number): string {
   if (pbr === 0) return '#6b7280'
   if (pbr === 100) return '#16a34a'
@@ -112,56 +111,52 @@ function spacePbrColor(pbr: number): string {
   return '#ef4444'
 }
 
-// For individual PBR (summed decimals like 3.84)
-// Color is relative: rank by avg PBR within same-count tier
-function buildIndividualPbrColorMap(): Record<string, string> {
-  // Group all named space types by their occurrence count
-  const labelCounts: Record<string, number> = {}
-  const labelTotalPbr: Record<string, number> = {}
+// Unified relative color map: materials and space types compared together,
+// grouped by occurrence count, ranked by avg PBR within each tier.
+const UNIFIED_PBR_COLOR = (() => {
+  const counts: Record<string, number> = {}
+  const totals: Record<string, number> = {}
+
   FULL_SPACE_GUIDE.forEach((e, i) => {
-    if (e[0] === 'M') return
-    const l = e[0]?.toLowerCase() ?? ''
-    labelCounts[l] = (labelCounts[l] ?? 0) + 1
-    labelTotalPbr[l] = (labelTotalPbr[l] ?? 0) + (SPACE_PBR[i + 1] ?? 0)
+    const pbr = SPACE_PBR[i + 1] ?? 0
+    if (e[0] === 'M') {
+      for (const mat of e.slice(1)) {
+        counts[`mat:${mat}`] = (counts[`mat:${mat}`] ?? 0) + 1
+        totals[`mat:${mat}`] = (totals[`mat:${mat}`] ?? 0) + pbr
+      }
+    } else {
+      const l = e[0]?.toLowerCase() ?? ''
+      counts[`space:${l}`] = (counts[`space:${l}`] ?? 0) + 1
+      totals[`space:${l}`] = (totals[`space:${l}`] ?? 0) + pbr
+    }
   })
-  // Group labels by count
+
   const byCount: Record<number, string[]> = {}
-  for (const [label, count] of Object.entries(labelCounts)) {
+  for (const [key, count] of Object.entries(counts)) {
     if (!byCount[count]) byCount[count] = []
-    byCount[count].push(label)
+    byCount[count].push(key)
   }
-  // Within each count tier, rank by avg PBR and assign color
+
   const result: Record<string, string> = {}
-  for (const [, labels] of Object.entries(byCount)) {
-    if (labels.length === 1) {
-      result[labels[0]] = '#22c55e' // default green for unique count
+  for (const [, keys] of Object.entries(byCount)) {
+    if (keys.length === 1) {
+      result[keys[0]] = '#22c55e'
       continue
     }
-    const ranked = [...labels].sort((a, b) =>
-      (labelTotalPbr[b] / labelCounts[b]) - (labelTotalPbr[a] / labelCounts[a])
+    const ranked = [...keys].sort((a, b) =>
+      (totals[b] / counts[b]) - (totals[a] / counts[a])
     )
-    ranked.forEach((label, idx) => {
-      const pct = ranked.length === 1 ? 1 : idx / (ranked.length - 1)
-      if (pct <= 0.33) result[label] = '#22c55e'
-      else if (pct <= 0.66) result[label] = '#eab308'
-      else result[label] = '#ef4444'
+    ranked.forEach((key, idx) => {
+      const pct = idx / (ranked.length - 1)
+      result[key] = pct <= 0.33 ? '#22c55e' : pct <= 0.66 ? '#eab308' : '#ef4444'
     })
   }
   return result
-}
-const INDIVIDUAL_PBR_COLOR = buildIndividualPbrColorMap()
+})()
 
-function individualPbrColor(spaceIndex: number): string {
-  const entries = FULL_SPACE_GUIDE[spaceIndex - 1]
-  if (!entries || entries[0] === 'M') return '#6b7280'
-  const label = entries[0]?.toLowerCase() ?? ''
-  return INDIVIDUAL_PBR_COLOR[label] ?? '#22c55e'
-}
 function getSpacePbr(spaceIndex: number): number | null {
   const entries = FULL_SPACE_GUIDE[spaceIndex - 1]
-  if (!entries) return null
-  const isMat = entries[0] === 'M'
-  if (isMat) return null 
+  if (!entries || entries[0] === 'M') return null
 
   const label = entries[0]?.toLowerCase() ?? ''
   const aliases = BEAR_ALIASES[label] ?? []
@@ -177,26 +172,6 @@ function getSpacePbr(spaceIndex: number): number | null {
     if (match) total += SPACE_PBR[i + 1] ?? 0
   })
   return Math.round(total) / 100
-}
-
-function getSpacePbrAvg(spaceIndex: number): number | null {
-  const entries = FULL_SPACE_GUIDE[spaceIndex - 1]
-  if (!entries || entries[0] === 'M') return null
-
-  const label = entries[0]?.toLowerCase() ?? ''
-  const aliases = BEAR_ALIASES[label] ?? []
-  const isAlias = Object.values(BEAR_ALIASES).some(v => v.includes(label))
-
-  let total = 0, count = 0
-  FULL_SPACE_GUIDE.forEach((e, i) => {
-    if (e[0] === 'M') return
-    const l = e[0]?.toLowerCase() ?? ''
-    const match = l === label
-      || (aliases.length > 0 && aliases.includes(l))
-      || (isAlias && (BEAR_ALIASES[l]?.includes(label) || l === label))
-    if (match) { total += SPACE_PBR[i + 1] ?? 0; count++ }
-  })
-  return count === 0 ? null : Math.round(total / count)
 }
 
 export default function MapPage() {
@@ -354,7 +329,6 @@ export default function MapPage() {
 
   const isMaterial = (entries: string[]) => entries[0] === 'M'
 
-  // All spaces that have coordinates (shown in PBR overlay and path pickers)
   const allSpaceIndices = useMemo(
     () => SPACE_COORDINATES.map((_, i) => i + 1).filter(i => SPACE_COORDINATES[i - 1]),
     []
@@ -460,7 +434,6 @@ export default function MapPage() {
             const pbr = SPACE_PBR[spaceIndex] ?? 0
             if (pbr === 0) return null
             const { x, y } = boardToCanvas(coords, containerSize)
-            const color = spacePbrColor(pbr)
             return (
               <button
                 key={`pbr-${spaceIndex}`}
@@ -473,7 +446,7 @@ export default function MapPage() {
                   width: 28,
                   height: 28,
                   fontSize: 9,
-                  backgroundColor: color,
+                  backgroundColor: spacePbrColor(pbr),
                   border: '1.5px solid rgba(255,255,255,0.6)',
                   zIndex: 10,
                   lineHeight: 1,
@@ -584,15 +557,15 @@ export default function MapPage() {
                         key={m}
                         className="text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
                         style={{ backgroundColor: '#374151' }}
-                        title={`Avg material PBR: ${mpbr}`}
+                        title={`Material PBR: ${mpbr}`}
                       >
                         {m}
                         {mpbr !== undefined && (
                           <span
                             className="text-[9px] font-bold px-1 rounded"
-                            style={{ backgroundColor: spacePbrColor(MATERIAL_PBR_AVG[m] ?? 0), color: '#fff' }}
+                            style={{ backgroundColor: UNIFIED_PBR_COLOR[`mat:${m}`] ?? '#22c55e', color: '#fff' }}
                           >
-                            {mpbr}
+                            {Number.isInteger(mpbr) ? mpbr : mpbr.toFixed(2)}
                           </span>
                         )}
                       </span>
@@ -634,23 +607,19 @@ export default function MapPage() {
                 {selected.world && (
                   <div className="text-gray-300 text-xs">{selected.world}</div>
                 )}
-                {/* PBR badge on selected space */}
+                {/* Space PBR badge — always the raw integer for this one space */}
                 {(() => {
-  const pbr = SPACE_PBR[selected.index] ?? null
-  if (pbr === null || pbr === undefined) return null
+                  const pbr = SPACE_PBR[selected.index] ?? null
+                  if (pbr === null) return null
                   return (
                     <div className="mt-1 flex items-center gap-1">
                       <span className="text-gray-400 text-xs">PBR</span>
-<span
-  className="text-xs font-bold px-1.5 py-0.5 rounded text-white"
-  style={{ backgroundColor: 
-  FULL_SPACE_GUIDE[selected.index - 1]?.[0] === 'M'
-    ? spacePbrColor(pbr as number)
-    : individualPbrColor(selected.index)
-}}
->
-  {Number.isInteger(pbr) ? pbr : pbr.toFixed(2)}
-</span>
+                      <span
+                        className="text-xs font-bold px-1.5 py-0.5 rounded text-white"
+                        style={{ backgroundColor: spacePbrColor(pbr) }}
+                      >
+                        {pbr}
+                      </span>
                     </div>
                   )
                 })()}
@@ -676,39 +645,40 @@ export default function MapPage() {
                       >
                         {mat}
                         {mpbr !== undefined && (
-  <span
-    className="text-[9px] font-bold px-1 rounded"
-    style={{ backgroundColor: spacePbrColor(MATERIAL_PBR_AVG[mat] ?? 0), color: '#fff' }}
-  >
-    {Number.isInteger(mpbr) ? mpbr : mpbr.toFixed(2)}
-  </span>
-)}
+                          <span
+                            className="text-[9px] font-bold px-1 rounded"
+                            style={{ backgroundColor: UNIFIED_PBR_COLOR[`mat:${mat}`] ?? '#22c55e', color: '#fff' }}
+                          >
+                            {Number.isInteger(mpbr) ? mpbr : mpbr.toFixed(2)}
+                          </span>
+                        )}
                       </span>
                     )
                   })}
                 </div>
               </div>
             ) : (
-  <div className="flex flex-col gap-1">
-    {selected.entries.map((entry, i) => (
-      <span key={i} className="text-white text-sm flex items-center gap-1">
-        {entry}
-        {i === 0 && (() => {
-          const sum = getSpacePbr(selected.index)
-          if (sum === null || sum === undefined) return null
-          return (
-            <span
-              className="text-[9px] font-bold px-1 rounded"
-              style={{ backgroundColor: individualPbrColor(selected.index), color: '#fff' }}
-            >
-              {Number.isInteger(sum) ? sum : sum.toFixed(2)}
-            </span>
-          )
-        })()}
-      </span>
-    ))}
-  </div>
-)}
+              <div className="flex flex-col gap-1">
+                {selected.entries.map((entry, i) => (
+                  <span key={i} className="text-white text-sm flex items-center gap-1">
+                    {entry}
+                    {i === 0 && (() => {
+                      const sum = getSpacePbr(selected.index)
+                      if (sum === null || sum === undefined) return null
+                      const l = FULL_SPACE_GUIDE[selected.index - 1]?.[0]?.toLowerCase() ?? ''
+                      return (
+                        <span
+                          className="text-[9px] font-bold px-1 rounded"
+                          style={{ backgroundColor: UNIFIED_PBR_COLOR[`space:${l}`] ?? '#22c55e', color: '#fff' }}
+                        >
+                          {Number.isInteger(sum) ? sum : sum.toFixed(2)}
+                        </span>
+                      )
+                    })()}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
