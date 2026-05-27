@@ -211,18 +211,12 @@ localStorage.setItem(`joined_${data.session.id}`, 'true')
 
               <button
                 onClick={() => {
-  if (s.host_email === user.email) {
-    router.push(`/session/${s.id}`)
-    return
-  }
-
-  const alreadyJoined = localStorage.getItem(`joined_${s.id}`) === 'true'
+  const alreadyJoined = s.host_email === user.email || localStorage.getItem(`joined_${s.id}`) === 'true'
   if (alreadyJoined) {
     router.push(`/session/${s.id}`)
     return
   }
 
-  // Otherwise show password modal
   setSelectedSession(s)
   setPassword('')
   setMode('join')
@@ -231,7 +225,7 @@ localStorage.setItem(`joined_${data.session.id}`, 'true')
 
                 className="btn-primary text-sm"
               >
-                {s.host_email === user.email ? 'Open' : 'Join'}
+                {s.host_email === user.email || localStorage.getItem(`joined_${s.id}`) === 'true' ? 'Open' : 'Join'}
               </button>
             </div>
           ))}
