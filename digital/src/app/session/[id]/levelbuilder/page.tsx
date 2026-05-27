@@ -25,6 +25,7 @@ import {
 } from '@/lib/dkcbg/data'
 
 import PhotoScanModal from '../PhotoScanModal' 
+import { MATERIAL_PBR } from '@/lib/dkcbg/pathfinding'
 
 const ALL_MATERIALS = [
   ...environmentList,
@@ -921,6 +922,23 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                     className="shrink-0"
                   />
                   <span className="w-36 text-sm font-medium truncate">{m}</span>
+                  {(() => {
+                    const pbr = MATERIAL_PBR[m]
+                    if (pbr === undefined) return <span className="w-10" />
+                    const color = pbr >= 0.28 ? '#22c55e' : pbr >= 0.14 ? '#eab308' : '#ef4444'
+                    return (
+                      <span
+                        className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white shrink-0"
+                        style={{ backgroundColor: color }}
+                        title="Material PBR"
+                      >
+                        {Number.isInteger(pbr) ? pbr : pbr.toFixed(2)}
+                      </span>
+                    )
+                  })()}
+                  <span className="text-sm text-gray-600 w-16 text-center">
+                    {used}/{totalNeeded}
+                  </span><span className="w-36 text-sm font-medium truncate">{m}</span>
                   <span className="text-sm text-gray-600 w-16 text-center">
                     {used}/{totalNeeded}
                   </span>
