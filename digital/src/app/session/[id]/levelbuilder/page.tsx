@@ -930,7 +930,7 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                       <span
                         className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white shrink-0"
                         style={{ backgroundColor: color }}
-                        title="Material PBR"
+                        title="Material Passby Rate: Sums of all the occurances of the material on the board multiplied by their individual PassbyPercentage, as seen in the Map/Location Finder page if you toggle on Show PBP"
                       >
                         {Number.isInteger(pbr) ? pbr : pbr.toFixed(2)}
                       </span>
