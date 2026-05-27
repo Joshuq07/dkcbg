@@ -111,9 +111,6 @@ function spacePbrColor(pbr: number): string {
   return '#ef4444'
 }
 
-// Unified relative color map: materials and space types compared together,
-// grouped by occurrence count, ranked by avg PBR within each tier.
-const AVG_SPACE_PBR = 28
 
 const UNIFIED_PBR_COLOR = (() => {
   const counts: Record<string, number> = {}
@@ -135,11 +132,11 @@ const UNIFIED_PBR_COLOR = (() => {
 
   const result: Record<string, string> = {}
   for (const key of Object.keys(counts)) {
-    const avg = totals[key] / counts[key]
-    const expected = counts[key] * AVG_SPACE_PBR
-    const diff = avg - expected
-    if (diff > AVG_SPACE_PBR) result[key] = '#22c55e'
-    else if (diff >= -AVG_SPACE_PBR) result[key] = '#eab308'
+    const individualPbr = totals[key] / 100 
+    const expected = counts[key] * 0.28      
+    const diff = individualPbr - expected
+    if (diff > 0.28) result[key] = '#22c55e'
+    else if (diff >= -0.28) result[key] = '#eab308'
     else result[key] = '#ef4444'
   }
   return result
