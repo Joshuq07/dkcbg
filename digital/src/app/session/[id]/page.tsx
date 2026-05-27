@@ -27,6 +27,25 @@ type SessionData = {
   rotation?: number 
 }
 
+function useDraggable(initialPos: { x: number; y: number }) {
+  const [pos, setPos] = useState(initialPos)
+  const dragging = useRef(false)
+  const offset = useRef({ x: 0, y: 0 })
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    dragging.current = true
+    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragging.current) return
+    setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y })
+  }
+  const onPointerUp = () => { dragging.current = false }
+
+  return { pos, onPointerDown, onPointerMove, onPointerUp }
+}
+
 type Member = {
   user_email: string
   display_name: string | null
@@ -53,6 +72,8 @@ export default function SessionPage() {
   const [scrapbooked, setScrapbooked] = useState<string[]>([])
 const [scrapHydrated, setScrapHydrated] = useState(false)
 const [allScrapbooked, setAllScrapbooked] = useState<Record<string, string[]>>({})
+const dragPanel = useDraggable({ x: 16, y: 16 })
+const [showOverlay, setShowOverlay] = useState(false)
 
   useEffect(() => {
     function updateZoom() {
@@ -668,6 +689,12 @@ function toggleScrapbook(material: string) {
     +
   </button>
 )}
+<button
+  onClick={() => setShowOverlay(v => !v)}
+  className="bg-gray-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-gray-600"
+>
+  Overlay
+</button>
 
         {isHost && (
           <>
@@ -781,105 +808,153 @@ function toggleScrapbook(material: string) {
 </div>
 
 
-          <Draggable handle=".drag-handle" cancel="input">
-            <div
-              className="
-      fixed
-      bottom-20
-      right-4
-      bg-white/85
-      backdrop-blur-sm
-      rounded-lg
-      shadow-lg
-      z-[9999]
-    "
-              style={{}}
-            >
-              <div className="drag-handle cursor-move px-3 pt-2 pb-1 text-xs text-gray-400 select-none border-b border-gray-200">
-                ⠿
-              </div>
-              <div className="p-3 flex flex-wrap gap-4" style={{ width: `${500 * (1 / (window.devicePixelRatio || 1))}px`, maxWidth: '90vw', fontSize: `${12 * (1 / (window.devicePixelRatio || 1))}px` }}>
-              {sortedMembers.map((m, idx) => {
-                const canEdit =
-                  (viewMode === 'my' && m.user_email === user?.email) ||
-                  (viewMode === 'global' && user?.email === session.host_email)
+         {showOverlay && (
+  <div
+    className="fixed bg-white/85 backdrop-blur-sm rounded-lg shadow-lg z-[9999] cursor-grab active:cursor-grabbing"
+    style={{ left: dragPanel.pos.x, top: dragPanel.pos.y, touchAction: 'none' }}
+    onClick={(e) => e.stopPropagation()}
+    onPointerDown={dragPanel.onPointerDown}
+    onPointerMove={dragPanel.onPointerMove}
+    onPointerUp={dragPanel.onPointerUp}
+  >
+    <div className="flex justify-end px-2 pt-2">
+      <button
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={() => setShowOverlay(false)}
+        className="text-gray-400 hover:text-gray-700 text-lg leading-none"
+      >
+        ✕
+      </button>
+    </div>
+    <div className="p-3 flex flex-wrap gap-4" style={{ width: `${500 * (1 / (window.devicePixelRatio || 1))}px`, maxWidth: '90vw', fontSize: `${12 * (1 / (window.devicePixelRatio || 1))}px` }}>
+     {sortedMembers.map((m, idx) => {
+  const canEdit =
+    (viewMode === 'my' && m.user_email === user?.email) ||
+    (viewMode === 'global' && user?.email === session.host_email)
 
-                return (
-                  <div key={m.user_email} className="flex flex-col" style={{ width: 'calc(50% - 8px)' }}>
-                    <span className="font-semibold text-gray-800 text-xs truncate">
-                      {m.display_name || m.user_email}
-                    </span>
-                    <span className="mb-2 text-xs text-gray-500">Player {idx + 1}</span>
+  const characterNames = [
+    "Donkey Kong", "Diddy Kong", "Dixie Kong", "Kiddy Kong",
+    "Tiny Kong", "Lanky Kong", "Chunky Kong", "Taj",
+    "Xananab", "Klubba", "VoidCo", "King K. Rool"
+  ]
 
-                    { }
-                    <input
-                      className="border rounded px-2 py-1 text-xs mb-1"
-                      placeholder="Player Name"
-                      value={m.player_name ?? ''}
-                      disabled={!canEdit}
-                      onChange={async e => {
-                        const value = e.target.value
-                        setMembers(prev =>
-                          prev.map(mem =>
-                            mem.user_email === m.user_email
-                              ? { ...mem, player_name: value }
-                              : mem
-                          )
-                        )
-                        await fetch('/api/session_members', {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            session_id: sessionId,
-                            user_email: m.user_email,
-                            player_name: value
-                          })
-                        })
-                      }}
-                    />
+  function getRankColor(userEmail: string, getValue: (email: string) => number): string {
+  const scores = sortedMembers.map(m => ({ email: m.user_email, val: getValue(m.user_email) }))
+  const myVal = getValue(userEmail)
+  const uniqueScores = [...new Set(scores.map(s => s.val))].sort((a, b) => b - a)
+  const rank = uniqueScores.indexOf(myVal)
+  const colors = ['#fff59f', '#e7e7e7', '#f7dec5', '#d7e6d8']
+  return colors[rank] ?? 'transparent'
+}
 
-                    { }
-                    <input
-                      className="border rounded px-2 py-1 text-xs mb-1"
-                      placeholder="Character Name"
-                      value={m.character_name ?? ''}
-                      disabled={!canEdit}
-                      onChange={async e => {
-                        const value = e.target.value
-                        setMembers(prev =>
-                          prev.map(mem =>
-                            mem.user_email === m.user_email
-                              ? { ...mem, character_name: value }
-                              : mem
-                          )
-                        )
-                        await fetch('/api/session_members', {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            session_id: sessionId,
-                            user_email: m.user_email,
-                            character_name: value
-                          })
-                        })
-                      }}
-                    />
+  return (
+    <div key={m.user_email} className="flex gap-2 items-stretch" style={{ width: 'calc(50% - 8px)' }}>
+      {/* Left: text fields column */}
+      <div className="flex flex-col flex-1 min-w-0">
+        <span className="font-semibold text-gray-800 text-xs truncate">
+          {m.user_email}
+        </span>
+        <span className="mb-1 text-xs text-gray-500">Player {idx + 1}</span>
 
-                    { }
-                    <div className="border rounded px-2 py-1 text-xs mb-1 bg-gray-50 text-gray-600">
-                      {levelsBuilt(m.user_email)} levels
-                    </div>
+        <input
+          className="border rounded px-2 py-1 text-xs mb-1"
+          placeholder="Player Name"
+          value={m.player_name ?? ''}
+          disabled={!canEdit}
+          onChange={async e => {
+            const value = e.target.value
+            setMembers(prev =>
+              prev.map(mem =>
+                mem.user_email === m.user_email
+                  ? { ...mem, player_name: value }
+                  : mem
+              )
+            )
+            await fetch('/api/session_members', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                session_id: sessionId,
+                user_email: m.user_email,
+                player_name: value
+              })
+            })
+          }}
+        />
 
-                    { }
-                    <div className="border rounded px-2 py-1 text-xs bg-gray-50 text-gray-600">
-                      {bangCount(m.user_email)} / 142 "!"
-                    </div>
-                  </div>
-                )
-             })}
-              </div>
-            </div>
-          </Draggable>
+        <select
+          className="border rounded px-2 py-1 text-xs mb-1 bg-white"
+          value={m.character_name ?? ''}
+          disabled={!canEdit}
+          onChange={async e => {
+            const value = e.target.value
+            setMembers(prev =>
+              prev.map(mem =>
+                mem.user_email === m.user_email
+                  ? { ...mem, character_name: value }
+                  : mem
+              )
+            )
+            await fetch('/api/session_members', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                session_id: sessionId,
+                user_email: m.user_email,
+                character_name: value
+              })
+            })
+          }}
+        >
+          <option value="">Character Name</option>
+          {characterNames.map(name => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
+
+        
+
+        <div
+  className="border rounded px-2 py-1 text-xs mb-1 text-gray-600 whitespace-nowrap"
+  style={{ backgroundColor: getRankColor(m.user_email, email => {
+    return entries.filter(e => e.user_email === email && e.box_type === 'number' && e.value && !e.lost).length
+  })}}
+>
+  {levelsBuilt(m.user_email)} levels
+</div>
+
+<div
+  className="border rounded px-2 py-1 text-xs text-gray-600 whitespace-nowrap"
+  style={{ backgroundColor: getRankColor(m.user_email, email => {
+    return entries.filter(e => e.user_email === email && e.box_type === 'bang' && e.value).length
+  })}}
+>
+  {bangCount(m.user_email)} / 142 "!"
+</div>
+      </div>
+
+      {/* Right: character portrait */}
+      {m.character_name ? (
+        <div className="shrink-0 flex items-stretch">
+          <img
+            src={`/characters/${m.character_name}/portrait.png`}
+            alt={m.character_name}
+            className="rounded border border-gray-200 object-contain h-full w-auto"
+            style={{ maxHeight: 120 }}
+          />
+        </div>
+      ) : (
+        <div
+          className="shrink-0 rounded border border-gray-200 bg-gray-50"
+          style={{ width: 60, maxHeight: 120 }}
+        />
+      )}
+    </div>
+  )
+})}
+  </div>
+</div>
+         )}
 
 
         </div>

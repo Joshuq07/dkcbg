@@ -5,12 +5,12 @@ import { LEVEL_CODE, bonusDifficulties } from '@/lib/dkcbg/data'
 import type { BoxEntry } from '@/lib/types'
 
 // Final boss level numbers
-const FINAL_BOSS_LEVELS = new Set([40, 79, 85, 120, 142])
+const FINAL_BOSS_LEVELS = new Set([40, 81, 87, 136, 142])
 const FINAL_BOSS_NAMES: Record<number, string> = {
   40: 'Gang-Plank Galleon',
-  79: 'K. Rool Duel',
-  85: 'Krocodile Kore',
-  120: 'Kastle KAOS',
+  81: 'K. Rool Duel',
+  87: 'Krocodile Kore',
+  136: 'Kastle KAOS',
   142: 'Knautilus',
 }
 
