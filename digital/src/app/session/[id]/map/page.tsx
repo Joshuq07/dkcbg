@@ -422,8 +422,7 @@ export default function MapPage() {
       </div>
 
       {/* ── board ── */}
-      <div className="flex-1 relative overflow-hidden" ref={containerRef}>
-        <Image
+<div className="flex-1 relative" ref={containerRef} style={{ overflow: 'hidden' }}>        <Image
           src="/board.png"
           alt="Board"
           fill
@@ -549,20 +548,13 @@ export default function MapPage() {
           const covered = stats.coveredLevels
           return (
            <div
-  className="absolute pointer-events-auto bg-gray-900/95 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20 cursor-grab active:cursor-grabbing"
-  style={{
-    left: dragStats.pos.x,
-    top: dragStats.pos.y,
-    touchAction: 'none',
-    pointerEvents: 'auto',
-  }}
-  onPointerDown={(e) => {
-    e.stopPropagation()
-    dragStats.onPointerDown(e)
-  }}
-  onPointerMove={dragStats.onPointerMove}
-  onPointerUp={dragStats.onPointerUp}
->
+            className="absolute pointer-events-auto bg-gray-900 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20 cursor-grab active:cursor-grabbing"
+            style={{ left: dragStats.pos.x, top: dragStats.pos.y, touchAction: 'none', pointerEvents: 'auto' }}
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => { e.stopPropagation(); dragStats.onPointerDown(e) }}
+            onPointerMove={dragStats.onPointerMove}
+            onPointerUp={dragStats.onPointerUp}
+          >
               <div className="flex justify-between items-start mb-3">
                 <div className="text-yellow-400 text-xs font-semibold uppercase tracking-widest">
                   {pathMode === 'best-result' ? 'Best Path' : 'Check Path'} — {highlightedPath.length} spaces
@@ -635,20 +627,13 @@ export default function MapPage() {
         {/* ── space info card ── */}
         {selected && (
           <div
-  className="absolute pointer-events-auto bg-gray-900/95 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20 cursor-grab active:cursor-grabbing"
-  style={{
-    left: dragCard.pos.x,
-    top: dragCard.pos.y,
-    touchAction: 'none',
-    pointerEvents: 'auto',
-  }}
-  onPointerDown={(e) => {
-    e.stopPropagation()
-    dragCard.onPointerDown(e)
-  }}
-  onPointerMove={dragCard.onPointerMove}
-  onPointerUp={dragCard.onPointerUp}
->
+            className="absolute pointer-events-auto bg-gray-900 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20 cursor-grab active:cursor-grabbing"
+            style={{ left: dragCard.pos.x, top: dragCard.pos.y, touchAction: 'none', pointerEvents: 'auto' }}
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => { e.stopPropagation(); dragCard.onPointerDown(e) }}
+            onPointerMove={dragCard.onPointerMove}
+            onPointerUp={dragCard.onPointerUp}
+          >
             <div className="flex justify-between items-start mb-3">
               <div>
                 <div className="text-yellow-400 text-xs font-semibold uppercase tracking-widest mb-1">
