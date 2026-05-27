@@ -548,7 +548,7 @@ export default function MapPage() {
           const covered = stats.coveredLevels
           return (
            <div
-            className="absolute pointer-events-auto bg-gray-900 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20 cursor-grab active:cursor-grabbing"
+            className="absolute pointer-events-auto bg-gray-900 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-40 cursor-grab active:cursor-grabbing"
             style={{ left: dragStats.pos.x, top: dragStats.pos.y, touchAction: 'none', pointerEvents: 'auto' }}
             onClick={(e) => e.stopPropagation()}
             onPointerDown={(e) => { e.stopPropagation(); dragStats.onPointerDown(e) }}
@@ -627,7 +627,7 @@ export default function MapPage() {
         {/* ── space info card ── */}
         {selected && (
           <div
-            className="absolute pointer-events-auto bg-gray-900 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-20 cursor-grab active:cursor-grabbing"
+            className="absolute pointer-events-auto bg-gray-900 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-40 cursor-grab active:cursor-grabbing"
             style={{ left: dragCard.pos.x, top: dragCard.pos.y, touchAction: 'none', pointerEvents: 'auto' }}
             onClick={(e) => e.stopPropagation()}
             onPointerDown={(e) => { e.stopPropagation(); dragCard.onPointerDown(e) }}
