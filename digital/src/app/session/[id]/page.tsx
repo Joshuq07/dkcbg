@@ -939,14 +939,14 @@ function toggleScrapbook(material: string) {
           <img
             src={`/characters/${m.character_name}/portrait.png`}
             alt={m.character_name}
-            className="rounded border border-gray-200 object-contain h-full w-auto"
-            style={{ maxHeight: 120 }}
+            className="rounded border border-gray-200 object-contain w-auto"
+style={{ maxHeight: `${120 * (1 / (window.devicePixelRatio || 1))}px` }}
           />
         </div>
       ) : (
         <div
           className="shrink-0 rounded border border-gray-200 bg-gray-50"
-          style={{ width: 60, maxHeight: 120 }}
+          style={{ width: `${60 * (1 / (window.devicePixelRatio || 1))}px`, maxHeight: `${120 * (1 / (window.devicePixelRatio || 1))}px` }}
         />
       )}
     </div>
