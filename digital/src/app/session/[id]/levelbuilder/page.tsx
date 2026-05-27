@@ -791,7 +791,7 @@ useEffect(() => {
 
                 return (
                   <li key={star}>
-                    {unbuilt} {star}-star level{unbuilt !== 1 ? 's' : ''} remaining:
+                    {unbuilt} <Stars value={star} /> level{unbuilt !== 1 ? 's' : ''} remaining:
                     Built ({built}/{total})
                   </li>
                 )
@@ -809,7 +809,7 @@ useEffect(() => {
 
                 return (
                   <li key={size}>
-                    {unbuilt} {size}-card level{unbuilt !== 1 ? 's' : ''} remaining:
+                    {unbuilt} {size}★ level{unbuilt !== 1 ? 's' : ''} remaining:
                     Built ({built}/{total})
                   </li>
                 )
