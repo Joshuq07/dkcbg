@@ -79,25 +79,9 @@ function boardToCanvas(
 ): { x: number; y: number } {
   const BOARD_W = 2690
   const BOARD_H = 1905
-  const containerAspect = containerSize.w / containerSize.h
-  const boardAspect = BOARD_W / BOARD_H
-  let renderedW: number, renderedH: number, offsetX: number, offsetY: number
-
-  if (containerAspect > boardAspect) {
-    renderedH = containerSize.h
-    renderedW = renderedH * boardAspect
-    offsetX = (containerSize.w - renderedW) / 2
-    offsetY = 0
-  } else {
-    renderedW = containerSize.w
-    renderedH = renderedW / boardAspect
-    offsetX = 0
-    offsetY = (containerSize.h - renderedH) / 2
-  }
-
   return {
-    x: offsetX + (coords[0] / BOARD_W) * renderedW,
-    y: offsetY + (coords[1] / BOARD_H) * renderedH,
+    x: (coords[0] / BOARD_W) * containerSize.w,
+    y: (coords[1] / BOARD_H) * containerSize.h,
   }
 }
 
@@ -184,6 +168,7 @@ export default function MapPage() {
   const [matchedSpaces, setMatchedSpaces] = useState<number[]>([])
   const [selected, setSelected] = useState<SpaceInfo | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const boardRef = useRef<HTMLDivElement>(null)
   const [containerSize, setContainerSize] = useState({ w: 0, h: 0 })
   const [dimness, setDimness] = useState(100)
   const [randomSpace, setRandomSpace] = useState<number | null>(null)
@@ -299,7 +284,7 @@ export default function MapPage() {
         setContainerSize({ w: entry.contentRect.width, h: entry.contentRect.height })
       }
     })
-    if (containerRef.current) ro.observe(containerRef.current)
+    if (boardRef.current) ro.observe(boardRef.current)
     return () => ro.disconnect()
   }, [])
 
@@ -341,7 +326,7 @@ export default function MapPage() {
   )
 
   const isPicking = pathMode !== 'idle' && pathMode !== 'best-result' && pathMode !== 'check-result'
-  const markerSize = Math.max(14, Math.min(28, containerSize.w * 0.012))
+  const markerSize = 18
 
   return (
     <div className="flex flex-col h-screen bg-white">
@@ -423,11 +408,13 @@ export default function MapPage() {
       </div>
 
       {/* ── board ── */}
-<div className="flex-1 relative" ref={containerRef} style={{ overflow: 'hidden' }}>        <Image
+<div className="flex-1 relative overflow-auto" ref={containerRef}>
+        <div ref={boardRef} style={{ position: 'relative', width: '100%', paddingBottom: `${(1905/2690)*100}%` }}>
+        <Image
           src="/board.png"
           alt="Board"
           fill
-          className="object-contain"
+          className="object-cover"
           priority
           style={{ filter: `brightness(${dimness}%)` }}
         />
