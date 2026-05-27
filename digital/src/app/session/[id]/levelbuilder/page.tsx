@@ -938,9 +938,6 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                   })()}
                   <span className="text-sm text-gray-600 w-16 text-center">
                     {used}/{totalNeeded}
-                  </span><span className="w-36 text-sm font-medium truncate">{m}</span>
-                  <span className="text-sm text-gray-600 w-16 text-center">
-                    {used}/{totalNeeded}
                   </span>
                   <div className="flex-1 bg-gray-200 rounded-full h-3 min-w-[80px]">
                     <div
