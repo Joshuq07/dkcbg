@@ -211,7 +211,7 @@ export default function LevelBuilderPage({
   const [matProgressTab, setMatProgressTab] = useState<'all' | 'environments' | 'resources' | 'animals'>('all')
   const [matProgressAsc, setMatProgressAsc] = useState(true)
   const [includeInventory, setIncludeInventory] = useState(true)
-  const [includeScrapbook, setIncludeScrapbook] = useState(false)
+  const [includeScrapbook, setIncludeScrapbook] = useState(true)
 const [scrapbooked, setScrapbooked] = useState<string[]>([])
 const [showQueue, setShowQueue] = useState(false)
 const [queuedLevels, setQueuedLevels] = useState<number[]>([])
