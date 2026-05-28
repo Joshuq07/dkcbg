@@ -15,10 +15,15 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
       : "text-gray-600 hover:text-gray-900"
 
   return (
-    <nav className="w-full border-b bg-white px-4 py-3 flex items-center gap-6 overflow-x-auto">
-
-      <Link href="/sessions" className="text-sm text-gray-500 hover:text-gray-800">
-        ← Back
+    <nav className="relative w-full px-4 py-3 flex items-center gap-6 overflow-x-auto">
+      <img
+        src="/headerbackground.png"
+        alt=""
+        className="absolute inset-0 w-full h-full"
+        style={{ objectFit: 'cover', objectPosition: 'left' }}
+      />
+      <Link href="/sessions" className="relative z-10 flex items-center flex-shrink-0">
+        <img src="/backlogo.png" alt="Back" style={{ height: '27px' }} />
       </Link>
 
       <Link
