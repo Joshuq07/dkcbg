@@ -46,18 +46,12 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
       <Link href={`/session/${sessionId}/rules`} className="relative z-10 shrink-0">
         <img src="/ruleslogo.png" alt="Rules" style={{ height: '27px' }} />
       </Link>
-      <Link
-        href={`/session/${sessionId}/songs`}
-        className={`shrink-0 ${linkClass(`/session/${sessionId}/songs`)}`}
-      >
-        Music
+      <Link href={`/session/${sessionId}/songs`} className="relative z-10 shrink-0">
+        <img src="/musiclogo.png" alt="Music" style={{ height: '27px' }} />
       </Link>
 
-      <Link
-        href={`/session/${sessionId}/records`}
-        className={`shrink-0 ${linkClass(`/session/${sessionId}/records`)}`}
-      >
-        Records
+      <Link href={`/session/${sessionId}/records`} className="relative z-10 shrink-0">
+        <img src="/recordslogo.png" alt="Records" style={{ height: '27px' }} />
       </Link>
 
       <div className="ml-auto relative z-10 flex items-center gap-2">
