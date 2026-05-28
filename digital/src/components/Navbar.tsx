@@ -14,21 +14,21 @@ export function Navbar() {
 
   return (
     <nav className="relative w-full px-4 py-3 flex items-center justify-between gap-3 min-w-0 overflow-hidden">
-  <img
-    src="/headerbackground.png"
-    alt=""
-    className="absolute inset-0 w-full h-full"
-    style={{ objectFit: 'cover', objectPosition: 'left' }}
-  />
+      <img
+        src="/headerbackground.png"
+        alt=""
+        className="absolute inset-0 w-full h-full"
+        style={{ objectFit: 'cover', objectPosition: 'left' }}
+      />
       <div className="relative z-10 flex items-center gap-4 min-w-0 flex-shrink-0">
         <Link href="/" className="flex items-center">
-  <img src="/logolong.png" alt="DKCBG Digital" className="hidden sm:block" style={{ height: '27px' }} />
-  <img src="/logoshort.png" alt="DKCBG Digital" className="sm:hidden" style={{ height: '27px' }} />
-</Link>
+          <img src="/logolong.png" alt="DKCBG Digital" className="hidden sm:block" style={{ height: '27px' }} />
+          <img src="/logoshort.png" alt="DKCBG Digital" className="sm:hidden" style={{ height: '27px' }} />
+        </Link>
 
         <Link href="/sessions" className="flex items-center flex-shrink-0">
-  <img src="/gameslogo.png" alt="Games" style={{ height: '27px' }} />
-</Link>
+          <img src="/gameslogo.png" alt="Games" style={{ height: '27px' }} />
+        </Link>
       </div>
 
       <div className="relative z-10 flex items-center gap-3 flex-shrink-0">
@@ -45,15 +45,14 @@ export function Navbar() {
             )}
             <Link
               href="/dashboard"
-              className="text-sm text-gray-700 hover:underline cursor-pointer truncate max-w-[120px] sm:max-w-none"
-            >
+              className="text-sm text-white hover:underline cursor-pointer truncate max-w-[120px] sm:max-w-none"            >
               {user.name}
             </Link>
           </>
         ) : (
           <button onClick={signIn} className="flex items-center bg-transparent border-0 p-0 cursor-pointer flex-shrink-0">
-  <img src="/signinlogo.png" alt="Sign in" style={{ height: '27px' }} />
-</button>
+            <img src="/signinlogo.png" alt="Sign in" style={{ height: '27px' }} />
+          </button>
         )}
       </div>
     </nav>
