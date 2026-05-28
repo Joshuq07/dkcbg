@@ -33,13 +33,14 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   const body = await req.json()
-  const { session_id, user_email, player_name, character_name } = body
+  const { session_id, user_email, player_name, character_name, game } = body
 
   const { error } = await supabase
     .from('session_members')
     .update({
       ...(player_name !== undefined && { player_name }),
       ...(character_name !== undefined && { character_name }),
+      ...(game !== undefined && { game }),
     })
     .eq('session_id', session_id)
     .eq('user_email', user_email)
