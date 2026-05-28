@@ -13,20 +13,25 @@ export function Navbar() {
   if (inSession) return null
 
   return (
-    <nav className="w-full border-b border-gray-200 bg-white px-4 py-3 flex items-center justify-between gap-3 min-w-0">
-      <div className="flex items-center gap-4 min-w-0 flex-shrink-0">
-        <Link href="/" className="font-semibold text-gray-900 text-lg whitespace-nowrap">
-          <span className="hidden sm:inline">Donkey Kong Country Board Game Digital</span>
-          <span className="sm:hidden">DKCBG Digital</span>
-        </Link>
+    <nav className="relative w-full px-4 py-3 flex items-center justify-between gap-3 min-w-0 overflow-hidden">
+  <img
+    src="/headerbackground.png"
+    alt=""
+    className="absolute inset-0 w-full h-full"
+    style={{ objectFit: 'cover', objectPosition: 'left' }}
+  />
+      <div className="relative z-10 flex items-center gap-4 min-w-0 flex-shrink-0">
+        <Link href="/" className="flex items-center">
+  <img src="/logolong.png" alt="DKCBG Digital" className="hidden sm:block" style={{ height: '27px' }} />
+  <img src="/logoshort.png" alt="DKCBG Digital" className="sm:hidden" style={{ height: '27px' }} />
+</Link>
 
-        <Link href="/sessions" className="text-sm text-gray-500 hover:text-gray-800 whitespace-nowrap flex-shrink-0">
-          Games
-        </Link>
+        <Link href="/sessions" className="flex items-center flex-shrink-0">
+  <img src="/gameslogo.png" alt="Games" style={{ height: '27px' }} />
+</Link>
       </div>
 
-      {/* Right: auth */}
-      <div className="flex items-center gap-3 flex-shrink-0">
+      <div className="relative z-10 flex items-center gap-3 flex-shrink-0">
         {isAuthenticated && user ? (
           <>
             {user.image && (
@@ -46,13 +51,9 @@ export function Navbar() {
             </Link>
           </>
         ) : (
-          <button
-            onClick={signIn}
-            className="text-sm font-medium bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 transition whitespace-nowrap flex-shrink-0"
-          >
-            <span className="hidden sm:inline">Sign in with Google</span>
-            <span className="sm:hidden">Sign in</span>
-          </button>
+          <button onClick={signIn} className="flex items-center bg-transparent border-0 p-0 cursor-pointer flex-shrink-0">
+  <img src="/signinlogo.png" alt="Sign in" style={{ height: '27px' }} />
+</button>
         )}
       </div>
     </nav>

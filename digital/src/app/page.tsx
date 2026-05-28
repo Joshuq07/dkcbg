@@ -15,14 +15,19 @@ export default function Home() {
   if (isLoading) return <div className="page-container">Loading...</div>
 
   return (
-    <main className="flex items-center justify-center bg-white" style={{ height: 'calc(100dvh - 56px)' }}>
-      <button
-        onClick={signIn}
-        className="flex items-center gap-3 px-6 py-3 border border-gray-300 rounded shadow-sm bg-white hover:bg-gray-50 text-gray-700 font-medium text-base"
-      >
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width={20} height={20} />
-        Sign in with Google
-      </button>
-    </main>
+    <main className="relative flex items-center justify-center overflow-hidden" style={{ height: 'calc(100dvh - 56px)' }}>
+  <img
+    src="/signinbackground.png"
+    alt=""
+    className="absolute inset-0 w-full h-full"
+    style={{ objectFit: 'cover', objectPosition: 'center' }}
+  />
+  <button
+    onClick={signIn}
+    className="relative border-0 bg-transparent p-0 cursor-pointer z-10"
+  >
+    <img src="/signin.png" alt="Sign in with Google" width={600} height={261} />
+  </button>
+</main>
   )
 }
