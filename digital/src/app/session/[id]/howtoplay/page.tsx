@@ -410,11 +410,11 @@ const characters = {
     guide: `VoidCo wants to win by stealing away bonuses before opponents can get them. You come with a couple of general use positives and negatives like Wallopoid to make levels more annoying for opponents to build, IntelliSense Specs to draw extra stuff at Bazaar's, and Property of VoidCo to stop opponents from building levels in specific areas of the board. Your negatives like Mountain of Paperwork, Downloadable Kongtent, and False Imprisonment aren't too punishing and don't restrict you too much from your main strategy, which is going invisible. Inviseaux allows you to hide your space on the board so you can sneak up on opponents with 3-in-1, All-Mine Remote, and Swap Harp to attack them. Find Yer Own! and Pay-Dirt Piledriver both play into this by making ! harder to comeby for yourself and opponents. Finally, The King of Rot Returns makes your final bosses much tougher, so make sure you're prepared to face them and have a solid lead going into the endgame.`,
     versus: 'VoidCo is the most active character in the game, with multiple effects that require him to directly interact with other players. His invisibiliy minigame and "!" shenanigans can make it very tough for you to get your "!" done. Try and keep track of him while invisible and force him to use a lot of resources to disguise himself. Don\'t build a lot of levels at once and leave yourself open for All Mine Remote if you are unsure of his location, as that can lead to a major swing in the game. Wallopoid is really annoying if you end up finding one of the levels you want to build is walled off. Try and pivot when you find one and force other players to build those levels.',
     abilities: [
-      { name: "3-in-1", type: "Core", value: "+1", imp: 3, diff: 3, desc: 'Choose 1 of the 3 VoidCo character pieces to be the company president (they all have the same stats). By default, you only have that 1 Kong on the board. But, at the start of your turn, you can split into 3 separate Kongs. If they\'re split up, before you do a movement roll on your turn, choose which Kong you\'ll move; if it\'s not the president, must spend 1 banandium gem. Each time you get a "!" (that you haven\'t gotten before), gain 1 gem. [Counter] The 3 Kongs\' inventory is shared, and position-based effects (passing, range, etc.) for all 3 of them apply to you. Once you\'ve gotten 3 "!"s [Counter], remove all your Kongs except the president from the board, and place them in jail (on this card). They can be retrieved from jail when you reach Start as an option instead of taking cash, saving, etc.', detail: "Try to limit your use of gems and mainly use this to split up the kongs when invisible. If you're able to keep 1-2 invisble, it'll be a lot easier for you to activate All-Mine Remote and Swap Harp." },
+      { name: "3-in-1", type: "Core", value: "+1", imp: 3, diff: 3, desc: '"Choose 1 of the 3 VoidCo character pieces to be the company president (they all have the same stats). By default, you only have that 1 Kong on the board. But, at the start of your turn, you can split into 3 separate Kongs. If they\'re split up, before you do a movement roll on your turn, choose which Kong you\'ll move; if it\'s not the president, must spend 1 banandium gem. Each time you get a ""!"" (that you haven\'t gotten before), gain 1 gem. [Counter] The 3 Kongs\' inventory is shared, and position-based effects (passing, range, etc.) for all 3 of them apply to you. Kongs that have been placed in jail (see Inviseaux) can be retrieved when you reach Start as an option instead of taking cash, saving, etc.', detail: "Try to limit your use of gems and mainly use this to split up the kongs when invisible. If you're able to keep 1-2 invisble, it'll be a lot easier for you to activate All-Mine Remote and Swap Harp." },
       { name: "Property of VoidCo", type: "Core", value: "+1", imp: 1, diff: 1, desc: "Your opponents can't build levels while they're standing on a purple space, meaning either Bazaar or in a purple world. [Priority]", detail: "Minor detriment to your opponents, make sure to remind them of this effect." },
       { name: "Find Yer Own!", type: "Core", value: "-1", imp: 4, diff: 5, desc: 'You must roll for all "!"s with a 4-side die instead of 6-side (unless your president is currently invisible), and you\'re not allowed to swap tokens into different types at Cranky\'s.', detail: 'Brutal -1 right here, but it plays off the rest of the kit, so not much you can do about it other than build levels while invisible to negate the "!" penalty. Getting Banana Birds will be much harder so make sure you focus on the Queen Banana Bird Quest early.' },
       { name: "Downloadable Kongtent", type: "Core", value: "-1", imp: 2, diff: 2, desc: "With your shrewd business sense, you've convinced most of the public to pay $20 for access to a glorified minigame. But there's some boycotts due to the growing controversy about it... Each time an opponent lands on a bonus space, take $20 from them. But, opponents never have to pay you when building levels.", detail: "Removes your income from stars, so they aren't as valuable, but you still want them as it means less profit for opponents." },
-      { name: "Inviseaux", type: "", value: "+1", imp: 4, diff: 4, desc: "At the start of your turn, can spend $300 to activate perfume: make your character piece(s) invisible, removing them from the board. Your movement rolls can still be seen. It's recommended to keep track of your own location on a hidden list, with each entry including your movement roll, which Kong you moved (if split up), and the space and world where you landed. Use this list to remember where you're currently located. If they want, players can use the blank outline VoidCo pieces to keep track of where they think you are. You may want to forgo taking a space's actions to keep your position a mystery. Whenever one of your Kongs uses a position-based effect (passing, range, etc.) on another player/piece, you must reveal that Kong (make it visible again). Or, if you've been invisible for at least 3 turns [Counter], an opponent can make a guess during their turn; they guess an exact space, and if you have a Kong there, reveal it. If they're wrong, they must choose to lose either a turn, a life, or 3 slots of stuff. These are the only cases when you must reveal a Kong. Perfume can't be re-activated until all your Kongs on the board are revealed.", detail: "Try to strategize around being invisible as often as possible, using abilities like 3-in-1 and King Crockoid to confuse opponents along with any other movement effects you can find. Only reveal information about your space that is needed, and consider not taking/actiavting things if it means you can successfully go undetected for longer." },
+      { name: "Inviseaux", type: "", value: "+1", imp: 4, diff: 4, desc: "At the start of your turn, can spend $300 to activate perfume: make your character piece(s) invisible, removing them from the board. Your movement rolls can still be seen. It's recommended to keep track of your own location on a hidden list, with each entry including your movement roll, which Kong you moved (if split up), and the space and world where you landed. Use this list to remember where you're currently located. If they want, players can use the blank outline VoidCo pieces to keep track of where they think you are. You may want to forgo taking a space's actions to keep your position a mystery. Whenever one of your Kongs uses a position-based effect (passing, range, etc.) on another player/piece, you must reveal that Kong (make it visible again). Or, if you've been invisible for at least 3 turns [Counter], an opponent can make a guess during their turn - they guess an exact space; if you have a Kong there, reveal it, and if it's not the president, place it in jail (see 3-in-1). If their guess is wrong, they must choose to lose either a turn, a life, or 3 slots of stuff. These are the only cases when you must reveal a Kong. Perfume can't be re-activated until all your Kongs on the board are revealed.", detail: "Try to strategize around being invisible as often as possible, using abilities like 3-in-1 and King Crockoid to confuse opponents along with any other movement effects you can find. Only reveal information about your space that is needed, and consider not taking/actiavting things if it means you can successfully go undetected for longer." },
       { name: "All-Mine Remote", type: "", value: "+1", imp: 4, diff: 3, desc: '"At the end of an opponent\'s turn, if you\'re in range of them, you can activate your remote (must reveal yourself if invisible; if you\'re split into multiple Kongs, just reveal the 1 who\'s in range). Then, choose 1 of 2 options: All Mine!: Can steal some "!"s that the opponent gained this turn; roll a 4-side die [Unbounded] to see how many you can take. You can steal a ""!"" even if you already have it for that level, or even if you haven\'t built that level yet. [Shortcut] Odd Rock: If nobody is currently Odd Rock, you can drop an item to petrify that opponent and change their character card into Odd Rock. All their abilities get disabled [Rulebook: ?? (Disabling Abilities)], and they can change back to their original character if they forgo taking cash, saving, etc. when they reach Start."', detail: "Steal \"!\"s as often as you can when in range. If you have the opportunity to choose between stealing their ! and turning them into Odd Rock, wait and see how many ! they get and if that outweighs them losing their abilities for a while." },
       { name: "Wallopoid", type: "", value: "+1", imp: 3, diff: 2, desc: "You can have up to 3 levels selected as booby-trapped. They must be levels you haven't built yet; write them down secretly. If anyone (including you) attempts to build one, you reveal it; they can either cancel the build, or go ahead. If they go ahead, the trap gets removed, but they lose a turn and a life. Once all the traps are removed, you can set up new ones when you visit Candy. If another player besides you is about to build a level (and it's unknown if it's booby-trapped), they can also risk it and make a guess if they think it has a wallopoid on it. If it does, the trap gets removed and they get to build the level with no penalty. If they're wrong, they lose a turn.", detail: "Good effect to make opponents second guess building levels. If K. Rool is in the game put this on Boss levels that he might want. If you find yourself really wanting to build a level you trapped yourself, just go to Candy's and remove the ability and re-add it later on after you've built it." },
       { name: "King Crockoid", type: "", value: "+1", imp: 2, diff: 2, desc: "On your turn instead of regular movement, can discard 3 material cards to move with a 60-side die. During this, if you land on a material space, after the space's effects, if you want to warp back to where you started the turn, you have the option to; if it was a non-material space you landed on, then you must warp back after. Can't land on a K. Rool entry space during this.", detail: "Good tool to get distance and disguise where on the board you are, or to get out of a region you don't really like." },
@@ -451,7 +451,7 @@ const characters = {
     guide: `K. Rool's gotta be saved, and to do so you have to scale, using rogue-like deckbuilding with your Minions and Bosses. Money is your biggest weakness, and you'll be starting off the game much weaker than other characters. Try your best to manage the Kremling Krew Phase, and then go wild as the K. Rools. All 3 K. Rool Costumes come with a unique set of abilities that are each powerful and tailored to different playstyles. Switch between them whenever you'd like to get the most value out of the character. Aside from his financial negative abilities liek Share the Booty, Overripe Bananas, and Unionized Underlings, his other two negatives Steal the Crystal Coconut and Video Game Villain give him alternate objectives to do from his opponents, so make sure to focus on them so that you can defeat your opponents.`,
     versus: 'K. Rool is a major threat once he\'s in play, but the Kremling Krew is pretty weak for most of its portion. Take advantage of this by attacking them frequently. The Krew has to play a tricky game of completing all the objectives at a similar pace. You can try and take advantage of this by getting leads in certain categories or making certain objectives extra tough so they have to give up a lot of resources to progress in them. Once he progresses to the second phase, just make sure you\'re aware of all of the effects for each costume to know what you might have to avoid. All 3 play differently and present different challenges, Baron especially has a lot of constant harrassment effects like his roll subtraction with Electric Bolts. Make sure you adapt your counterplay based on which of the costumes is equipped so that he can\'t get as much value from each of them, and try to maintain a solid lead so that once he breaks into the 2nd phase he doesn\'t have enough time to catch up.',
     abilities: [
-      { name: "Kremling Rekruitment", type: "Core", value: "+2", imp: 5, diff: 4, desc: 'You have a deck of enemies who give effects you can use during your turn (you can only do 1 Move action per turn; all effects are 1 use per turn unless specified). Begin the game with Kritter in your hand, and the other 5 starter minions in your draw pile. At start of turn, draw until you have 5 Krew cards, then roll to see how many Krew actions you get this turn. (From the start of the game, you\'ll roll a 1-side die for this; upgrade to 3-side if you\'ve beaten 1 boss, 4-side at 5 bosses [Counter], and a 5-side at 10 bosses. Can banana bird this roll, but can\'t go above max for that die.) At end of your turn (not earlier), put all enemy cards you used and any others you want from your hand into the Krew discard pile. When you run out of cards in your draw pile and need to draw another, shuffle and reuse the discard pile. The Krew enemies that are available for you to get are sorted into 4 piles on your Krew mat: DKC, 2, 3, and bosses. Whenever you build a non-boss level from a game, draw 3 minions from that game\'s Krew pile. Must purchase 1, then put it in your Krew discard pile. Whenever you build a regular boss level, purchase that boss\'s Krew card for $500 and unlock it for the rest of the game; at this time, you can search all your Krew and add in or remove any unlocked bosses you want, then fully reshuffle. Only up to 20% of your currently-used Krew deck can be bosses. Money you pay to buy Krew cards replaces the level\'s usual price for you (but goes to the same place). Final boss levels don\'t cost you money. Lose this ability when you become K. Rool.', detail: "There are over a hundered Minion and Boss effects to remember, so instead focus on the Bosses as those you'll have to work for while the minions you can learn as you see them as options. Building boss levels not only gives you more Boss options for your deck but also allows you to roll better action die. Once you have a strategy with your Bosses that you're working towards, try to pickup minions that help you with it or provide value that makes them good uses of your actions. See the bottom tab of K. Rool's How to Play guide for some suggestions on what Bosses to target (WIP NOT DONE YET)." },
+      { name: "Kremling Rekruitment", type: "Core", value: "+2", imp: 5, diff: 4, desc: 'You have a deck of enemies who give effects you can use during your turn (you can only do 1 Move action per turn; all effects are 1 use per turn unless specified). Begin the game with Kritter in your hand, and the 4 filler minions in your draw pile. At start of turn, draw until you have 5 Krew cards, then roll to see how many Krew actions you get this turn. (From the start of the game, you\'ll roll a 2-side die for this; upgrade to 3-side if you\'ve built 1 boss, 4-side at 5 bosses [Counter], and a 5-side at 10 bosses. Can banana bird this roll, but can\'t go above max for that die.) At end of your turn (not earlier), put all enemy cards you used and any others you want from your hand into the Krew discard pile. When you run out of cards in your draw pile and need to draw another, shuffle and reuse the discard pile. The Krew enemies that are available for you to get are sorted into 4 piles on your Krew mat: DKC, 2, 3, and bosses. Whenever you build a non-boss level from a game, draw 3 minions from that game\'s Krew pile. Must purchase 1, then put it in your Krew discard pile. Whenever you build a regular boss level, purchase that boss\'s Krew card for $500 and unlock it for the rest of the game; at this time, you can search all your Krew and add in or remove any unlocked bosses you want, then fully reshuffle. Only up to 20% of your currently-used Krew deck can be bosses. Money you pay to buy Krew cards replaces the level\'s usual price for you (but goes to the same place). Final boss levels don\'t cost you money. Lose this ability when you become K. Rool.', detail: "There are over a hundered Minion and Boss effects to remember, so instead focus on the Bosses as those you'll have to work for while the minions you can learn as you see them as options. Building boss levels not only gives you more Boss options for your deck but also allows you to roll better action die. Once you have a strategy with your Bosses that you're working towards, try to pickup minions that help you with it or provide value that makes them good uses of your actions. See the bottom tab of K. Rool's How to Play guide for some suggestions on what Bosses to target (WIP NOT DONE YET)." },
       { name: "K. Rool Kaptured", type: "Core", value: "-2", imp: 5, diff: 5, desc: "[Always Enabled] Queen Banana Bird has sealed K. Rool away, and you need to get all 4 barrier keys to set him free and lead your Krew once again. The requirements for each key are: 70 levels built (5 of which must be the final boss levels), 100 homework/music points, 30 cards scrapbooked, and 10 banana birds returned. As soon as you fulfill a key's requirement, write it down on your level sheet; you can no longer progress in that category until you become K. Rool. [Priority] (If a homework assignment or song gets you above 100 points, that's fine, but can't turn in another.) When you have all 4 keys and visit Queen Banana Bird, permanently switch to K. Rool and lose this ability.", detail: "These barriers can be tough, as its hard to do your requirements evenly. Make sure you are pacing yourself in all of these keys so you don't get soft-locked in progressing. K. Rool is very powerful, so you want to get to him as fast as possible even if it means building less valuable levels or overspending your limited money." },
       { name: "Kremling Krunch", type: "", value: "+1", imp: 1, diff: 2, desc: "An additional option for you at Swanky's is to pay $100 times your number of opponents to play the Kremling Krunch minigame. You will repeatedly roll an X-side die, where X = your number of opponents+1. You are player 1, the opponent to your left is 2, and so on. If you roll a 1, the game is over. Whenever an opponent's number is rolled, they must choose to lose a life, give you $200, or give you 1 slot of stuff. Die rolls during this can only be modified with banana birds, not any other effects.", detail: "Worth playing over Endurance or Casino if you come into Swanky's without any Banana Birds." },
       { name: "Kremling Koncerto", type: "Unlockable", value: "+2", imp: 4, diff: 3, desc: "[MUSIC: When you land on a material space, can visit the music pool if you skip taking 1 material. While this is equipped, you're allowed to work on 2 songs at once (and can take multiple at Candy's). However, you must turn in 2 songs at once, can't turn in just 1 at a time. Your max note inventory is increased to 40. If you unequip this, must choose only one face-down song to keep and discard the rest (but can keep all your music notes). If you're currently Kremling Krew and visiting the music pool, you can convert any unused Krew actions into additional music pool actions.]", detail: "You'll need this early to get started on music, and it becomes a lot weaker when you become K. Rool as you don't get to convert actions, so get this ASAP and focus on music. Once you've changed into K. Rool, try to get 200 points quickly so you can unequip this as it doesn't help you outside of music." },
@@ -640,9 +640,8 @@ export default function CharacterGuidePage() {
             ))}
             <button
               onClick={() => setVsMode(v => !v)}
-              className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap shrink-0 font-semibold transition-all ${
-                vsMode ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-100'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap shrink-0 font-semibold transition-all ${vsMode ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-100'
+                }`}
             >
               Vs.
             </button>
@@ -652,55 +651,54 @@ export default function CharacterGuidePage() {
 
       <div className={`mx-auto px-4 py-6 ${vsMode ? '' : 'space-y-6'} ${vsMode ? 'max-w-3xl' : 'max-w-5xl'}`}>
         {vsMode && (
-  <div className="w-full rounded-t-xl overflow-hidden">
-    <img
-      src={`/wanted/${active}/portrait.png`}
-      alt={`${active} wanted`}
-      className="block w-full h-auto object-contain"
-    />
-  </div>
-)}
+          <div className="w-full rounded-t-xl overflow-hidden">
+            <img
+              src={`/wanted/${active}/portrait.png`}
+              alt={`${active} wanted`}
+              className="block w-full h-auto object-contain"
+            />
+          </div>
+        )}
         <div
-  className={`text-white shadow flex flex-col sm:flex-row items-start sm:items-center gap-6 p-5 ${
-    vsMode ? 'rounded-b-xl' : 'rounded-xl'
-  }`}
-  style={{
-  backgroundColor: vsMode ? "#533E39" : char.color,
-}}
->
-  <div className="flex-1">
-    {!vsMode && (
-      <h1 className="text-2xl font-bold mb-2">
-        {active}
-      </h1>
-    )}
+          className={`text-white shadow flex flex-col sm:flex-row items-start sm:items-center gap-6 p-5 ${vsMode ? 'rounded-b-xl' : 'rounded-xl'
+            }`}
+          style={{
+            backgroundColor: vsMode ? "#533E39" : char.color,
+          }}
+        >
+          <div className="flex-1">
+            {!vsMode && (
+              <h1 className="text-2xl font-bold mb-2">
+                {active}
+              </h1>
+            )}
 
-    {(vsMode ? char.versus : char.guide) && (
-      <p className="text-sm text-white/90 leading-relaxed">
-        {vsMode ? char.versus : char.guide}
-      </p>
-    )}
-  </div>
+            {(vsMode ? char.versus : char.guide) && (
+              <p className="text-sm text-white/90 leading-relaxed">
+                {vsMode ? char.versus : char.guide}
+              </p>
+            )}
+          </div>
 
           <div className="flex flex-col items-center gap-2">
             <div className="w-32 h-32 rounded-lg overflow-hidden bg-transparent flex items-center justify-center">
               <img
-  key={active}
-  src={`/characters/${active}/portrait.png`}
-  alt={`${active} portrait`}
-  className="object-contain w-full h-full transition-opacity duration-200"
-  style={{ opacity: imgLoaded ? 1 : 0 }}
-  onLoad={() => setImgLoaded(true)}
-  ref={el => { if (el?.complete) setImgLoaded(true) }}
-/>
+                key={active}
+                src={`/characters/${active}/portrait.png`}
+                alt={`${active} portrait`}
+                className="object-contain w-full h-full transition-opacity duration-200"
+                style={{ opacity: imgLoaded ? 1 : 0 }}
+                onLoad={() => setImgLoaded(true)}
+                ref={el => { if (el?.complete) setImgLoaded(true) }}
+              />
             </div>
             <div className="flex flex-col gap-1.5 items-center">
               {!vsMode && (
-  <div className="flex items-center gap-2">
-    <span className="text-xs text-white/70 w-20 text-right">Complexity</span>
-    <ImportanceDots value={char.complexity ?? 0} max={5} color="#ffffff" />
-  </div>
-)}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-white/70 w-20 text-right">Complexity</span>
+                  <ImportanceDots value={char.complexity ?? 0} max={5} color="#ffffff" />
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <span className="text-xs text-white/70 w-20 text-right">{vsMode ? 'Threat Level' : 'Interaction'}</span>
                 <ImportanceDots value={(vsMode ? char.threat : char.interaction) ?? 0} max={5} color="#ffffff" />
