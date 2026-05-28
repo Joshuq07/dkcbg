@@ -20,7 +20,7 @@ export default function Home() {
         onClick={signIn}
         className="relative border-0 bg-transparent p-0 cursor-pointer"
       >
-        <img src="/signin.png" alt="Sign in with Google" width={600} height={261} />
+        <img src="/signin.png" alt="Sign in with Google" width={480} height={208} />
       </button>
     </main>
   )
