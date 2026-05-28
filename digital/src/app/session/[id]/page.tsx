@@ -733,14 +733,17 @@ async function saveGame(newGame: string) {
           {(['dkc1', 'dkc2', 'dkc3'] as const).map(g => (
             <button
               key={g}
-              onClick={() => saveGame(g)}
+              onClick={async () => {
+  await saveGame(g)
+  window.location.reload()
+}}
               className={`flex-1 px-3 py-2 rounded text-sm font-medium border ${
                 (members.find(m => m.user_email === user?.email)?.game ?? 'dkc1') === g
                   ? 'bg-blue-600 text-white border-blue-600'
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              {g === 'dkc1' ? 'DKC' : g === 'dkc2' ? 'DKC2' : 'DKC3'}
+              {g === 'dkc1' ? 'DKC Theme' : g === 'dkc2' ? 'DKC2 Theme' : 'DKC3 Theme'}
             </button>
           ))}
         </div>
