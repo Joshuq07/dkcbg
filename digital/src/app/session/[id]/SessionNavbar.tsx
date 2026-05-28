@@ -26,25 +26,16 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
         <img src="/backlogo.png" alt="Back" style={{ height: '27px' }} />
       </Link>
 
-      <Link
-        href={`/session/${sessionId}`}
-        className={`shrink-0 ${linkClass(`/session/${sessionId}`)}`}
-      >
-        Game
+      <Link href={`/session/${sessionId}`} className={`relative z-10 shrink-0`}>
+        <img src="/gamelogo.png" alt="Game" style={{ height: '27px' }} />
       </Link>
 
-      <Link
-        href={`/session/${sessionId}/levelbuilder`}
-        className={`shrink-0 ${linkClass(`/session/${sessionId}/levelbuilder`)}`}
-      >
-        Level Builder
+      <Link href={`/session/${sessionId}/levelbuilder`} className={`relative z-10 shrink-0`}>
+        <img src="/levelbuilderlogo.png" alt="Level Builder" style={{ height: '27px' }} />
       </Link>
 
-      <Link
-        href={`/session/${sessionId}/map`}
-        className={`shrink-0 ${linkClass(`/session/${sessionId}/map`)}`}
-      >
-        Map/Location Finder
+      <Link href={`/session/${sessionId}/map`} className={`relative z-10 shrink-0`}>
+        <img src="/maplocationfinderlogo.png" alt="Map/Location Finder" style={{ height: '27px' }} />
       </Link>
 
 
