@@ -709,63 +709,61 @@ async function saveGame(newGame: string) {
   Overlay
 </button>
 
-        {isHost && (
-          <>
-            <button
-              onClick={() => setShowOptions(true)}
-              className="bg-gray-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-gray-600"
-            >
-              Options
-            </button>
+<button
+  onClick={() => setShowOptions(true)}
+  className="bg-gray-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-gray-600"
+>
+  Options
+</button>
 
-            {showOptions && (
-              <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
-                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
-                  <div className="flex gap-2">
-  {(['dkc1', 'dkc2', 'dkc3'] as const).map(g => (
-    <button
-      key={g}
-      onClick={() => saveGame(g)}
-      className={`flex-1 px-3 py-2 rounded text-sm font-medium border ${
-        (members.find(m => m.user_email === user?.email)?.game ?? 'dkc1') === g
-          ? 'bg-blue-600 text-white border-blue-600'
-          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-      }`}
-    >
-      {g === 'dkc1' ? 'DKC' : g === 'dkc2' ? 'DKC2' : 'DKC3'}
-    </button>
-  ))}
-</div>
-                  <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                    <h2 className="text-lg font-bold text-gray-900">Options</h2>
-                    <button
-                      onClick={() => setShowOptions(false)}
-                      className="text-gray-400 hover:text-gray-700 text-xl leading-none"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <div className="px-5 py-4 space-y-3">
-                    <button
-                      onClick={async () => {
-                        const confirmDelete = window.prompt(
-                          'Type DELETE to permanently remove this session:',
-                          ''
-                        )
-                        if (confirmDelete !== 'DELETE') return
-                        await fetch(`/api/sessions/${sessionId}`, { method: 'DELETE' })
-                        router.push('/sessions')
-                      }}
-                      className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm"
-                    >
-                      Delete Session
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </>
+        {showOptions && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
+    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <h2 className="text-lg font-bold text-gray-900">Options</h2>
+        <button
+          onClick={() => setShowOptions(false)}
+          className="text-gray-400 hover:text-gray-700 text-xl leading-none"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="px-5 py-4 space-y-3">
+        <div className="flex gap-2">
+          {(['dkc1', 'dkc2', 'dkc3'] as const).map(g => (
+            <button
+              key={g}
+              onClick={() => saveGame(g)}
+              className={`flex-1 px-3 py-2 rounded text-sm font-medium border ${
+                (members.find(m => m.user_email === user?.email)?.game ?? 'dkc1') === g
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {g === 'dkc1' ? 'DKC' : g === 'dkc2' ? 'DKC2' : 'DKC3'}
+            </button>
+          ))}
+        </div>
+        {isHost && (
+          <button
+            onClick={async () => {
+              const confirmDelete = window.prompt(
+                'Type DELETE to permanently remove this session:',
+                ''
+              )
+              if (confirmDelete !== 'DELETE') return
+              await fetch(`/api/sessions/${sessionId}`, { method: 'DELETE' })
+              router.push('/sessions')
+            }}
+            className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm"
+          >
+            Delete Session
+          </button>
         )}
+      </div>
+    </div>
+  </div>
+)}
 
         {/**/}
         <div className="flex flex-col lg:flex-row gap-4">
