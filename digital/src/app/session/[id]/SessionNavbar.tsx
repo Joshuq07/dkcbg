@@ -39,18 +39,12 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
       </Link>
 
 
-      <Link
-        href={`/session/${sessionId}/howtoplay`}
-        className={`shrink-0 ${linkClass(`/session/${sessionId}/howtoplay`)}`}
-      >
-        How To Play
+      <Link href={`/session/${sessionId}/howtoplay`} className="relative z-10 shrink-0">
+        <img src="/howtoplaylogo.png" alt="How To Play" style={{ height: '27px' }} />
       </Link>
 
-      <Link
-        href={`/session/${sessionId}/rules`}
-        className={`shrink-0 ${linkClass(`/session/${sessionId}/rules`)}`}
-      >
-        Rules
+      <Link href={`/session/${sessionId}/rules`} className="relative z-10 shrink-0">
+        <img src="/ruleslogo.png" alt="Rules" style={{ height: '27px' }} />
       </Link>
       <Link
         href={`/session/${sessionId}/songs`}
@@ -66,7 +60,7 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
         Records
       </Link>
 
-      <div className="ml-auto flex items-center">
+      <div className="ml-auto relative z-10 flex items-center gap-2">
         {user?.image && (
           <Image
             src={user.image}
@@ -75,6 +69,9 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
             height={32}
             className="rounded-full"
           />
+        )}
+        {user?.name && (
+          <span className="text-sm text-white">{user.name}</span>
         )}
       </div>
 
