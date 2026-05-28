@@ -11,17 +11,15 @@ export async function renumberAfterDelete(session_id: string, user_email: string
 
   if (error || !numbers) return
 
-  const active = numbers.filter(n => !n.lost)
+  const all = [...numbers].sort((a, b) => Number(a.value) - Number(b.value))
 
-  active.sort((a, b) => Number(a.value) - Number(b.value))
-
-  const updates = active.map((entry, index) => ({
+  const updates = all.map((entry, index) => ({
     session_id,
     level: entry.level,
     box_type: 'number',
     user_email,
     value: String(index + 1),
-    lost: null,
+    lost: entry.lost ?? null,   
   }))
 
   if (updates.length > 0) {
