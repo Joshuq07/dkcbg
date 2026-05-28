@@ -52,6 +52,7 @@ type Member = {
   position: number | null
   player_name?: string | null
   character_name?: string | null
+  game?: string
 }
 
 type BoxEntry = BoxEntryType
@@ -563,6 +564,22 @@ function toggleScrapbook(material: string) {
   })
   setSession(s => s ? { ...s, rotation: newRotation } : s)
 }
+async function saveGame(newGame: string) {
+  setMembers(prev =>
+    prev.map(m =>
+      m.user_email === user?.email ? { ...m, game: newGame } : m
+    )
+  )
+  await fetch('/api/session_members', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      session_id: sessionId,
+      user_email: user?.email,
+      game: newGame
+    })
+  })
+}
 
   function renderBox(box: Box) {
     const ownerEmail = getUserForBox(box)
@@ -704,6 +721,21 @@ function toggleScrapbook(material: string) {
             {showOptions && (
               <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
                 <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+                  <div className="flex gap-2">
+  {(['dkc1', 'dkc2', 'dkc3'] as const).map(g => (
+    <button
+      key={g}
+      onClick={() => saveGame(g)}
+      className={`flex-1 px-3 py-2 rounded text-sm font-medium border ${
+        (members.find(m => m.user_email === user?.email)?.game ?? 'dkc1') === g
+          ? 'bg-blue-600 text-white border-blue-600'
+          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+      }`}
+    >
+      {g === 'dkc1' ? 'DKC' : g === 'dkc2' ? 'DKC2' : 'DKC3'}
+    </button>
+  ))}
+</div>
                   <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
                     <h2 className="text-lg font-bold text-gray-900">Options</h2>
                     <button

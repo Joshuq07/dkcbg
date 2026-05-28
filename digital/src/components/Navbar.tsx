@@ -15,7 +15,7 @@ export function Navbar() {
   return (
     <nav className="relative w-full px-4 py-3 flex items-center justify-between gap-3 min-w-0 overflow-hidden">
       <img
-        src="/headerbackground.png"
+        src="/headerbackground1.png"
         alt=""
         className="absolute inset-0 w-full h-full"
         style={{ objectFit: 'cover', objectPosition: 'left' }}
