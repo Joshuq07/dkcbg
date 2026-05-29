@@ -62,11 +62,11 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
         </Link>
 
         <Link href={`/session/${sessionId}`} className="relative z-10 shrink-0">
-          <img src="/gamelogo.png" alt="Game" style={{ height: '27px' }} />
+          <img src="/gamelogo.png" alt="Level Sheet" style={{ height: '27px' }} />
         </Link>
 
         <Link href={`/session/${sessionId}/levelbuilder`} className="relative z-10 shrink-0">
-          <img src="/levelbuilderlogo.png" alt="Level Builder" style={{ height: '27px' }} />
+          <img src="/levelbuilderlogo.png" alt="Materials" style={{ height: '27px' }} />
         </Link>
 
         <Link href={`/session/${sessionId}/map`} className="relative z-10 shrink-0">
@@ -87,6 +87,10 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
 
         <Link href={`/session/${sessionId}/records`} className="relative z-10 shrink-0">
           <img src="/recordslogo.png" alt="Records" style={{ height: '27px' }} />
+        </Link>
+
+        <Link href={`/achievements`} className="relative z-10 shrink-0">
+          <img src="/achievementslogo.png" alt="Achievements" style={{ height: '27px' }} />
         </Link>
 
         <div className="ml-auto relative z-10 flex items-center gap-2">
