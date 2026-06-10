@@ -58,7 +58,7 @@ const BONUS_COIN_REWARD: Record<number, number> = {
   105: 1,
   111: 1,
   117: 1,
-  124: 1,
+  123: 1,
   130: 1,
   136: 2
 }
