@@ -806,7 +806,7 @@ async function saveGame(newGame: string) {
 <div
   className="absolute flex items-center justify-center leading-none"
   style={{
-    left: `${(301 / 3300) * 100}%`,
+    left: `${(303 / 3300) * 100}%`,
     top: `${(3982 / 4740) * 100}%`,
     fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)',
     color: 'black',
@@ -818,7 +818,7 @@ async function saveGame(newGame: string) {
 <div
   className="absolute flex items-center justify-center leading-none"
   style={{
-    left: `${(301 / 3300) * 100}%`,
+    left: `${(303 / 3300) * 100}%`,
     top: `${(4041 / 4740) * 100}%`,
     fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)',
     color: 'black',
