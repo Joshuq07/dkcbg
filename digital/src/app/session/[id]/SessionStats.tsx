@@ -48,6 +48,7 @@ interface Props {
   entries: BoxEntry[]
   scrapbooked: Record<string, string[]>
   onClose: () => void
+  pointsTotals: Record<string, number>
 }
 
 function StatRow({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
@@ -110,7 +111,7 @@ function computeStatsForUser(userEmail: string, entries: BoxEntry[]) {
   }
 }
 
-export default function SessionStats({ members, entries, scrapbooked, onClose }: Props) {
+export default function SessionStats({ members, entries, scrapbooked, onClose, pointsTotals }: Props) {
   const [activeTab, setActiveTab] = useState(members[0]?.user_email ?? '')
 
   const statsByUser = useMemo(() => {
@@ -178,6 +179,10 @@ export default function SessionStats({ members, entries, scrapbooked, onClose }:
               sub="All levels built & !"
               value={`${stats.worldsFullyCompleted} / 24`}
             />
+            <StatRow
+  label="Points"
+  value={`${pointsTotals[activeTab] ?? 0} / 200`}
+/>
            <StatRow
   label="Cards Scrapbooked"
   value={`${(scrapbooked[activeTab] || []).length} / 68`}
