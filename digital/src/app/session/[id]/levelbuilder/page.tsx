@@ -702,19 +702,33 @@ for (const mat of ALL_MATERIALS) {
       <section>
         <h2 className="text-2xl font-semibold mb-2">Levels You Can Build</h2>
 
-        {buildable.map(id => (
-          <div key={id} className="p-2 border rounded bg-green-50">
-            {formatLevel(
-              id,
-              [],
-              [],
-              materialList[id - 1]?.length || 0,
-              materialList[id - 1]?.length || 0,
-              (materialList[id - 1] || []).filter(m => (materialCounts[m] || 0) > 0),
-              BONUS_COIN_COST_LEVELS.has(id)
-            )}
-          </div>
-        ))}
+        {buildable.map(id => {
+  const requiredCopy = [...(materialList[id - 1] || [])]
+  const available = Object.entries(materialCounts).flatMap(([m, c]) => Array(c).fill(m))
+  const haveMaterials: string[] = []
+
+  for (const req of requiredCopy) {
+    const idx = available.indexOf(req)
+    if (idx !== -1) {
+      available.splice(idx, 1)
+      haveMaterials.push(req)
+    }
+  }
+
+  return (
+    <div key={id} className="p-2 border rounded bg-green-50">
+      {formatLevel(
+        id,
+        [],
+        [],
+        materialList[id - 1]?.length || 0,
+        materialList[id - 1]?.length || 0,
+        haveMaterials,
+        BONUS_COIN_COST_LEVELS.has(id)
+      )}
+    </div>
+  )
+})}
       </section>
 
       <section>
@@ -743,23 +757,36 @@ for (const mat of ALL_MATERIALS) {
 
         <ul className="space-y-2">
           {closest
-            .filter(x => showZeroMaterials || x.total - x.missingMaterials.length > 0)
-            .slice(0, closestLimit)
-            .map(x => (
-              <li key={x.levelId} className="p-2 border rounded bg-yellow-50">
-                {formatLevel(
-                  x.levelId,
-                  x.missingMaterials,
-                  x.missingBonus,
-                  x.total - x.missingMaterials.length,
-                  x.total,
-                  (materialList[x.levelId - 1] || []).filter(m =>
-                    (materialCounts[m] || 0) > 0 && !x.missingMaterials.includes(m)
-                  ),
-                  BONUS_COIN_COST_LEVELS.has(x.levelId) && x.missingBonus.length === 0
-                )}
-              </li>
-            ))}
+  .filter(x => showZeroMaterials || x.total - x.missingMaterials.length > 0)
+  .slice(0, closestLimit)
+  .map(x => {
+    const requiredCopy = [...(materialList[x.levelId - 1] || [])]
+    const missingCopy = [...x.missingMaterials]
+    const haveMaterials: string[] = []
+
+    for (const req of requiredCopy) {
+      const idx = missingCopy.indexOf(req)
+      if (idx !== -1) {
+        missingCopy.splice(idx, 1)
+      } else {
+        haveMaterials.push(req)
+      }
+    }
+
+    return (
+      <li key={x.levelId} className="p-2 border rounded bg-yellow-50">
+        {formatLevel(
+          x.levelId,
+          x.missingMaterials,
+          x.missingBonus,
+          x.total - x.missingMaterials.length,
+          x.total,
+          haveMaterials,
+          BONUS_COIN_COST_LEVELS.has(x.levelId) && x.missingBonus.length === 0
+        )}
+      </li>
+    )
+  })}
         </ul>
       </section>
 
