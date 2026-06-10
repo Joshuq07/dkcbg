@@ -101,6 +101,20 @@ const [showOverlay, setShowOverlay] = useState(false)
     2: allBoxes.filter(b => b.page === 2),
   }), [allBoxes])
 
+  const myBuiltCount = useMemo(() =>
+  entries.filter(
+    e => e.user_email === user?.email && e.box_type === 'number' && e.value && !e.lost
+  ).length,
+  [entries, user]
+)
+
+const ABILITY_TIERS = [
+  { threshold: 25, x: 344, y: 4361 },
+  { threshold: 50, x: 444, y: 4361 },
+  { threshold: 75, x: 544, y: 4361 },
+  { threshold: 100, x: 644, y: 4361 },
+]
+
   useEffect(() => {
     if (!isLoading && !isAuthenticated) router.push('/')
   }, [isLoading, isAuthenticated, router])
@@ -768,15 +782,27 @@ async function saveGame(newGame: string) {
   </div>
 )}
 
-        {/**/}
         <div className="flex flex-col lg:flex-row gap-4">
 
-          {/* PAGE 1 */}
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
             <img src="/page1.png" className="w-full h-auto block" />
             {boxesByPage[1].map(box => (
               <div key={box.id}>{renderBox(box)}</div>
             ))}
+            {ABILITY_TIERS.filter(t => myBuiltCount >= t.threshold).map(t => (
+  <img
+    key={t.threshold}
+    src="/check.png"
+    alt=""
+    className="absolute pointer-events-none"
+    style={{
+      left: `${(t.x / 3300) * 100}%`,
+      top: `${(t.y / 4740) * 100}%`,
+      width: `${(98 / 3300) * 100}%`,
+      height: `${(58 / 4740) * 100}%`,
+    }}
+  />
+))}
           </div>
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
   <img src="/page2.png" className="w-full h-auto block" />
