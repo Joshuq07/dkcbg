@@ -803,8 +803,7 @@ async function saveGame(newGame: string) {
     }}
   />
 ))}
-          </div>
-          <div
+<div
   className="absolute flex items-center justify-center leading-none overflow-hidden"
   style={{
     left: `${(299 / 3300) * 100}%`,
@@ -827,6 +826,8 @@ async function saveGame(newGame: string) {
 >
   {members.find(m => m.user_email === user?.email)?.character_name ?? ''}
 </div>
+          </div>
+          
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
   <img src="/page2.png" className="w-full h-auto block" />
   {boxesByPage[2].map(box => (
