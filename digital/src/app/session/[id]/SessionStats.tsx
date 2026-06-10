@@ -40,6 +40,7 @@ interface Member {
   user_email: string
   display_name: string | null
   player_name?: string | null
+  banana_birds?: number | null
 }
 
 interface Props {
@@ -177,10 +178,14 @@ export default function SessionStats({ members, entries, scrapbooked, onClose }:
               sub="All levels built & !"
               value={`${stats.worldsFullyCompleted} / 24`}
             />
-            <StatRow
-              label="Cards Scrapbooked"
-              value={`${(scrapbooked[activeTab] || []).length} / 68`}
-            />
+           <StatRow
+  label="Cards Scrapbooked"
+  value={`${(scrapbooked[activeTab] || []).length} / 68`}
+/>
+<StatRow
+  label="Banana Birds Returned"
+  value={activeMember?.banana_birds ?? 0}
+/>
             <StatRow
               label="Final Bosses Completed"
               sub={

@@ -53,6 +53,7 @@ type Member = {
   player_name?: string | null
   character_name?: string | null
   game?: string
+  banana_birds?: number | null
 }
 
 type BoxEntry = BoxEntryType
@@ -884,6 +885,46 @@ async function saveGame(newGame: string) {
       </React.Fragment>
     )
   })}
+
+  <button
+  className="absolute flex items-center justify-center leading-none"
+  style={{
+    left: `${(1752 / 3300) * 100}%`,
+    top: `${(3804 / 4740) * 100}%`,
+    width: `${(97 / 3300) * 100}%`,
+    height: `${(53 / 4740) * 100}%`,
+    fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)',
+    color: 'black',
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+  }}
+  onClick={async () => {
+    if (viewMode === 'global') return
+    const current = members.find(m => m.user_email === user?.email)?.banana_birds ?? ''
+    const input = window.prompt('Banana Birds Returned:', String(current))
+    if (input === null) return
+    const trimmed = input.trim()
+    const value = trimmed === '' ? null : parseInt(trimmed, 10)
+    if (trimmed !== '' && isNaN(value as number)) return
+    setMembers(prev =>
+      prev.map(m =>
+        m.user_email === user?.email ? { ...m, banana_birds: value } : m
+      )
+    )
+    await fetch('/api/session_members', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: sessionId,
+        user_email: user?.email,
+        banana_birds: value,
+      }),
+    })
+  }}
+>
+  {members.find(m => m.user_email === user?.email)?.banana_birds ?? ''}
+</button>
 </div>
 
 
