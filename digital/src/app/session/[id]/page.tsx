@@ -804,6 +804,29 @@ async function saveGame(newGame: string) {
   />
 ))}
           </div>
+          <div
+  className="absolute flex items-center justify-center leading-none overflow-hidden"
+  style={{
+    left: `${(299 / 3300) * 100}%`,
+    top: `${(3980 / 4740) * 100}%`,
+    fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)',
+    color: 'black',
+  }}
+>
+  {members.find(m => m.user_email === user?.email)?.player_name ?? ''}
+</div>
+
+<div
+  className="absolute flex items-center justify-center leading-none overflow-hidden"
+  style={{
+    left: `${(299 / 3300) * 100}%`,
+    top: `${(4039 / 4740) * 100}%`,
+    fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)',
+    color: 'black',
+  }}
+>
+  {members.find(m => m.user_email === user?.email)?.character_name ?? ''}
+</div>
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
   <img src="/page2.png" className="w-full h-auto block" />
   {boxesByPage[2].map(box => (
