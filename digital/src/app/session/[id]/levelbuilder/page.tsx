@@ -24,7 +24,7 @@ import {
   getLevelCode
 } from '@/lib/dkcbg/data'
 
-import PhotoScanModal from '../PhotoScanModal' 
+import PhotoScanModal from '../PhotoScanModal'
 import { MATERIAL_PBR, UNIFIED_PBR_COLOR } from '@/lib/dkcbg/pathfinding'
 
 const ALL_MATERIALS = [
@@ -100,11 +100,10 @@ function modeButton(
   return (
     <button
       onClick={() => set(mode)}
-      className={`px-3 py-1 rounded border ${
-        active
-          ? 'bg-blue-600 text-white border-blue-700'
-          : 'bg-white text-gray-700 hover:bg-gray-100'
-      }`}
+      className={`px-3 py-1 rounded border ${active
+        ? 'bg-blue-600 text-white border-blue-700'
+        : 'bg-white text-gray-700 hover:bg-gray-100'
+        }`}
     >
       {mode[0].toUpperCase() + mode.slice(1)}
     </button>
@@ -138,9 +137,8 @@ function MaterialEditor({
           return (
             <div
               key={name}
-              className={`relative p-2 border rounded-lg shadow-sm flex flex-col items-center bg-white ${
-                count === 0 ? 'opacity-40' : 'opacity-100'
-              }`}
+              className={`relative p-2 border rounded-lg shadow-sm flex flex-col items-center bg-white ${count === 0 ? 'opacity-40' : 'opacity-100'
+                }`}
             >
               <Image
                 src={`/materials/${name.toLowerCase()}.png`}
@@ -212,17 +210,17 @@ export default function LevelBuilderPage({
   const [matProgressAsc, setMatProgressAsc] = useState(true)
   const [includeInventory, setIncludeInventory] = useState(true)
   const [includeScrapbook, setIncludeScrapbook] = useState(true)
-const [scrapbooked, setScrapbooked] = useState<string[]>([])
-const [showQueue, setShowQueue] = useState(false)
-const [queuedLevels, setQueuedLevels] = useState<number[]>([])
-const [queuedMaterials, setQueuedMaterials] = useState<Record<string, number>>({})
-const [queueHydrated, setQueueHydrated] = useState(false)
-const [queueSearch, setQueueSearch] = useState('')
-const [queueTab, setQueueTab] = useState<'levels' | 'environments' | 'resources' | 'animals'>('levels')
-const [showBuiltInQueue, setShowBuiltInQueue] = useState(false)
-const [includeScrapbookProgress, setIncludeScrapbookProgress] = useState(true)
+  const [scrapbooked, setScrapbooked] = useState<string[]>([])
+  const [showQueue, setShowQueue] = useState(false)
+  const [queuedLevels, setQueuedLevels] = useState<number[]>([])
+  const [queuedMaterials, setQueuedMaterials] = useState<Record<string, number>>({})
+  const [queueHydrated, setQueueHydrated] = useState(false)
+  const [queueSearch, setQueueSearch] = useState('')
+  const [queueTab, setQueueTab] = useState<'levels' | 'environments' | 'resources' | 'animals'>('levels')
+  const [showBuiltInQueue, setShowBuiltInQueue] = useState(false)
+  const [includeScrapbookProgress, setIncludeScrapbookProgress] = useState(true)
 
-const [showPhotoScan, setShowPhotoScan] = useState(false)
+  const [showPhotoScan, setShowPhotoScan] = useState(false)
 
   useEffect(() => {
     if (!user || !sessionId) return
@@ -283,42 +281,42 @@ const [showPhotoScan, setShowPhotoScan] = useState(false)
   }, [materialCounts, sessionId, user, hydrated])
 
   useEffect(() => {
-  if (!user || !sessionId) return
-  fetch(`/api/scrapbook/${sessionId}`, {
-    headers: { 'x-user-id': user.email! }
-  })
-    .then(r => r.json())
-    .then(json => setScrapbooked(json.scrapbooked_materials || []))
-}, [user, sessionId])
-
-useEffect(() => {
-  if (!user || !sessionId || queueHydrated) return
-  fetch(`/api/queue/${sessionId}`, {
-    headers: { 'x-user-id': user.email! }
-  })
-    .then(r => r.json())
-    .then(json => {
-      setQueuedLevels(json.queued_levels || [])
-      setQueuedMaterials(json.queued_materials || {})
-      setQueueHydrated(true)
+    if (!user || !sessionId) return
+    fetch(`/api/scrapbook/${sessionId}`, {
+      headers: { 'x-user-id': user.email! }
     })
-}, [user, sessionId, queueHydrated])
+      .then(r => r.json())
+      .then(json => setScrapbooked(json.scrapbooked_materials || []))
+  }, [user, sessionId])
 
-useEffect(() => {
-  if (!user || !sessionId || !queueHydrated) return
-  const timeout = setTimeout(() => {
+  useEffect(() => {
+    if (!user || !sessionId || queueHydrated) return
     fetch(`/api/queue/${sessionId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_email: user.email,
-        queued_levels: queuedLevels,
-        queued_materials: queuedMaterials
-      })
+      headers: { 'x-user-id': user.email! }
     })
-  }, 300)
-  return () => clearTimeout(timeout)
-}, [queuedLevels, queuedMaterials, sessionId, user, queueHydrated])
+      .then(r => r.json())
+      .then(json => {
+        setQueuedLevels(json.queued_levels || [])
+        setQueuedMaterials(json.queued_materials || {})
+        setQueueHydrated(true)
+      })
+  }, [user, sessionId, queueHydrated])
+
+  useEffect(() => {
+    if (!user || !sessionId || !queueHydrated) return
+    const timeout = setTimeout(() => {
+      fetch(`/api/queue/${sessionId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_email: user.email,
+          queued_levels: queuedLevels,
+          queued_materials: queuedMaterials
+        })
+      })
+    }, 300)
+    return () => clearTimeout(timeout)
+  }, [queuedLevels, queuedMaterials, sessionId, user, queueHydrated])
 
   const remainingLevels = useMemo(() => {
     return computeRemainingLevels(userEntries as LogicEntry[] || [])
@@ -333,16 +331,15 @@ useEffect(() => {
       }
     }
     const counts: Record<string, number> = {}
-for (const mat of ALL_MATERIALS) {
-  const required = requiredTotals[mat] || 0
-  const have = materialCounts[mat] || 0
-  const isScrapbooked = scrapbooked.includes(mat)
-  const scrapbookRequired = isScrapbooked ? 0 : 1  // need 1 extra unless already scrapbooked
-  const totalRequired = required + scrapbookRequired
-  counts[mat] = Math.max(0, required + 1 - have - (isScrapbooked ? 1 : 0))
-}
+    for (const mat of ALL_MATERIALS) {
+      const required = requiredTotals[mat] || 0
+      const have = materialCounts[mat] || 0
+      const isScrapbooked = scrapbooked.includes(mat)
+      const scrapbookRequired = (includeScrapbook && !isScrapbooked) ? 1 : 0
+      counts[mat] = Math.max(0, required + scrapbookRequired - have)
+    }
     return counts
-  }, [remainingLevels, materialCounts, scrapbooked])
+  }, [remainingLevels, materialCounts, scrapbooked, includeScrapbook])
 
   const stats = useMemo(() => {
     const base = computeStats(userEntries as LogicEntry[] || [])
@@ -424,12 +421,12 @@ for (const mat of ALL_MATERIALS) {
     const netBonusCoins = bonusCoins - spent
 
     const baseBuildable = computeBuildableLevels(userEntries as LogicEntry[] || [], {
-  materials: Object.entries(materialCounts).flatMap(([m, c]) =>
-    Array(c).fill(m)
-  ),
-  bonusCoins: netBonusCoins,
-  money: 0
-})
+      materials: Object.entries(materialCounts).flatMap(([m, c]) =>
+        Array(c).fill(m)
+      ),
+      bonusCoins: netBonusCoins,
+      money: 0
+    })
 
     return baseBuildable.filter(levelId => {
       if (BONUS_COIN_COST_LEVELS.has(levelId)) {
@@ -443,12 +440,12 @@ for (const mat of ALL_MATERIALS) {
     const buildableSet = new Set(buildable)
 
     return computeClosestLevels(userEntries as LogicEntry[] || [], {
-  materials: Object.entries(materialCounts).flatMap(([m, c]) =>
-    Array(c).fill(m)
-  ),
-  bonusCoins: stats.bonusCoins,
-  money: 0
-}).filter(x => !buildableSet.has(x.levelId))
+      materials: Object.entries(materialCounts).flatMap(([m, c]) =>
+        Array(c).fill(m)
+      ),
+      bonusCoins: stats.bonusCoins,
+      money: 0
+    }).filter(x => !buildableSet.has(x.levelId))
   }, [userEntries, materialCounts, buildable])
 
   const closest = useMemo(() => {
@@ -489,21 +486,21 @@ for (const mat of ALL_MATERIALS) {
     return enriched
   }, [closestRaw, stats.bonusCoins])
 
-   const queuedMaterialTotals = useMemo(() => {
-  const totals: Record<string, number> = {}
-  // From queued levels
-  for (const lvl of queuedLevels) {
-    const mats = materialList[lvl - 1] || []
-    for (const m of mats) {
-      totals[m] = (totals[m] || 0) + 1
+  const queuedMaterialTotals = useMemo(() => {
+    const totals: Record<string, number> = {}
+    // From queued levels
+    for (const lvl of queuedLevels) {
+      const mats = materialList[lvl - 1] || []
+      for (const m of mats) {
+        totals[m] = (totals[m] || 0) + 1
+      }
     }
-  }
-  // From directly queued materials
-  for (const [m, count] of Object.entries(queuedMaterials)) {
-    totals[m] = (totals[m] || 0) + count
-  }
-  return totals
-}, [queuedLevels, queuedMaterials])
+    // From directly queued materials
+    for (const [m, count] of Object.entries(queuedMaterials)) {
+      totals[m] = (totals[m] || 0) + count
+    }
+    return totals
+  }, [queuedLevels, queuedMaterials])
 
   const displayedMaterials = useMemo((): MaterialItem[] => {
     let list: MaterialItem[] = ALL_MATERIALS
@@ -529,6 +526,14 @@ for (const mat of ALL_MATERIALS) {
         const mats = materialList[lvl - 1] || []
         for (const m of mats) {
           neededCounts[m] = (neededCounts[m] || 0) + 1
+        }
+      }
+
+      if (includeScrapbook) {
+        for (const m of ALL_MATERIALS) {
+          if (!scrapbooked.includes(m) && !(m in neededCounts)) {
+            neededCounts[m] = 0
+          }
         }
       }
 
@@ -591,7 +596,7 @@ for (const mat of ALL_MATERIALS) {
     return list
   }, [viewMode, materialCounts, remainingLevels, materialSortMode, includeScrapbook, scrapbooked, queuedMaterialTotals])
 
- 
+
 
   const formatLevel = (
     id: number,
@@ -634,7 +639,7 @@ for (const mat of ALL_MATERIALS) {
         {modeButton('owned', viewMode, setViewMode)}
         {modeButton('needed', viewMode, setViewMode)}
         {modeButton('queued', viewMode, setViewMode)}
-        
+
       </div>
       <div className="flex flex-wrap gap-3 text-sm">
         <label className="flex items-center gap-1 cursor-pointer">
@@ -654,23 +659,23 @@ for (const mat of ALL_MATERIALS) {
           Show built levels in queue
         </label>
       </div>
-<div className="flex gap-2 text-sm flex-wrap">
-      <button
-        onClick={() =>
-          setMaterialSortMode(m =>
-            m === 'grouped' ? 'mixed' : m === 'mixed' ? 'frequency' : 'grouped'
-          )
-        }
-        className="px-2 py-1 border rounded hover:bg-gray-100 text-sm"
-      >
-        {materialSortMode === 'grouped'
-          ? 'Sort: By Type'
-          : materialSortMode === 'mixed'
-          ? 'Sort: Alphabetical'
-          : 'Sort: By Frequency'}
-      </button>
+      <div className="flex gap-2 text-sm flex-wrap">
+        <button
+          onClick={() =>
+            setMaterialSortMode(m =>
+              m === 'grouped' ? 'mixed' : m === 'mixed' ? 'frequency' : 'grouped'
+            )
+          }
+          className="px-2 py-1 border rounded hover:bg-gray-100 text-sm"
+        >
+          {materialSortMode === 'grouped'
+            ? 'Sort: By Type'
+            : materialSortMode === 'mixed'
+              ? 'Sort: Alphabetical'
+              : 'Sort: By Frequency'}
+        </button>
 
-      <button
+        <button
           onClick={() => setShowQueue(true)}
           className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
         >
@@ -679,12 +684,12 @@ for (const mat of ALL_MATERIALS) {
             : ''}
         </button>
         <button
-  onClick={() => setShowPhotoScan(true)}
-  className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
->
-  Scan
-</button>
-</div>
+          onClick={() => setShowPhotoScan(true)}
+          className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100"
+        >
+          Scan
+        </button>
+      </div>
       <MaterialEditor
         counts={materialCounts}
         displayedMaterials={displayedMaterials}
@@ -834,11 +839,10 @@ for (const mat of ALL_MATERIALS) {
               <button
                 key={tab}
                 onClick={() => setMatProgressTab(tab)}
-                className={`px-3 py-1 rounded border ${
-                  matProgressTab === tab
-                    ? 'bg-blue-600 text-white border-blue-700'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
-                }`}
+                className={`px-3 py-1 rounded border ${matProgressTab === tab
+                  ? 'bg-blue-600 text-white border-blue-700'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  }`}
               >
                 {tab[0].toUpperCase() + tab.slice(1)}
               </button>
@@ -854,13 +858,13 @@ for (const mat of ALL_MATERIALS) {
               Include materials in your inventory towards completion
             </label>
             <label className="flex items-center gap-1 cursor-pointer">
-  <input
-    type="checkbox"
-    checked={includeScrapbookProgress}
-    onChange={e => setIncludeScrapbookProgress(e.target.checked)}
-  />
-  Include Scrapbook towards completion
-</label>
+              <input
+                type="checkbox"
+                checked={includeScrapbookProgress}
+                onChange={e => setIncludeScrapbookProgress(e.target.checked)}
+              />
+              Include Scrapbook towards completion
+            </label>
             <button
               onClick={() => setMatProgressAsc(a => !a)}
               className="px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-100 shrink-0"
@@ -900,10 +904,10 @@ for (const mat of ALL_MATERIALS) {
             const stillNeeded = totalNeeded - usedByBuilt
             const have = includeInventory ? (materialCounts[m] || 0) : 0
             const usedFromInventory = Math.min(have, stillNeeded)
-const scrapbookTotal = includeScrapbookProgress ? totalNeeded + 1 : totalNeeded
-const scrapbookUsed = (includeScrapbookProgress && scrapbooked.includes(m)) ? 1 : 0
-const used = usedByBuilt + usedFromInventory + scrapbookUsed
-const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
+            const scrapbookTotal = includeScrapbookProgress ? totalNeeded + 1 : totalNeeded
+            const scrapbookUsed = (includeScrapbookProgress && scrapbooked.includes(m)) ? 1 : 0
+            const used = usedByBuilt + usedFromInventory + scrapbookUsed
+            const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
 
             return { m, used, totalNeeded: scrapbookTotal, pct }
           })
@@ -986,11 +990,10 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                 <button
                   key={tab}
                   onClick={() => setQueueTab(tab)}
-                  className={`px-4 py-2 text-sm shrink-0 border-b-2 transition-colors ${
-                    queueTab === tab
-                      ? 'border-blue-500 text-blue-600 font-semibold'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
-                  }`}
+                  className={`px-4 py-2 text-sm shrink-0 border-b-2 transition-colors ${queueTab === tab
+                    ? 'border-blue-500 text-blue-600 font-semibold'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    }`}
                 >
                   {tab[0].toUpperCase() + tab.slice(1)}
                 </button>
@@ -1037,9 +1040,8 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                     return (
                       <label
                         key={id}
-                        className={`flex items-start gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-50 ${
-                          isQueued ? 'bg-blue-50' : ''
-                        }`}
+                        className={`flex items-start gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-50 ${isQueued ? 'bg-blue-50' : ''
+                          }`}
                       >
                         <input
                           type="checkbox"
@@ -1053,16 +1055,16 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                         />
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium flex items-center gap-2 flex-wrap">
-  <span className="text-gray-400">{code}</span>
+                            <span className="text-gray-400">{code}</span>
 
-  {name}
+                            {name}
 
-  <Stars value={starValue[id - 1] || 0} />
+                            <Stars value={starValue[id - 1] || 0} />
 
-  {isBuilt && (
-    <span className="text-xs text-green-600">(built)</span>
-  )}
-</div>
+                            {isBuilt && (
+                              <span className="text-xs text-green-600">(built)</span>
+                            )}
+                          </div>
                           <div className="text-xs text-gray-400 truncate">
                             {mats.join(', ')}
                           </div>
@@ -1076,8 +1078,8 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                 const matList = queueTab === 'environments'
                   ? environmentList
                   : queueTab === 'resources'
-                  ? resourceList
-                  : animalList
+                    ? resourceList
+                    : animalList
 
                 return matList.map(m => {
                   const count = queuedMaterials[m] || 0
@@ -1110,7 +1112,7 @@ const pct = scrapbookTotal === 0 ? 100 : (used / scrapbookTotal) * 100
                   )
                 })
               })()}
-              
+
             </div>
           </div>
         </div>
