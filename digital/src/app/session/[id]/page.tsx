@@ -53,9 +53,19 @@ type Member = {
   player_name?: string | null
   character_name?: string | null
   game?: string
+  banana_birds?: number | null
 }
 
 type BoxEntry = BoxEntryType
+
+type PointsEntry = {
+  slot: number
+  name: string | null
+  points: number | null
+  user_email: string
+}
+
+
 
 export default function SessionPage() {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -75,6 +85,7 @@ const [scrapHydrated, setScrapHydrated] = useState(false)
 const [allScrapbooked, setAllScrapbooked] = useState<Record<string, string[]>>({})
 const dragPanel = useDraggable({ x: 16, y: 16 })
 const [showOverlay, setShowOverlay] = useState(false)
+const [pointsEntries, setPointsEntries] = useState<PointsEntry[]>([])
 
   useEffect(() => {
     function updateZoom() {
@@ -100,6 +111,20 @@ const [showOverlay, setShowOverlay] = useState(false)
     1: allBoxes.filter(b => b.page === 1),
     2: allBoxes.filter(b => b.page === 2),
   }), [allBoxes])
+
+  const myBuiltCount = useMemo(() =>
+  entries.filter(
+    e => e.user_email === user?.email && e.box_type === 'number' && e.value && !e.lost
+  ).length,
+  [entries, user]
+)
+
+const ABILITY_TIERS = [
+  { threshold: 25, x: 344, y: 4361 },
+  { threshold: 50, x: 444, y: 4361 },
+  { threshold: 75, x: 544, y: 4361 },
+  { threshold: 100, x: 644, y: 4361 },
+]
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) router.push('/')
@@ -131,10 +156,18 @@ setAllScrapbooked(allScrap)
     setEntries(e.entries ?? [])
   }, [sessionId])
 
-  useEffect(() => {
-    loadSession()
-    loadEntries()
-  }, [loadSession, loadEntries])
+  const loadPoints = useCallback(async () => {
+  if (!sessionId) return
+  const r = await fetch(`/api/session_points?session_id=${sessionId}`).then(r => r.json())
+  setPointsEntries(r.points ?? [])
+}, [sessionId])
+
+useEffect(() => {
+  loadSession()
+  loadEntries()
+  loadPoints()
+}, [loadSession, loadEntries, loadPoints])
+
 
 
   useEffect(() => {
@@ -183,6 +216,33 @@ setAllScrapbooked(allScrap)
 
     return () => { supabase.removeChannel(sub) }
   }, [sessionId])
+
+  useEffect(() => {
+  if (!sessionId) return
+  const sub = supabase
+    .channel(`session_points:${sessionId}`)
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'session_points',
+      filter: `session_id=eq.${sessionId}`,
+    }, payload => {
+      if (payload.eventType === 'DELETE') {
+        const old = payload.old as PointsEntry
+        setPointsEntries(prev =>
+          prev.filter(p => !(p.user_email === old.user_email && p.slot === old.slot))
+        )
+      } else {
+        const next = payload.new as PointsEntry
+        setPointsEntries(prev => [
+          ...prev.filter(p => !(p.user_email === next.user_email && p.slot === next.slot)),
+          next,
+        ])
+      }
+    })
+    .subscribe()
+  return () => { supabase.removeChannel(sub) }
+}, [sessionId])
 
   useEffect(() => {
     if (!sessionId) return
@@ -542,6 +602,49 @@ function toggleScrapbook(material: string) {
     }
   }
 
+  async function handlePointsClick(slot: number) {
+  if (viewMode === 'global') return
+  const existing = pointsEntries.find(p => p.user_email === user?.email && p.slot === slot)
+
+  const nameInput = window.prompt('Name:', existing?.name ?? '')
+  if (nameInput === null) return
+  const pointsInput = window.prompt('Points:', String(existing?.points ?? ''))
+  if (pointsInput === null) return
+
+  const trimmedName = nameInput.trim()
+  const trimmedPoints = pointsInput.trim()
+
+  if (!trimmedName && !trimmedPoints) {
+    setPointsEntries(prev => prev.filter(p => !(p.user_email === user?.email && p.slot === slot)))
+    await fetch('/api/session_points', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, user_email: user?.email, slot }),
+    })
+    return
+  }
+
+  const points = trimmedPoints ? parseInt(trimmedPoints, 10) : null
+  if (trimmedPoints && isNaN(points as number)) return
+
+  setPointsEntries(prev => [
+    ...prev.filter(p => !(p.user_email === user?.email && p.slot === slot)),
+    { slot, name: trimmedName || null, points, user_email: user!.email! },
+  ])
+  await fetch('/api/session_points', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session_id: sessionId, user_email: user?.email, slot, name: trimmedName || null, points }),
+  })
+}
+
+const myTotalPoints = useMemo(() =>
+  pointsEntries
+    .filter(p => p.user_email === user?.email)
+    .reduce((sum, p) => sum + (p.points ?? 0), 0),
+  [pointsEntries, user]
+)
+
   async function saveEntry(box: Box, userEmail: string, value: string | null) {
     await fetch('/api/box_entries', {
       method: value ? 'PUT' : 'DELETE',
@@ -768,16 +871,52 @@ async function saveGame(newGame: string) {
   </div>
 )}
 
-        {/**/}
         <div className="flex flex-col lg:flex-row gap-4">
 
-          {/* PAGE 1 */}
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
             <img src="/page1.png" className="w-full h-auto block" />
             {boxesByPage[1].map(box => (
               <div key={box.id}>{renderBox(box)}</div>
             ))}
+            {ABILITY_TIERS.filter(t => myBuiltCount >= t.threshold).map(t => (
+  <img
+    key={t.threshold}
+    src="/check.png"
+    alt=""
+    className="absolute pointer-events-none"
+    style={{
+      left: `${(t.x / 3300) * 100}%`,
+      top: `${(t.y / 4740) * 100}%`,
+      width: `${(98 / 3300) * 100}%`,
+      height: `${(58 / 4740) * 100}%`,
+    }}
+  />
+))}
+<div
+  className="absolute flex items-center justify-center leading-none"
+  style={{
+    left: `${(303 / 3300) * 100}%`,
+    top: `${(3982 / 4740) * 100}%`,
+    fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)',
+    color: 'black',
+  }}
+>
+  {members.find(m => m.user_email === user?.email)?.player_name ?? ''}
+</div>
+
+<div
+  className="absolute flex items-center justify-center leading-none"
+  style={{
+    left: `${(303 / 3300) * 100}%`,
+    top: `${(4041 / 4740) * 100}%`,
+    fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)',
+    color: 'black',
+  }}
+>
+  {members.find(m => m.user_email === user?.email)?.character_name ?? ''}
+</div>
           </div>
+          
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
   <img src="/page2.png" className="w-full h-auto block" />
   {boxesByPage[2].map(box => (
@@ -834,6 +973,80 @@ async function saveGame(newGame: string) {
       </React.Fragment>
     )
   })}
+
+  <button
+  className="absolute flex items-center justify-center leading-none"
+  style={{
+    left: `${(1752 / 3300) * 100}%`,
+    top: `${(3804 / 4740) * 100}%`,
+    width: `${(97 / 3300) * 100}%`,
+    height: `${(53 / 4740) * 100}%`,
+    fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)',
+    color: 'black',
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+  }}
+  onClick={async () => {
+    if (viewMode === 'global') return
+    const current = members.find(m => m.user_email === user?.email)?.banana_birds ?? ''
+    const input = window.prompt('Banana Birds Returned:', String(current))
+    if (input === null) return
+    const trimmed = input.trim()
+    const value = trimmed === '' ? null : parseInt(trimmed, 10)
+    if (trimmed !== '' && isNaN(value as number)) return
+    setMembers(prev =>
+      prev.map(m =>
+        m.user_email === user?.email ? { ...m, banana_birds: value } : m
+      )
+    )
+    await fetch('/api/session_members', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: sessionId,
+        user_email: user?.email,
+        banana_birds: value,
+      }),
+    })
+  }}
+>
+  {members.find(m => m.user_email === user?.email)?.banana_birds ?? ''}
+</button>
+{/* Points boxes */}
+{Array.from({ length: 15 }, (_, i) => {
+  const y = 3644 + i * 55
+  const slot1 = i + 1        // col 1, slots 1-15
+  const slot2 = i + 16       // col 2, slots 16-30
+  const e1 = pointsEntries.find(p => p.user_email === user?.email && p.slot === slot1)
+  const e2 = pointsEntries.find(p => p.user_email === user?.email && p.slot === slot2)
+
+  return (
+    <React.Fragment key={i}>
+      {/* Col 1 name */}
+      <button onClick={() => handlePointsClick(slot1)} className="absolute flex items-center justify-center leading-none" style={{ left: `${(140 / 3300) * 100}%`, top: `${(y / 4740) * 100}%`, width: `${(630 / 3300) * 100}%`, height: `${(54 / 4740) * 100}%`, fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)', color: 'black', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+        {e1?.name ?? ''}
+      </button>
+      {/* Col 1 points */}
+      <button onClick={() => handlePointsClick(slot1)} className="absolute flex items-center justify-center leading-none" style={{ left: `${(771 / 3300) * 100}%`, top: `${(y / 4740) * 100}%`, width: `${(99 / 3300) * 100}%`, height: `${(54 / 4740) * 100}%`, fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)', color: 'black', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+        {e1?.points ?? ''}
+      </button>
+      {/* Col 2 name */}
+      <button onClick={() => handlePointsClick(slot2)} className="absolute flex items-center justify-center leading-none" style={{ left: `${(903 / 3300) * 100}%`, top: `${(y / 4740) * 100}%`, width: `${(630 / 3300) * 100}%`, height: `${(54 / 4740) * 100}%`, fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)', color: 'black', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+        {e2?.name ?? ''}
+      </button>
+      {/* Col 2 points */}
+      <button onClick={() => handlePointsClick(slot2)} className="absolute flex items-center justify-center leading-none" style={{ left: `${(1534 / 3300) * 100}%`, top: `${(y / 4740) * 100}%`, width: `${(99 / 3300) * 100}%`, height: `${(54 / 4740) * 100}%`, fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)', color: 'black', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+        {e2?.points ?? ''}
+      </button>
+    </React.Fragment>
+  )
+})}
+
+{/* Total points box */}
+<div className="absolute flex items-center justify-center leading-none" style={{ left: `${(1534 / 3300) * 100}%`, top: `${(4526 / 4740) * 100}%`, width: `${(98 / 3300) * 100}%`, height: `${(98 / 4740) * 100}%`, fontSize: 'clamp(0.25rem, 1.2cqw, 1.1rem)', color: 'black' }}>
+  {myTotalPoints || ''}
+</div>
 </div>
 
 
@@ -992,12 +1205,18 @@ style={{ maxHeight: `${120 * (1 / (window.devicePixelRatio || 1))}px` }}
       </div>
 
       {showStats && (
-        <SessionStats
-          members={members}
-          entries={entries}
-          scrapbooked={{ [user?.email ?? '']: scrapbooked }}
-          onClose={() => setShowStats(false)}
-        />
+       <SessionStats
+  members={members}
+  entries={entries}
+  scrapbooked={{ [user?.email ?? '']: scrapbooked }}
+  pointsTotals={Object.fromEntries(
+    members.map(m => [
+      m.user_email,
+      pointsEntries.filter(p => p.user_email === m.user_email).reduce((sum, p) => sum + (p.points ?? 0), 0)
+    ])
+  )}
+  onClose={() => setShowStats(false)}
+/>
       )}
     </main>
   )

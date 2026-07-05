@@ -64,26 +64,10 @@ export function canBuildLevel(
   levelId: number,
   inventory: InventoryResult
 ): boolean {
-  const requiredMaterials = materialList[levelId - 1]
-  const { materials, bonusCoins } = inventory
+  if (computeMissingMaterials(levelId, inventory).length > 0) return false
 
-  for (const req of requiredMaterials) {
-    if (!materials.includes(req)) {
-      return false
-    }
-  }
-
-
-  if (levelId === 39 || levelId === 136) {
-    const bossCount = materials.filter(m => m === "Boss").length
-    if (bossCount <= 1) return false
-  }
-
-
-  if (
-    [82, 83, 84, 85, 86, 87, 137, 138, 139, 140, 141, 142].includes(levelId)
-  ) {
-    if (bonusCoins <= 1) return false
+  if ([82, 83, 84, 85, 86, 87, 137, 138, 139, 140, 141, 142].includes(levelId)) {
+    if (inventory.bonusCoins <= 1) return false
   }
 
   return true
@@ -104,7 +88,19 @@ export function computeMissingMaterials(
   inventory: InventoryResult
 ): string[] {
   const required = materialList[levelId - 1]
-  return required.filter(req => !inventory.materials.includes(req))
+  const available = [...inventory.materials] 
+  const missing: string[] = []
+
+  for (const req of required) {
+    const idx = available.indexOf(req)
+    if (idx === -1) {
+      missing.push(req)
+    } else {
+      available.splice(idx, 1) 
+    }
+  }
+
+  return missing
 }
 
 
