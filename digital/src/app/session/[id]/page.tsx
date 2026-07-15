@@ -394,7 +394,7 @@ useEffect(() => {
 
 function nextNumberForUser(userEmail: string) {
   const nums = entries
-    .filter(e => e.user_email === userEmail && e.box_type === 'number' && e.value) 
+    .filter(e => e.user_email === userEmail && e.box_type === 'number' && e.value && !e.lost)
     .map(e => parseInt(e.value!, 10))
     .filter(n => !Number.isNaN(n))
   return nums.length === 0 ? 1 : Math.max(...nums) + 1
