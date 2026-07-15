@@ -18,9 +18,10 @@ export async function PUT(req: Request) {
   const body = await req.json()
   const { session_id, user_email, slot, name, points } = body
 
-  const { error } = await supabase.from('session_points').upsert({
-    session_id, user_email, slot, name, points
-  })
+  const { error } = await supabase.from('session_points').upsert(
+  { session_id, user_email, slot, name, points },
+  { onConflict: 'session_id,user_email,slot' }
+)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ ok: true })
