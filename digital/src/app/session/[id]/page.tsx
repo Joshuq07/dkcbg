@@ -185,9 +185,10 @@ useEffect(() => {
         },
         payload => {
           if (payload.eventType === 'DELETE') {
-            const old = payload.old as BoxEntry
-            setEntries(prev =>
-              prev.filter(
+  const old = payload.old as BoxEntry
+  if (!old.level || !old.box_type || !old.user_email) return
+  setEntries(prev =>
+    prev.filter(
                 e =>
                   !(
                     e.level === old.level &&
@@ -608,7 +609,7 @@ function toggleScrapbook(material: string) {
 
   const nameInput = window.prompt('Name:', existing?.name ?? '')
   if (nameInput === null) return
-  const pointsInput = window.prompt('Points:', String(existing?.points ?? ''))
+  const pointsInput = window.prompt('Points:', existing?.points != null ? String(existing.points) : '')
   if (pointsInput === null) return
 
   const trimmedName = nameInput.trim()

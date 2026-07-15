@@ -162,6 +162,7 @@ export async function DELETE(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   if (box_type === 'number') {
+    await renumberAfterDelete(session_id, user_email)
     await recomputeStars(session_id, level)
   }
 
