@@ -222,6 +222,9 @@ export default function LevelBuilderPage({
 
   const [showPhotoScan, setShowPhotoScan] = useState(false)
 
+  const [prefsHydrated, setPrefsHydrated] = useState(false)
+const [prefsLoaded, setPrefsLoaded] = useState(false)
+
   useEffect(() => {
     if (!user || !sessionId) return
     if (hydrated) return
@@ -288,6 +291,63 @@ export default function LevelBuilderPage({
       .then(r => r.json())
       .then(json => setScrapbooked(json.scrapbooked_materials || []))
   }, [user, sessionId])
+
+  // Load preferences
+useEffect(() => {
+  if (!user || !sessionId || prefsLoaded) return
+  fetch(`/api/session_preferences?session_id=${sessionId}`, {
+    headers: { 'x-user-id': user.email! }
+  })
+    .then(r => r.json())
+    .then(json => {
+      const p = json.preferences ?? {}
+      if (p.viewMode !== undefined) setViewMode(p.viewMode)
+      if (p.materialSortMode !== undefined) setMaterialSortMode(p.materialSortMode)
+      if (p.includeScrapbook !== undefined) setIncludeScrapbook(p.includeScrapbook)
+      if (p.showBuiltInQueue !== undefined) setShowBuiltInQueue(p.showBuiltInQueue)
+      if (p.showZeroMaterials !== undefined) setShowZeroMaterials(p.showZeroMaterials)
+      if (p.closestLimit !== undefined) setClosestLimit(p.closestLimit)
+      if (p.matProgressTab !== undefined) setMatProgressTab(p.matProgressTab)
+      if (p.matProgressAsc !== undefined) setMatProgressAsc(p.matProgressAsc)
+      if (p.includeInventory !== undefined) setIncludeInventory(p.includeInventory)
+      if (p.includeScrapbookProgress !== undefined) setIncludeScrapbookProgress(p.includeScrapbookProgress)
+      setPrefsLoaded(true)
+      setPrefsHydrated(true)
+    })
+}, [user, sessionId, prefsLoaded])
+
+// Save preferences
+useEffect(() => {
+  if (!user || !sessionId || !prefsHydrated) return
+  const timeout = setTimeout(() => {
+    fetch('/api/session_preferences', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: sessionId,
+        user_email: user.email,
+        preferences: {
+          viewMode,
+          materialSortMode,
+          includeScrapbook,
+          showBuiltInQueue,
+          showZeroMaterials,
+          closestLimit,
+          matProgressTab,
+          matProgressAsc,
+          includeInventory,
+          includeScrapbookProgress,
+        }
+      })
+    })
+  }, 500)
+  return () => clearTimeout(timeout)
+}, [
+  user, sessionId, prefsHydrated,
+  viewMode, materialSortMode, includeScrapbook, showBuiltInQueue,
+  showZeroMaterials, closestLimit, matProgressTab, matProgressAsc,
+  includeInventory, includeScrapbookProgress
+])
 
   useEffect(() => {
     if (!user || !sessionId || queueHydrated) return
