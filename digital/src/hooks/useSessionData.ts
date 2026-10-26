@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 
 type Entry = {
@@ -16,6 +16,8 @@ export function useSessionData(
 
   
 
+  const requestId = useRef(0)
+
   // -----------------------------
   // Initial load
   // -----------------------------
@@ -26,13 +28,24 @@ export function useSessionData(
       const s = await fetch(`/api/sessions/${sessionId}`).then(r => r.json())
       setSession(s.session)
       setMembers(s.members ?? [])
-
-      const e = await fetch(`/api/box_entries?session_id=${sessionId}`).then(r => r.json())
-      setEntries(e.entries ?? [])
+      await refetchEntries()
     }
 
     load()
   }, [sessionId])
+
+  // -----------------------------
+  // Fetch entries, ignoring stale responses
+  // -----------------------------
+  async function refetchEntries() {
+    const myId = ++requestId.current
+    const data = await fetch(`/api/box_entries?session_id=${sessionId}`).then(r => r.json())
+
+    // A newer request started while this one was in flight, so drop this result
+    if (myId !== requestId.current) return
+
+    setEntries(data.entries ?? [])
+  }
 
   // -----------------------------
   // Realtime subscription
@@ -50,11 +63,7 @@ export function useSessionData(
           table: 'box_entries',
           filter: `session_id=eq.${sessionId}`
         },
-        () => {
-          fetch(`/api/box_entries?session_id=${sessionId}`)
-            .then(r => r.json())
-            .then(data => setEntries(data.entries ?? []))
-        }
+        () => { refetchEntries() }
       )
       .subscribe()
 

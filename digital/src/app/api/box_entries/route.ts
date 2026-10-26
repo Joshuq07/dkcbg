@@ -11,14 +11,28 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Missing session_id' }, { status: 400 })
   }
 
-  const { data, error } = await supabase
-    .from('box_entries')
-    .select('*')
-    .eq('session_id', session_id)
+  const PAGE = 1000
+  let from = 0
+  const all: any[] = []
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  while (true) {
+    const { data, error } = await supabase
+      .from('box_entries')
+      .select('*')
+      .eq('session_id', session_id)
+      .order('level', { ascending: true })
+      .order('box_type', { ascending: true })
+      .order('user_email', { ascending: true })
+      .range(from, from + PAGE - 1)
 
-  return NextResponse.json({ entries: data })
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    all.push(...(data ?? []))
+    if (!data || data.length < PAGE) break
+    from += PAGE
+  }
+
+  return NextResponse.json({ entries: all })
 }
 
 export async function PUT(req: Request) {
