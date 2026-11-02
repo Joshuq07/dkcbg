@@ -389,17 +389,17 @@ if (trophies.length === 0) return null
             className="text-left rounded-2xl overflow-hidden hover:shadow-md transition-all group"
           >
             {/* Image portion */}
-            <div className="relative w-full" style={{ aspectRatio: '256 / 224' }}>
-              <Image
-                src="/Leaderboard.png"
-                alt="Leaderboard"
-                fill
-                className="object-cover"
-              />
-            </div>
+<div className="relative w-full rounded-t-2xl overflow-hidden" style={{ aspectRatio: '256 / 224' }}>
+  <Image
+    src="/Leaderboard.png"
+    alt="Leaderboard"
+    fill
+    className="object-cover"
+  />
+</div>
 
             {/* Stats portion */}
-            <div className="bg-black px-3 py-2">
+            <div className="bg-black px-3 py-2 rounded-b-2xl">
               {/* Row 1: Game number, date, version */}
 {(() => {
   const isTeams = summaries.some(a =>
