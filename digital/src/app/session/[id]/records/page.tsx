@@ -366,6 +366,40 @@ if (trophies.length === 0) return null
     )
   }
 
+  // Spot on Leaderboard.png (256x224 image space) where each place's image is centered
+const PLACE_POSITIONS: Record<number, { x: number; y: number }> = {
+  1: { x: 127, y: 117 },
+  2: { x: 68, y: 121 },
+  3: { x: 183, y: 127 },
+  4: { x: 205, y: 187 },
+}
+
+// Must match the start of your filenames in /public/placements (e.g. dk-1.png)
+const PLACEMENT_FILE_PREFIX: Record<CharacterId, string> = {
+  'donkey-kong': 'dk',
+  'diddy-kong': 'diddy',
+  'dixie-kong': 'dixie',
+  'kiddy-kong': 'kiddy',
+  'tiny-kong': 'tiny',
+  'lanky-kong': 'lanky',
+  'chunky-kong': 'chunky',
+  'taj': 'taj',
+  'xananab': 'xananab',
+  'klubba': 'klubba',
+  'voidco': 'voidco',
+  'king-k-rool': 'krool',
+}
+
+// Size of each placed image as a % of the leaderboard width. Tweak to taste.
+const PLACEMENT_IMG_WIDTH_PCT = 18
+
+function isTeamGame(summaries: PlacementSummary[]) {
+  return summaries.some(a =>
+    summaries.some(
+      b => b.playerId !== a.playerId && b.place === a.place && b.teamId && a.teamId && b.teamId === a.teamId
+    )
+  )
+}
 
  function GameHistory() {
   const sorted = [...GAMES].sort((a, b) => {
@@ -377,29 +411,52 @@ if (trophies.length === 0) return null
   })
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 items-stretch">
       {sorted.map(game => {
         const summaries = getPlacementSummaries(game).sort((a, b) => a.place - b.place)
         const gameNumber = game.id.match(/\d+/)?.[0] ?? game.id
+                const teams = isTeamGame(summaries)
+        const showImages = !teams
 
         return (
-          <button
+                    <button
             key={game.id}
             onClick={() => goToGame(game.id)}
-            className="text-left rounded-2xl overflow-hidden hover:shadow-md transition-all group"
+            className="text-left rounded-2xl overflow-hidden bg-black flex flex-col h-full hover:shadow-md transition-all group"
           >
             {/* Image portion */}
-<div className="relative w-full rounded-t-2xl overflow-hidden" style={{ aspectRatio: '256 / 224' }}>
+<div className="relative w-full overflow-hidden" style={{ aspectRatio: '256 / 224' }}>
   <Image
     src="/Leaderboard.png"
     alt="Leaderboard"
     fill
     className="object-cover"
   />
+  {showImages &&
+    summaries
+      .filter(p => p.place >= 1 && p.place <= 4)
+      .map(p => {
+        const pos = PLACE_POSITIONS[p.place]
+        const fileNum = Math.min(p.place, 3) // no 4 image, so 4th uses the 3 image
+        return (
+          <img
+            key={p.playerId}
+            src={`/placements/${PLACEMENT_FILE_PREFIX[p.characterId]}-${fileNum}.png`}
+            alt=""
+            className="absolute pointer-events-none select-none"
+            style={{
+              left: `${(pos.x / 256) * 100}%`,
+              top: `${(pos.y / 224) * 100}%`,
+              width: `${PLACEMENT_IMG_WIDTH_PCT}%`,
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        )
+      })}
 </div>
 
             {/* Stats portion */}
-            <div className="bg-black px-3 py-2 rounded-b-2xl" style={{ minHeight: '64px' }}>
+                        <div className="bg-black px-3 py-2 flex-1" style={{ minHeight: '64px' }}>
               {/* Row 1: Game number, date, version */}
 {(() => {
   const isTeams = summaries.some(a =>
