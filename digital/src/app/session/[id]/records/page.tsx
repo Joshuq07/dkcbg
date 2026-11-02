@@ -373,74 +373,66 @@ if (trophies.length === 0) return null
       const match = id.match(/\d+/)
       return match ? Number(match[0]) : 0
     }
-
     return getGameNumber(a.id) - getGameNumber(b.id)
   })
 
   return (
-    <div className="space-y-3">
+    <div className="grid grid-cols-2 gap-4">
       {sorted.map(game => {
-        const summaries = getPlacementSummaries(game)
+        const summaries = getPlacementSummaries(game).sort((a, b) => a.place - b.place)
+        const gameNumber = game.id.match(/\d+/)?.[0] ?? game.id
+
         return (
           <button
             key={game.id}
             onClick={() => goToGame(game.id)}
-            className="w-full text-left p-4 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-300 transition-all group"
+            className="text-left rounded-xl overflow-hidden hover:shadow-md transition-all group"
+            style={{ border: '1px solid transparent' }}
           >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="font-semibold text-gray-800 group-hover:text-black transition-colors">
-                  {game.name ?? game.id}
-                </div>
-                <div className="text-xs text-gray-400 mt-0.5">
-                  {game.date} · {game.version}
-                </div>
-                {game.notes && (
-                  <div className="text-xs text-gray-500 mt-1 italic">
-                    {game.notes}
-                  </div>
-                )}
-              </div>
-              <span className="text-gray-300 group-hover:text-gray-500 text-lg mt-0.5 transition-colors">
-                →
-              </span>
+            {/* Image portion */}
+            <div className="relative w-full" style={{ aspectRatio: '256 / 224' }}>
+              <Image
+                src="/Leaderboard.png"
+                alt="Leaderboard"
+                fill
+                className="object-cover"
+              />
             </div>
 
-            <div className="flex flex-wrap gap-2 mt-3">
-              {summaries.map(p => (
-                <div
-                  key={p.playerId}
-                  className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs"
-                  style={{
-                    background: `${PLACEMENT_COLORS[p.place]}22`,
-                    border: `1px solid ${PLACEMENT_COLORS[p.place]}66`,
-                    color: '#1f2937',
-                  }}
-                >
-                  <span
-                    style={{
-                      color: PLACEMENT_COLORS[p.place],
-                      fontWeight: 700,
-                    }}
+            {/* Stats portion */}
+            <div className="bg-gray-900 px-3 py-2">
+              {/* Row 1: Game number, date, version */}
+              <div className="text-xs text-white font-semibold flex items-center gap-2 flex-wrap">
+                <span>Game {gameNumber}</span>
+                <span className="text-gray-400">·</span>
+                <span className="text-gray-300">{game.date}</span>
+                <span className="text-gray-400">·</span>
+                <span className="text-gray-400">{game.version}</span>
+              </div>
+
+              {/* Row 2: Placements sorted by place */}
+              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                {summaries.map(p => (
+                  <div
+                    key={p.playerId}
+                    className="flex items-center gap-1 text-xs"
                   >
-                    {PLACEMENT_LABELS[p.place]}
-                  </span>
-                  <span className="text-gray-600">
-                    {getPlayerName(p.playerId)}
-                  </span>
-                  <span className="text-gray-400">·</span>
-                  <span className="text-gray-500">
-                    {CHARACTER_NAMES[p.characterId]}
-                  </span>
-                </div>
-              ))}
+                    <span style={{ color: PLACEMENT_COLORS[p.place], fontWeight: 700 }}>
+                      {PLACEMENT_LABELS[p.place]}
+                    </span>
+                    <span className="text-gray-300">{getPlayerName(p.playerId)}</span>
+                    <span className="text-gray-500">·</span>
+                    <span className="text-gray-400">{CHARACTER_NAMES[p.characterId]}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </button>
         )
       })}
 
       {GAMES.length === 0 && (
-        <div className="text-center text-gray-400 py-12 text-sm italic">
+        <div className="col-span-2 text-center text-gray-400 py-12 text-sm italic">
           No games recorded yet.
         </div>
       )}
