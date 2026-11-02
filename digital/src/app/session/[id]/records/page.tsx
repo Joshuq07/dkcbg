@@ -257,7 +257,7 @@ export default function RecordsPage() {
   const router = useRouter()
   const sessionId = params.id as string
 
-  const [mainTab, setMainTab] = useState<MainTab>('trophy')
+  const [mainTab, setMainTab] = useState<MainTab>('history')
   const [trophyMode, setTrophyMode] = useState<TrophyMode>('player')
 
   function goToGame(gameId: string) {
