@@ -797,7 +797,15 @@ async function saveGame(newGame: string) {
     onClick={async () => {
       const next = (session.rotation ?? 1) + 1
       await saveRotation(next)
-      const audio = new Audio('/rotation.mp3')  
+      const selectedGame = members.find(m => m.user_email === user?.email)?.game ?? 'dkc1'
+
+const soundFile = {
+  dkc1: '/dkc1rotation.mp3',
+  dkc2: '/dkc2rotation.mp3',
+  dkc3: '/dkc3rotation.mp3',
+}[selectedGame] ?? '/dkc1rotation.mp3'
+
+const audio = new Audio(soundFile)
       audio.play().catch(() => {})
     }}
     className="bg-gray-500 text-white px-3 py-2 rounded mb-4 ml-1 hover:bg-gray-600 font-bold"
