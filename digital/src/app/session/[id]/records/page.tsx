@@ -546,8 +546,8 @@ function isTeamGame(summaries: PlacementSummary[]) {
 
 
   const TAB_LABELS: Record<MainTab, string> = {
-    trophy: 'Trophy Room',
     history: 'Game History',
+    trophy: 'Trophy Room',
     versions: 'Version History',
   }
 
