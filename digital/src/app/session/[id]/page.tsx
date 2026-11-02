@@ -750,7 +750,7 @@ async function saveGame(newGame: string) {
    <main
   className="w-full min-h-screen p-4 flex justify-center"
   style={{
-    backgroundImage: 'url(/music_bg.png)',
+    backgroundImage: `url(/${members.find(m => m.user_email === user?.email)?.game ?? 'dkc1'}_bg.png)`,
     backgroundPosition: 'center center',
   }}
 >
@@ -889,7 +889,7 @@ const audio = new Audio(soundFile)
         <div className="flex flex-col lg:flex-row gap-4">
 
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
-            <img src="/page1.png" className="w-full h-auto block" />
+            <img src="/page1.png" className="w-full h-auto block border border-black" />
             {boxesByPage[1].map(box => (
               <div key={box.id}>{renderBox(box)}</div>
             ))}
@@ -933,7 +933,7 @@ const audio = new Audio(soundFile)
           </div>
           
           <div className="relative w-full md:flex-1" style={{ containerType: 'inline-size' }}>
-  <img src="/page2.png" className="w-full h-auto block" />
+  <img src="/page2.png" className="w-full h-auto block border border-black" />
   {boxesByPage[2].map(box => (
     <div key={box.id}>{renderBox(box)}</div>
   ))}
