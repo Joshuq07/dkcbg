@@ -386,8 +386,7 @@ if (trophies.length === 0) return null
           <button
             key={game.id}
             onClick={() => goToGame(game.id)}
-            className="text-left rounded-xl overflow-hidden hover:shadow-md transition-all group"
-            style={{ border: '1px solid transparent' }}
+            className="text-left rounded-2xl overflow-hidden hover:shadow-md transition-all group"
           >
             {/* Image portion */}
             <div className="relative w-full" style={{ aspectRatio: '256 / 224' }}>
@@ -400,32 +399,41 @@ if (trophies.length === 0) return null
             </div>
 
             {/* Stats portion */}
-            <div className="bg-gray-900 px-3 py-2">
+            <div className="bg-black px-3 py-2">
               {/* Row 1: Game number, date, version */}
-              <div className="text-xs text-white font-semibold flex items-center gap-2 flex-wrap">
-                <span>Game {gameNumber}</span>
-                <span className="text-gray-400">·</span>
-                <span className="text-gray-300">{game.date}</span>
-                <span className="text-gray-400">·</span>
-                <span className="text-gray-400">{game.version}</span>
-              </div>
+{(() => {
+  const isTeams = summaries.some(a =>
+    summaries.some(b => b.playerId !== a.playerId && b.place === a.place && b.teamId && a.teamId && b.teamId === a.teamId)
+  )
+  return (
+    <div className="text-xs text-white font-semibold flex items-center gap-2 flex-wrap">
+      <span>Game {gameNumber}</span>
+      <span className="text-gray-400">·</span>
+      <span className="text-white">{game.date}</span>
+      <span className="text-white">{game.version}{isTeams ? ' (Teams)' : ''}</span>
+    </div>
+  )
+})()}
 
               {/* Row 2: Placements sorted by place */}
-              <div className="flex flex-wrap gap-1.5 mt-1.5">
-                {summaries.map(p => (
-                  <div
-                    key={p.playerId}
-                    className="flex items-center gap-1 text-xs"
-                  >
-                    <span style={{ color: PLACEMENT_COLORS[p.place], fontWeight: 700 }}>
-                      {PLACEMENT_LABELS[p.place]}
-                    </span>
-                    <span className="text-gray-300">{getPlayerName(p.playerId)}</span>
-                    <span className="text-gray-500">·</span>
-                    <span className="text-gray-400">{CHARACTER_NAMES[p.characterId]}</span>
-                  </div>
-                ))}
-              </div>
+<div className="flex flex-wrap gap-1.5 mt-1.5">
+  {summaries.map(p => (
+    <div
+      key={p.playerId}
+      className="flex items-center gap-1 text-xs"
+    >
+      <span style={{
+        color: p.place === 0 ? 'white' : PLACEMENT_COLORS[p.place],
+        fontWeight: 700,
+      }}>
+        {PLACEMENT_LABELS[p.place]}
+      </span>
+      <span className="text-white">{getPlayerName(p.playerId)}</span>
+      <span className="text-white">·</span>
+      <span className="text-white">{CHARACTER_NAMES[p.characterId]}</span>
+    </div>
+  ))}
+</div>
             </div>
           </button>
         )
