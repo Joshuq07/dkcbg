@@ -747,8 +747,16 @@ async function saveGame(newGame: string) {
   if (isLoading || !session) return <div className="page-container">Loading…</div>
 
   return (
-    <main className="w-full min-h-screen p-4 flex justify-center">
-      <div className="w-full max-w-[2400px]">
+    <main
+  className="w-full min-h-screen p-4 flex justify-center"
+  style={{
+    backgroundImage: 'url(/music_bg.png)',
+    backgroundPosition: 'center center',
+    backgroundSize: 'cover',
+    backgroundAttachment: 'fixed',
+  }}
+>
+  <div className="w-full max-w-[2400px]">
 
         <h1 className="text-2xl font-bold mb-2">{session.name}</h1>
 
