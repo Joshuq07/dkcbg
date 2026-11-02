@@ -399,7 +399,7 @@ if (trophies.length === 0) return null
 </div>
 
             {/* Stats portion */}
-            <div className="bg-black px-3 py-2 rounded-b-2xl">
+            <div className="bg-black px-3 py-2 rounded-b-2xl" style={{ minHeight: '64px' }}>
               {/* Row 1: Game number, date, version */}
 {(() => {
   const isTeams = summaries.some(a =>
