@@ -895,7 +895,7 @@ const audio = new Audio(soundFile)
   className="bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded mb-4 ml-2"
   aria-label="Highlight material"
 >
-  <option value="">Highlight material: None</option>
+  <option value="">Materials</option>
   {ALL_MATS.map(material => (
     <option key={material} value={material}>
       {material}
