@@ -36,10 +36,10 @@ export default function MaterialBoxes({
         const activeName = selectedMaterial || hoveredName
 const extraMatches = items.includes(activeName || '')
 
-        const dimmed =
-  greyed.has(b.id) ||
-  (activeName !== null &&
-    (b.isExtra ? !extraMatches : b.name !== activeName))
+       const dimmed =
+  !b.isExtra &&
+  (greyed.has(b.id) ||
+    (activeName !== null && b.name !== activeName))
 
         return (
           <button
@@ -69,7 +69,13 @@ const extraMatches = items.includes(activeName || '')
             }}
           >
             {b.isExtra && items.length > 0 && (
-              <span style={{ color: extraMatches ? '#facc15' : '#9ca3af', fontSize: 'clamp(0.4rem, 1.6cqw, 1.4rem)', textShadow: '0 0 2px #000' }}>
+              <span
+  style={{
+    color: !activeName || extraMatches ? '#facc15' : '#9ca3af',
+    fontSize: 'clamp(0.4rem, 1.6cqw, 1.4rem)',
+    textShadow: '0 0 2px #000',
+  }}
+>
                 ★
               </span>
             )}
