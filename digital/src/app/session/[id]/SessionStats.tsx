@@ -40,6 +40,7 @@ interface Member {
   user_email: string
   display_name: string | null
   player_name?: string | null
+  player_name_2?: string | null
   banana_birds?: number | null
 }
 
@@ -49,6 +50,7 @@ interface Props {
   scrapbooked: Record<string, string[]>
   onClose: () => void
   pointsTotals: Record<string, number>
+  isTeam?: boolean
 }
 
 function StatRow({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
@@ -111,7 +113,7 @@ function computeStatsForUser(userEmail: string, entries: BoxEntry[]) {
   }
 }
 
-export default function SessionStats({ members, entries, scrapbooked, onClose, pointsTotals }: Props) {
+export default function SessionStats({ members, entries, scrapbooked, onClose, pointsTotals, isTeam }: Props) {
   const [activeTab, setActiveTab] = useState(members[0]?.user_email ?? '')
 
   const statsByUser = useMemo(() => {
@@ -124,6 +126,10 @@ export default function SessionStats({ members, entries, scrapbooked, onClose, p
 
   const stats = statsByUser[activeTab]
   const activeMember = members.find(m => m.user_email === activeTab)
+    const labelFor = (m: Member) => {
+    const names = isTeam ? [m.player_name, m.player_name_2] : [m.player_name]
+    return names.filter(Boolean).join(' & ') || m.display_name || m.user_email
+  }
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
@@ -149,7 +155,7 @@ export default function SessionStats({ members, entries, scrapbooked, onClose, p
                   : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
               >
-                {m.player_name || m.display_name || m.user_email}
+                {labelFor(m)}
               </button>
             ))}
           </div>

@@ -19,8 +19,8 @@ export async function POST(req: Request) {
   const body = await req.json()
   const { action } = body
 
-  if (action === 'create') {
-    const { name, password, user_email, display_name } = body
+    if (action === 'create') {
+    const { name, password, user_email, display_name, game_number, is_team } = body
 
     const password_hash = await bcrypt.hash(password, 10)
 
@@ -30,6 +30,8 @@ export async function POST(req: Request) {
         name,
         password_hash,
         host_email: user_email,
+        game_number: game_number ?? null,
+        is_team: !!is_team,
       })
       .select()
       .single()

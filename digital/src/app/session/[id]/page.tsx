@@ -23,13 +23,7 @@ import {
 } from '@/lib/dkcbg/data'
 import MaterialBoxes from './MaterialBoxes'
 
-type SessionData = {
-  id: string
-  name: string
-  host_email: string
-  mode: 'my' | 'global'
-  rotation?: number 
-}
+
 
 function useDraggable(initialPos: { x: number; y: number }) {
   const [pos, setPos] = useState(initialPos)
@@ -49,6 +43,15 @@ function useDraggable(initialPos: { x: number; y: number }) {
 
   return { pos, onPointerDown, onPointerMove, onPointerUp }
 }
+type SessionData = {
+  id: string
+  name: string
+  host_email: string
+  mode: 'my' | 'global'
+  rotation?: number
+  is_team?: boolean
+  game_number?: number | null
+}
 
 type Member = {
   user_email: string
@@ -56,6 +59,8 @@ type Member = {
   position: number | null
   player_name?: string | null
   character_name?: string | null
+  player_name_2?: string | null
+  character_name_2?: string | null
   game?: string
   banana_birds?: number | null
 }
@@ -735,6 +740,15 @@ const myTotalPoints = useMemo(() =>
   })
   setSession(s => s ? { ...s, rotation: newRotation } : s)
 }
+
+async function patchMember(email: string, fields: Partial<Member>) {
+  setMembers(prev => prev.map(m => (m.user_email === email ? { ...m, ...fields } : m)))
+  await fetch('/api/session_members', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session_id: sessionId, user_email: email, ...fields }),
+  })
+}
 async function saveGame(newGame: string) {
   setMembers(prev =>
     prev.map(m =>
@@ -1213,61 +1227,32 @@ const audio = new Audio(soundFile)
         </span>
         <span className="mb-1 text-xs text-gray-500">Player {idx + 1}</span>
 
-        <input
-          className="border rounded px-2 py-1 text-xs mb-1"
-          placeholder="Player Name"
-          value={m.player_name ?? ''}
-          disabled={!canEdit}
-          onChange={async e => {
-            const value = e.target.value
-            setMembers(prev =>
-              prev.map(mem =>
-                mem.user_email === m.user_email
-                  ? { ...mem, player_name: value }
-                  : mem
-              )
-            )
-            await fetch('/api/session_members', {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                session_id: sessionId,
-                user_email: m.user_email,
-                player_name: value
-              })
-            })
-          }}
-        />
-
-        <select
-          className="border rounded px-2 py-1 text-xs mb-1 bg-white"
-          value={m.character_name ?? ''}
-          disabled={!canEdit}
-          onChange={async e => {
-            const value = e.target.value
-            setMembers(prev =>
-              prev.map(mem =>
-                mem.user_email === m.user_email
-                  ? { ...mem, character_name: value }
-                  : mem
-              )
-            )
-            await fetch('/api/session_members', {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                session_id: sessionId,
-                user_email: m.user_email,
-                character_name: value
-              })
-            })
-          }}
-        >
-          <option value="">Character Name</option>
-          {characterNames.map(name => (
-            <option key={name} value={name}>{name}</option>
-          ))}
-        </select>
+        {(session.is_team ? [1, 2] : [1]).map(n => {
+  const nameKey = (n === 1 ? 'player_name' : 'player_name_2') as 'player_name' | 'player_name_2'
+  const charKey = (n === 1 ? 'character_name' : 'character_name_2') as 'character_name' | 'character_name_2'
+  return (
+    <React.Fragment key={n}>
+      <input
+        className="border rounded px-2 py-1 text-xs mb-1"
+        placeholder={session.is_team ? `Player Name ${n}` : 'Player Name'}
+        value={m[nameKey] ?? ''}
+        disabled={!canEdit}
+        onChange={e => patchMember(m.user_email, { [nameKey]: e.target.value })}
+      />
+      <select
+        className="border rounded px-2 py-1 text-xs mb-1 bg-white"
+        value={m[charKey] ?? ''}
+        disabled={!canEdit}
+        onChange={e => patchMember(m.user_email, { [charKey]: e.target.value })}
+      >
+        <option value="">{session.is_team ? `Character ${n}` : 'Character Name'}</option>
+        {characterNames.map(name => (
+          <option key={name} value={name}>{name}</option>
+        ))}
+      </select>
+    </React.Fragment>
+  )
+})}
 
         
 
@@ -1291,21 +1276,31 @@ const audio = new Audio(soundFile)
       </div>
 
       {/* Right: character portrait */}
-      {m.character_name ? (
-        <div className="shrink-0 flex items-stretch">
-          <img
-            src={`/characters/${m.character_name}/portrait.png`}
-            alt={m.character_name}
-            className="rounded border border-gray-200 object-contain w-auto"
-style={{ maxHeight: `${120 * (1 / (window.devicePixelRatio || 1))}px` }}
-          />
-        </div>
-      ) : (
-        <div
-          className="shrink-0 rounded border border-gray-200 bg-gray-50"
-          style={{ width: `${60 * (1 / (window.devicePixelRatio || 1))}px`, maxHeight: `${120 * (1 / (window.devicePixelRatio || 1))}px` }}
+      {(() => {
+  const chars = [m.character_name, ...(session.is_team ? [m.character_name_2] : [])].filter(Boolean) as string[]
+  const dpr = window.devicePixelRatio || 1
+  if (chars.length === 0) {
+    return (
+      <div
+        className="shrink-0 rounded border border-gray-200 bg-gray-50"
+        style={{ width: `${60 / dpr}px`, maxHeight: `${120 / dpr}px` }}
+      />
+    )
+  }
+  return (
+    <div className="shrink-0 flex items-stretch gap-1">
+      {chars.map(c => (
+        <img
+          key={c}
+          src={`/characters/${c}/portrait.png`}
+          alt={c}
+          className="rounded border border-gray-200 object-contain w-auto"
+          style={{ maxHeight: `${120 / dpr}px` }}
         />
-      )}
+      ))}
+    </div>
+  )
+})()}
     </div>
   )
 })}
@@ -1370,6 +1365,7 @@ style={{ maxHeight: `${120 * (1 / (window.devicePixelRatio || 1))}px` }}
        <SessionStats
   members={members}
   entries={entries}
+   isTeam={!!session.is_team}
   scrapbooked={{ [user?.email ?? '']: scrapbooked }}
   pointsTotals={Object.fromEntries(
     members.map(m => [
