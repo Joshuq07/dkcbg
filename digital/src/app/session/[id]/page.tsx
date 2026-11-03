@@ -95,6 +95,7 @@ const [pointsEntries, setPointsEntries] = useState<PointsEntry[]>([])
 const [extras, setExtras] = useState<Record<string, string[]>>({})
 const [marksHydrated, setMarksHydrated] = useState(false)
 const [hoveredName, setHoveredName] = useState<string | null>(null)
+const [selectedMaterial, setSelectedMaterial] = useState('')
 const [extraLevel, setExtraLevel] = useState<number | null>(null)
 const [extraPick, setExtraPick] = useState('')
 
@@ -888,6 +889,20 @@ const audio = new Audio(soundFile)
   Overlay
 </button>
 
+<select
+  value={selectedMaterial}
+  onChange={e => setSelectedMaterial(e.target.value)}
+  className="bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded mb-4 ml-2"
+  aria-label="Highlight material"
+>
+  <option value="">Highlight material: None</option>
+  {ALL_MATS.map(material => (
+    <option key={material} value={material}>
+      {material}
+    </option>
+  ))}
+</select>
+
 <button
   onClick={() => setShowOptions(true)}
   className="bg-gray-500 text-white px-4 py-2 rounded mb-4 ml-2 hover:bg-gray-600"
@@ -960,6 +975,7 @@ const audio = new Audio(soundFile)
     greyed={greyedSet}
     extras={extras}
     hoveredName={hoveredName}
+    selectedMaterial={selectedMaterial}
     setHoveredName={setHoveredName}
     onToggle={toggleBoxGrey}
     onOpenExtra={openExtra}
@@ -1009,12 +1025,13 @@ const audio = new Audio(soundFile)
   {boxesByPage[2].map(box => (
     <div key={box.id}>{renderBox(box)}</div>
   ))}
-  {viewMode !== 'global' && (
+ {viewMode !== 'global' && (
   <MaterialBoxes
     page={2}
     greyed={greyedSet}
     extras={extras}
     hoveredName={hoveredName}
+    selectedMaterial={selectedMaterial}
     setHoveredName={setHoveredName}
     onToggle={toggleBoxGrey}
     onOpenExtra={openExtra}

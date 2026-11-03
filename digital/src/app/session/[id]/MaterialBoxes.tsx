@@ -8,6 +8,7 @@ type Props = {
   greyed: Set<string>
   extras: Record<string, string[]>
   hoveredName: string | null
+  selectedMaterial: string
   setHoveredName: (n: string | null) => void
   onToggle: (id: string) => void
   onOpenExtra: (level: number) => void
@@ -17,7 +18,14 @@ const W = 3300
 const H = 4740
 
 export default function MaterialBoxes({
-  page, greyed, extras, hoveredName, setHoveredName, onToggle, onOpenExtra,
+  page,
+  greyed,
+  extras,
+  hoveredName,
+  selectedMaterial,
+  setHoveredName,
+  onToggle,
+  onOpenExtra,
 }: Props) {
   const [hoverExtra, setHoverExtra] = useState<number | null>(null)
 
@@ -25,9 +33,12 @@ export default function MaterialBoxes({
     <>
       {MAT_BOXES.filter(b => b.page === page).map(b => {
         const items = extras[String(b.level)] ?? []
+        const activeName = selectedMaterial || hoveredName
+
         const dimmed =
           !b.isExtra &&
-          (greyed.has(b.id) || (hoveredName !== null && b.name !== hoveredName))
+          (greyed.has(b.id) ||
+            (activeName !== null && b.name !== activeName))
 
         return (
           <button
