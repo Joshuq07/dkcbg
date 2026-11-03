@@ -17,7 +17,11 @@ import { computePercentage } from '@/lib/percentages'
 import type { BoxEntry as BoxEntryType } from '@/lib/types'
 import SessionStats from './SessionStats'
 import { SCRAPBOOK_ANCHORS } from '@/lib/boxes'
-import { materialList } from '@/lib/dkcbg/data'
+import {
+  materialList, levelNames, getLevelCode,
+  environmentList, resourceList, animalList,
+} from '@/lib/dkcbg/data'
+import MaterialBoxes from './MaterialBoxes'
 
 type SessionData = {
   id: string
@@ -86,6 +90,19 @@ const [allScrapbooked, setAllScrapbooked] = useState<Record<string, string[]>>({
 const dragPanel = useDraggable({ x: 16, y: 16 })
 const [showOverlay, setShowOverlay] = useState(false)
 const [pointsEntries, setPointsEntries] = useState<PointsEntry[]>([])
+
+  const [greyedList, setGreyedList] = useState<string[]>([])
+const [extras, setExtras] = useState<Record<string, string[]>>({})
+const [marksHydrated, setMarksHydrated] = useState(false)
+const [hoveredName, setHoveredName] = useState<string | null>(null)
+const [extraLevel, setExtraLevel] = useState<number | null>(null)
+const [extraPick, setExtraPick] = useState('')
+
+const greyedSet = useMemo(() => new Set(greyedList), [greyedList])
+const ALL_MATS = useMemo(
+  () => [...environmentList, ...resourceList, ...animalList].sort((a, b) => a.localeCompare(b)),
+  []
+)
 
   useEffect(() => {
     function updateZoom() {
@@ -317,6 +334,29 @@ useEffect(() => {
   return () => clearTimeout(timeout)
 }, [scrapbooked, sessionId, user, scrapHydrated])
 
+useEffect(() => {
+  if (!user || !sessionId || marksHydrated) return
+  fetch(`/api/boxmarks/${sessionId}`, { headers: { 'x-user-id': user.email! } })
+    .then(r => r.json())
+    .then(json => {
+      setGreyedList(json.greyed || [])
+      setExtras(json.extras || {})
+      setMarksHydrated(true)
+    })
+}, [user, sessionId, marksHydrated])
+
+useEffect(() => {
+  if (!user || !sessionId || !marksHydrated) return
+  const t = setTimeout(() => {
+    fetch(`/api/boxmarks/${sessionId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_email: user.email, greyed: greyedList, extras }),
+    })
+  }, 300)
+  return () => clearTimeout(t)
+}, [greyedList, extras, sessionId, user, marksHydrated])
+
   const sortedMembers = useMemo(
     () => [...members].sort((a, b) => (a.position ?? 999) - (b.position ?? 999)),
     [members]
@@ -418,6 +458,32 @@ function toggleScrapbook(material: string) {
       ? prev.filter(m => m !== material)
       : [...prev, material]
   )
+}
+
+function toggleBoxGrey(id: string) {
+  setGreyedList(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
+}
+
+function openExtra(level: number) {
+  setExtraPick(ALL_MATS[0] ?? '')
+  setExtraLevel(level)
+}
+
+function addExtra() {
+  if (extraLevel === null || !extraPick) return
+  const key = String(extraLevel)
+  setExtras(prev => ({ ...prev, [key]: [...(prev[key] ?? []), extraPick] }))
+}
+
+function removeExtra(level: number, index: number) {
+  const key = String(level)
+  setExtras(prev => {
+    const next = (prev[key] ?? []).filter((_, i) => i !== index)
+    const copy = { ...prev }
+    if (next.length === 0) delete copy[key]
+    else copy[key] = next
+    return copy
+  })
 }
 
   async function handleBoxClick(box: Box) {
@@ -744,6 +810,7 @@ async function saveGame(newGame: string) {
     )
   }
 
+
   if (isLoading || !session) return <div className="page-container">Loading…</div>
 
   return (
@@ -887,6 +954,17 @@ const audio = new Audio(soundFile)
             {boxesByPage[1].map(box => (
               <div key={box.id}>{renderBox(box)}</div>
             ))}
+            {viewMode !== 'global' && (
+  <MaterialBoxes
+    page={1}
+    greyed={greyedSet}
+    extras={extras}
+    hoveredName={hoveredName}
+    setHoveredName={setHoveredName}
+    onToggle={toggleBoxGrey}
+    onOpenExtra={openExtra}
+  />
+)}
             {ABILITY_TIERS.filter(t => myBuiltCount >= t.threshold).map(t => (
   <img
     key={t.threshold}
@@ -931,6 +1009,17 @@ const audio = new Audio(soundFile)
   {boxesByPage[2].map(box => (
     <div key={box.id}>{renderBox(box)}</div>
   ))}
+  {viewMode !== 'global' && (
+  <MaterialBoxes
+    page={2}
+    greyed={greyedSet}
+    extras={extras}
+    hoveredName={hoveredName}
+    setHoveredName={setHoveredName}
+    onToggle={toggleBoxGrey}
+    onOpenExtra={openExtra}
+  />
+)}
   {SCRAPBOOK_ANCHORS.map(anchor => {
     const used = materialUsedCount(anchor.material)
     const isScrapbooked = scrapbooked.includes(anchor.material)
@@ -1212,7 +1301,54 @@ style={{ maxHeight: `${120 * (1 / (window.devicePixelRatio || 1))}px` }}
 
 
       </div>
+{extraLevel !== null && viewMode !== 'global' && (
+  <div
+    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40"
+    onClick={() => setExtraLevel(null)}
+  >
+    <div
+      className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-5 space-y-3"
+      onClick={e => e.stopPropagation()}
+    >
+      <h2 className="text-lg font-bold text-gray-900">
+        Extra: {getLevelCode(extraLevel + 1)} {levelNames[extraLevel]}
+      </h2>
 
+      {(extras[String(extraLevel)] ?? []).length > 0 && (
+        <ul className="space-y-1">
+          {(extras[String(extraLevel)] ?? []).map((m, i) => (
+            <li key={i} className="flex items-center justify-between text-sm bg-gray-50 rounded px-2 py-1">
+              <span>{m}</span>
+              <button
+                onClick={() => removeExtra(extraLevel, i)}
+                className="text-red-500 hover:text-red-700"
+              >
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <select
+        value={extraPick}
+        onChange={e => setExtraPick(e.target.value)}
+        className="w-full border rounded px-2 py-1.5 text-sm bg-white"
+      >
+        {ALL_MATS.map(m => <option key={m} value={m}>{m}</option>)}
+      </select>
+
+      <div className="flex gap-2">
+        <button onClick={addExtra} className="flex-1 bg-blue-600 text-white rounded px-3 py-2 text-sm hover:bg-blue-700">
+          Add
+        </button>
+        <button onClick={() => setExtraLevel(null)} className="flex-1 bg-gray-200 text-gray-800 rounded px-3 py-2 text-sm hover:bg-gray-300">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       {showStats && (
        <SessionStats
   members={members}
