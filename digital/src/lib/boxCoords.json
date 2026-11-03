@@ -7,8 +7,8 @@
       "image_height": 4740,
       "entries": [
         {"x": 1203, "y": 446, "name": "Jungle", "level": 0},
-        {"x": 1268, "y": 446, "name": "Balloons", "level": 0},
-        {"x": 1334, "y": 446, "name": "Banana Hoard", "level": 0},
+        {"x": 1268, "y": 446, "name": "Banana Hoard", "level": 0},
+        {"x": 1334, "y": 446, "name": "Balloons", "level": 0},
         {"x": 1399, "y": 444, "name": "Rambi", "level": 0},
         {"x": 1466, "y": 445, "name": "Extra", "level": 0},
         {"x": 1203, "y": 511, "name": "Jungle", "level": 1},
