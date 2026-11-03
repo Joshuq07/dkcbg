@@ -166,6 +166,11 @@ export default function SessionsPage() {
     setIndex(i => (i + 1) % sessions.length)
   }
 
+  function openCreate() {
+  setMode('create'); setError(''); setPassword(''); setIsTeam(false)
+  setGameNumber(String(Math.max(0, ...sessions.map(s => s.game_number ?? 0)) + 1))
+}
+
   async function handleCreate() {
     const n = parseInt(gameNumber, 10)
     if (isNaN(n) || !password) return setError('Game number and password required')
@@ -220,18 +225,7 @@ export default function SessionsPage() {
 
   return (
     <main className="page-container">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Games</h1>
-        <button
-          onClick={() => {
-            setMode('create'); setError(''); setPassword(''); setIsTeam(false)
-            setGameNumber(String(sessions.length + 1))
-          }}
-          className="btn-primary"
-        >
-          + New Game
-        </button>
-      </div>
+      
 
       {/* Create modal */}
       {mode === 'create' && (
@@ -296,14 +290,20 @@ export default function SessionsPage() {
       )}
 
       {!current ? (
-        <div className="card text-center text-gray-400 py-16">
-          No sessions yet — create one to get started.
-        </div>
-      ) : (
-        <div
-          className="relative w-full mx-auto"
-          style={{ maxWidth: 512, aspectRatio: `${W} / ${H}`, containerType: 'inline-size' }}
-        >
+  <div className="w-full mx-auto" style={{ maxWidth: 512 }}>
+    <div className="card text-center text-gray-400 py-16">
+      No sessions yet — create one to get started.
+    </div>
+    <div className="flex justify-end mt-3">
+      <button onClick={openCreate} className="btn-primary">+ New Game</button>
+    </div>
+  </div>
+) : (
+  <div className="w-full mx-auto" style={{ maxWidth: 512 }}>
+    <div
+      className="relative w-full"
+      style={{ aspectRatio: `${W} / ${H}`, containerType: 'inline-size' }}
+    >
           <img
             src="/GameSelect.png"
             alt=""
@@ -387,8 +387,19 @@ export default function SessionsPage() {
             Game {current.game_number ?? sessions.length - index}
           </Txt>
           <Txt x={185} y={246} pt={8} color={CYAN}>{formatDate(current.created_at)}</Txt>
-        </div>
-      )}
+         </div>
+
+    <div className="flex justify-end mt-3">
+      <button
+        onClick={openCreate}
+        className="btn-primary"
+      >
+        + New Game
+      </button>
+    </div>
+  </div>
+)}
+      
     </main>
   )
 }
