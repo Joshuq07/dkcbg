@@ -372,10 +372,10 @@ export default function SessionsPage() {
                     <Txt x={tx + 77} y={ty + 20} pt={6}>{first6(m.player_name_2)}</Txt>
                   </>
                 ) : (
-                  <Txt x={tx + 77} y={ty + 17} pt={10}>{first6(m.player_name)}</Txt>
+                  <Txt x={tx + 77} y={ty + 15} pt={10}>{first6(m.player_name)}</Txt>
                 )}
 
-                <Txt x={tx + 125} y={ty + 17} pt={10}>{builtCounts[m.user_email] ?? 0}</Txt>
+                <Txt x={tx + 125} y={ty + 15} pt={10}>{builtCounts[m.user_email] ?? 0}</Txt>
 
                 <Txt x={px} y={py} pt={12} color={CYAN}>{ordinal(placementFor(m.user_email))}</Txt>
               </React.Fragment>
