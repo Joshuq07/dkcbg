@@ -63,6 +63,12 @@ function formatDate(iso: string) {
 
 const first6 = (s?: string | null) => (s ?? '').slice(0, 6)
 
+function ordinal(n: number) {
+  const s = ['th', 'st', 'nd', 'rd']
+  const v = n % 100
+  return n + (s[(v - 20) % 10] || s[v] || s[0])
+}
+
 export default function SessionsPage() {
   const { user, isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
@@ -371,7 +377,7 @@ export default function SessionsPage() {
 
                 <Txt x={tx + 125} y={ty + 17} pt={10}>{builtCounts[m.user_email] ?? 0}</Txt>
 
-                <Txt x={px} y={py} pt={12} color={CYAN}>{placementFor(m.user_email)}</Txt>
+                <Txt x={px} y={py} pt={12} color={CYAN}>{ordinal(placementFor(m.user_email))}</Txt>
               </React.Fragment>
             )
           })}
