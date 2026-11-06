@@ -40,6 +40,8 @@ const extraMatches = items.includes(activeName || '')
   !b.isExtra &&
   (greyed.has(b.id) ||
     (activeName !== null && b.name !== activeName))
+  const highlighted =
+  !b.isExtra && !!selectedMaterial && b.name === selectedMaterial
 
         return (
           <button
@@ -63,9 +65,10 @@ const extraMatches = items.includes(activeName || '')
               backdropFilter: dimmed ? 'grayscale(1)' : 'none',
               WebkitBackdropFilter: dimmed ? 'grayscale(1)' : 'none',
               border: 'none',
+boxShadow: highlighted ? 'inset 0 0 0 1px #facc15' : 'none',
               cursor: 'pointer',
               padding: 0,
-              zIndex: hoverExtra === b.level ? 30 : 5,
+              zIndex: hoverExtra === b.level ? 30 : highlighted ? 6 : 5,
             }}
           >
             {b.isExtra && items.length > 0 && (
