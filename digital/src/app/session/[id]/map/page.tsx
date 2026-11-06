@@ -268,7 +268,7 @@ export default function MapPage() {
   const [prefsHydrated, setPrefsHydrated] = useState(false)
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
   const [dragIdx, setDragIdx] = useState<number | null>(null)
-
+ const [useRandForOptions, setUseRandForOptions] = useState(false)
   const params = useParams()
   const sessionId = params.id as string
   const { user } = useAuth()
@@ -305,6 +305,7 @@ export default function MapPage() {
       .then(r => r.json())
       .then(json => {
         if (typeof json.brightness === 'number') setDimness(json.brightness)
+          if (typeof json.use_rand_for_options === 'boolean') setUseRandForOptions(json.use_rand_for_options)
         if (Array.isArray(json.ranking)) {
           const known = json.ranking.filter((k: string) => DEFAULT_RANKING.includes(k))
           const missing = DEFAULT_RANKING.filter(k => !known.includes(k))
@@ -325,6 +326,7 @@ export default function MapPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          use_rand_for_options: useRandForOptions,
           user_email: user.email,
           brightness: dimness,
           ranking,
@@ -334,7 +336,7 @@ export default function MapPage() {
       })
     }, 400)
     return () => clearTimeout(t)
-  }, [dimness, ranking, countInventory, countScrapbook, sessionId, user, prefsHydrated])
+  }, [dimness, ranking, countInventory, countScrapbook, useRandForOptions, sessionId, user, prefsHydrated])
 
   const remainingLevels = useMemo(() =>
     computeRemainingLevels((userEntries || []) as LogicEntry[]),
@@ -385,6 +387,7 @@ export default function MapPage() {
   const [optStart, setOptStart] = useState<number | null>(null)
   const [optRoll, setOptRoll] = useState<number | null>(null)
   const [rollInput, setRollInput] = useState('')
+ 
 
   const optResults = useMemo(() => {
     if (pathMode !== 'opt-result' || optStart === null || optRoll === null) return []
@@ -417,10 +420,16 @@ export default function MapPage() {
 
   function handlePathSpaceClick(spaceIndex: number) {
     if (pathMode === 'opt-start' || pathMode === 'opt-roll') {
-      setOptStart(spaceIndex)
-      setRollInput('')
-      setPathMode('opt-roll')
-    } else if (pathMode === 'best-picking-start') {
+  setOptStart(spaceIndex)
+  const n = parseInt(randMax, 10)
+  if (useRandForOptions && !isNaN(n) && n >= 1) {
+    setOptRoll(n)
+    setPathMode('opt-result')
+  } else {
+    setRollInput('')
+    setPathMode('opt-roll')
+  }
+} else if (pathMode === 'best-picking-start') {
       setPathStart(spaceIndex)
       setPathMode('best-picking-end')
     } else if (pathMode === 'best-picking-end') {
@@ -622,7 +631,16 @@ export default function MapPage() {
             Options
           </button>
           <button
-            onClick={() => { resetPathMode(); setOptKind('show'); setPathMode('opt-start') }}
+            onClick={() => {
+  resetPathMode()
+  setOptKind('show')
+  const n = parseInt(randMax, 10)
+  if (useRandForOptions && !isNaN(n) && n >= 1) {
+    setPathMode('opt-start')
+  } else {
+    setPathMode('opt-start')
+  }
+}}
             className={`${rowBtn} ${optActive && optKind === 'show' ? 'bg-yellow-400 border-yellow-500 text-black' : rowBtnIdle}`}
           >
             Show Options
@@ -988,30 +1006,58 @@ export default function MapPage() {
             </div>
 
             {isMaterial(selected.entries) ? (
-              <div>
-                <div className="text-xs text-gray-400 mb-1">Material Space</div>
-                <div className="flex flex-wrap gap-1">
-                  {selected.entries.slice(1).map((mat, i) => {
-                    const mpbr = MATERIAL_PBR[mat]
-                    return (
-                      <span
-                        key={i}
-                        className="bg-gray-700 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
-                      >
-                        {mat}
-                        {mpbr !== undefined && (
-                          <span
-                            className="text-[9px] font-bold px-1 rounded"
-                            style={{ backgroundColor: UNIFIED_PBR_COLOR[`mat:${mat}`] ?? '#22c55e', color: '#fff' }}
-                          >
-                            {Number.isInteger(mpbr) ? mpbr : mpbr.toFixed(2)}
-                          </span>
-                        )}
-                      </span>
-                    )
-                  })}
+  <div>
+    <div className="text-xs text-gray-400 mb-1">Material Space</div>
+    <div className="flex flex-wrap gap-1 mb-2">
+      {selected.entries.slice(1).map((mat, i) => {
+        const mpbr = MATERIAL_PBR[mat]
+        return (
+          <span
+            key={i}
+            className="bg-gray-700 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
+          >
+            {mat}
+            {mpbr !== undefined && (
+              <span
+                className="text-[9px] font-bold px-1 rounded"
+                style={{ backgroundColor: UNIFIED_PBR_COLOR[`mat:${mat}`] ?? '#22c55e', color: '#fff' }}
+              >
+                {Number.isInteger(mpbr) ? mpbr : mpbr.toFixed(2)}
+              </span>
+            )}
+          </span>
+        )
+      })}
+    </div>
+    {(() => {
+      const spaceMats = new Set(selected.entries.slice(1))
+      const covered = remainingLevels
+        .map(lvl => ({
+          levelId: lvl,
+          materialsFound: (materialList[lvl - 1] || []).filter(m => spaceMats.has(m)),
+        }))
+        .filter(x => x.materialsFound.length > 0)
+        .sort((a, b) => b.materialsFound.length - a.materialsFound.length)
+      if (covered.length === 0) return null
+      return (
+        <div>
+          <div className="text-gray-400 text-xs mb-1">
+            Levels with materials here ({covered.length})
+          </div>
+          <div className="space-y-1 max-h-40 overflow-y-auto">
+            {covered.map(({ levelId, materialsFound }) => (
+              <div key={levelId} className="bg-gray-800 rounded p-1.5">
+                <div className="text-white text-xs font-medium">
+                  {getLevelCode(levelId)} {levelNames[levelId - 1]}
                 </div>
+                <div className="text-gray-400 text-xs">{materialsFound.join(', ')}</div>
               </div>
+            ))}
+          </div>
+        </div>
+      )
+    })()}
+  </div>
             ) : (
               <div className="flex flex-col gap-1">
                 {selected.entries.map((entry, i) => (
@@ -1078,7 +1124,20 @@ export default function MapPage() {
                   Include unscrapbooked materials
                 </label>
               </div>
-
+<div className="space-y-2">
+  <div className="text-sm font-semibold text-gray-800">Random number</div>
+  <label className="flex items-center gap-2 text-sm cursor-pointer">
+    <input
+      type="checkbox"
+      checked={useRandForOptions}
+      onChange={e => setUseRandForOptions(e.target.checked)}
+    />
+    Use random number box for Show/Best Options
+  </label>
+  <p className="text-xs text-gray-500">
+    When checked, clicking Show Options or Best Options will use the number in the Max # box as the roll automatically.
+  </p>
+</div>
               <div>
                 <div className="text-sm font-semibold text-gray-800 mb-1">Space ranking</div>
                 <p className="text-xs text-gray-500 mb-2">
