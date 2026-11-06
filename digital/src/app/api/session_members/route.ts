@@ -38,6 +38,7 @@ export async function PATCH(req: Request) {
     player_name, character_name,
     player_name_2, character_name_2,
     game, banana_birds,
+    outline_matches,
   } = body
 
   const { error } = await supabase
@@ -49,6 +50,7 @@ export async function PATCH(req: Request) {
       ...(character_name_2 !== undefined && { character_name_2 }),
       ...(game !== undefined && { game }),
       ...(banana_birds !== undefined && { banana_birds }),
+      ...(outline_matches !== undefined && { outline_matches }),
     })
     .eq('session_id', session_id)
     .eq('user_email', user_email)

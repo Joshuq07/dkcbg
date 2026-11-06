@@ -79,11 +79,14 @@ export default function RulesViewer({
 
   // Highlights matches inside each text item of the page
   const highlight = useMemo(() => {
-    if (!q) return (item: { str: string }) => escapeHtml(item.str)
-    const re = new RegExp(escapeRegex(escapeHtml(q)), 'gi')
-    return (item: { str: string }) =>
-      escapeHtml(item.str).replace(re, m => `<mark style="background:#facc15;color:transparent">${m}</mark>`)
-  }, [q])
+  if (!q) return (item: { str: string }) => escapeHtml(item.str)
+  const re = new RegExp(escapeRegex(escapeHtml(q)), 'gi')
+  return (item: { str: string }) =>
+    escapeHtml(item.str).replace(
+      re,
+      m => `<mark style="background:rgba(250,204,21,0.4);color:transparent;mix-blend-mode:multiply">${m}</mark>`
+    )
+}, [q])
 
   return (
     <div

@@ -63,6 +63,7 @@ type Member = {
   character_name_2?: string | null
   game?: string
   banana_birds?: number | null
+  outline_matches?: boolean
 }
 
 type BoxEntry = BoxEntryType
@@ -103,16 +104,11 @@ const [hoveredName, setHoveredName] = useState<string | null>(null)
 const [selectedMaterial, setSelectedMaterial] = useState('')
 const [extraLevel, setExtraLevel] = useState<number | null>(null)
 const [extraPick, setExtraPick] = useState('')
-const [outlineMatches, setOutlineMatches] = useState(true)
-
-useEffect(() => {
-  const saved = localStorage.getItem('outlineMatches')
-  if (saved !== null) setOutlineMatches(saved === 'true')
-}, [])
+const myMember = members.find(m => m.user_email === user?.email)
+const outlineMatches = myMember?.outline_matches ?? true
 
 function toggleOutline(value: boolean) {
-  setOutlineMatches(value)
-  localStorage.setItem('outlineMatches', String(value))
+  patchMember(user!.email!, { outline_matches: value })
 }
 
 const greyedSet = useMemo(() => new Set(greyedList), [greyedList])
