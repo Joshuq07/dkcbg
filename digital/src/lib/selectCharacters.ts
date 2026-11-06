@@ -1,7 +1,5 @@
-export type CharacterId =
-  | 'donkey-kong' | 'diddy-kong' | 'dixie-kong' | 'kiddy-kong'
-  | 'tiny-kong' | 'lanky-kong' | 'chunky-kong' | 'taj'
-  | 'xananab' | 'klubba' | 'voidco' | 'king-k-rool'
+import type { CharacterId } from '@/lib/types'
+
 
 export const PLACEMENT_FILE_PREFIX: Record<CharacterId, string> = {
   'donkey-kong': 'dk',
