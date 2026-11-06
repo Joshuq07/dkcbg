@@ -421,8 +421,8 @@ export default function MapPage() {
   function handlePathSpaceClick(spaceIndex: number) {
     if (pathMode === 'opt-start' || pathMode === 'opt-roll') {
   setOptStart(spaceIndex)
-  const n = parseInt(randMax, 10)
-  if (useRandForOptions && !isNaN(n) && n >= 1) {
+  const n = parseInt(randResult, 10)
+if (useRandForOptions && !isNaN(n) && n >= 1) {
     setOptRoll(n)
     setPathMode('opt-result')
   } else {
