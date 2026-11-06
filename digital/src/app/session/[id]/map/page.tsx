@@ -2,19 +2,19 @@
 
 import { useState, useRef, useEffect, useMemo } from 'react'
 import Image from 'next/image'
-import { FULL_SPACE_GUIDE, SPACE_COORDINATES, WORLD_MAP } from '@/lib/dkcbg/data'
+import {
+  FULL_SPACE_GUIDE, SPACE_COORDINATES, WORLD_MAP, CONNECTIONS,
+  levelNames, getLevelCode, materialList,
+  environmentList, resourceList, animalList,
+} from '@/lib/dkcbg/data'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { useSessionData } from '@/hooks/useSessionData'
 import { computeRemainingLevels, Entry as LogicEntry } from '@/lib/dkcbg/logic'
-import { CONNECTIONS, levelNames, getLevelCode, materialList } from '@/lib/dkcbg/data'
 import {
   findAllPaths, getMaterialsOnPath, buildNeededWeights, findBestPath,
   findPathsThroughWaypoints, SPACE_PBR, MATERIAL_PBR,
 } from '@/lib/dkcbg/pathfinding'
-
-const BOARD_WIDTH = 2976
-const BOARD_HEIGHT = 2976
 
 interface SpaceInfo {
   index: number
@@ -22,6 +22,35 @@ interface SpaceInfo {
   world: string | null
   coords: [number, number]
 }
+
+const ALL_MATERIALS = [...environmentList, ...resourceList, ...animalList]
+
+// ── ranking categories ────────────────────────────────────────────────────
+const DEFAULT_RANKING = [
+  'mat3', 'mat2', 'token', 'funky', 'bazaar', 'swanky', 'mat1',
+  'cranky', 'candy', 'wrinkly', 'bonus', 'mat0', 'lose',
+]
+
+const CATEGORY_LABELS: Record<string, string> = {
+  mat3: 'Material Space — 3 materials you need',
+  mat2: 'Material Space — 2 materials you need',
+  token: 'Token Space (Camera Piece, Banana Bird, Golden Feather, Crystal Coconut)',
+  funky: "Funky's Flights",
+  bazaar: 'Bazaar (all bear spaces)',
+  swanky: "Swanky's Bonus Bonanza",
+  mat1: 'Material Space — 1 material you need',
+  cranky: "Cranky's Cabin",
+  candy: "Candy's Save Point (and Start)",
+  wrinkly: "Wrinkly's Kong Kollege",
+  bonus: 'Bonus Spaces (DKC, DKC2, DKC3, ANY)',
+  mat0: 'Material Space — 0 materials you need',
+  lose: 'Lose a Life',
+}
+
+// Spaces the walk may never enter: K. Rool spaces, Queen Banana Bird, finish
+const BLOCKED_SPACES = new Set([2, 3, 4, 5, 6])
+
+const TOKEN_LABELS = new Set(['camera piece', 'banana bird', 'golden feather', 'crystal coconut'])
 
 const BEAR_ALIASES: Record<string, string[]> = {
   "barnacle's island": ["bazaar"],
@@ -42,14 +71,48 @@ const BEAR_ALIASES: Record<string, string[]> = {
 
 function getCanonicalLabel(label: string): string {
   const l = label.toLowerCase()
-
   for (const [key, aliases] of Object.entries(BEAR_ALIASES)) {
-    if (key === l || aliases.includes(l)) {
-      return 'bazaar'
-    }
+    if (key === l || aliases.includes(l)) return 'bazaar'
+  }
+  return l
+}
+
+function getSpaceCategory(spaceIndex: number, need: Record<string, number>): string | null {
+  const entries = FULL_SPACE_GUIDE[spaceIndex - 1]
+  if (!entries) return null
+
+  if (entries[0] === 'M') {
+    const count = entries.slice(1).filter(m => (need[m] ?? 0) > 0).length
+    return count >= 3 ? 'mat3' : count === 2 ? 'mat2' : count === 1 ? 'mat1' : 'mat0'
   }
 
-  return l
+  const label = getCanonicalLabel(entries[0] ?? '')
+  if (TOKEN_LABELS.has(label)) return 'token'
+  if (label === "funky's flights") return 'funky'
+  if (label === 'bazaar') return 'bazaar'
+  if (label === "swanky's bonus bonanza") return 'swanky'
+  if (label === "cranky's cabin") return 'cranky'
+  if (label === "candy's save point") return 'candy'
+  if (label === "wrinkly's kong kollege") return 'wrinkly'
+  if (label.endsWith('bonus')) return 'bonus'
+  if (label === 'lose a life') return 'lose'
+  return null
+}
+
+// Every space you could land on after exactly `steps` moves (all branches)
+function landingSpaces(start: number, steps: number): number[] {
+  let frontier = new Set<number>([start])
+  for (let i = 0; i < steps; i++) {
+    const next = new Set<number>()
+    frontier.forEach(s => {
+      for (const t of CONNECTIONS[s] ?? []) {
+        if (!BLOCKED_SPACES.has(t)) next.add(t)
+      }
+    })
+    frontier = next
+    if (frontier.size === 0) break
+  }
+  return Array.from(frontier)
 }
 
 function getMatchingSpaces(query: string): number[] {
@@ -113,7 +176,6 @@ function boardToCanvas(
   }
 }
 
-// Space PBR: absolute scale 0-100
 function spacePbrColor(pbr: number): string {
   if (pbr === 0) return '#6b7280'
   if (pbr === 100) return '#16a34a'
@@ -122,7 +184,6 @@ function spacePbrColor(pbr: number): string {
   if (pbr >= 21) return '#f97316'
   return '#ef4444'
 }
-
 
 const UNIFIED_PBR_COLOR = (() => {
   const counts: Record<string, number> = {}
@@ -144,8 +205,8 @@ const UNIFIED_PBR_COLOR = (() => {
 
   const result: Record<string, string> = {}
   for (const key of Object.keys(counts)) {
-    const individualPbr = totals[key] / 100 
-    const expected = counts[key] * 0.28      
+    const individualPbr = totals[key] / 100
+    const expected = counts[key] * 0.28
     const diff = individualPbr - expected
     if (diff > 0.28) result[key] = '#22c55e'
     else if (diff >= -0.28) result[key] = '#eab308'
@@ -159,17 +220,14 @@ function getSpacePbr(spaceIndex: number): number | null {
   if (!entries || entries[0] === 'M') return null
 
   const label = getCanonicalLabel(entries[0] ?? '')
-  const isAlias = Object.values(BEAR_ALIASES).some(v => v.includes(label))
-
   let total = 0
   FULL_SPACE_GUIDE.forEach((e, i) => {
     if (e[0] === 'M') return
-    const l = getCanonicalLabel(e[0] ?? '')
-const match = l === label
-    if (match) total += SPACE_PBR[i + 1] ?? 0
+    if (getCanonicalLabel(e[0] ?? '') === label) total += SPACE_PBR[i + 1] ?? 0
   })
   return Math.round(total) / 100
 }
+
 function useDraggable(initialPos: { x: number; y: number }) {
   const [pos, setPos] = useState(initialPos)
   const dragging = useRef(false)
@@ -188,6 +246,7 @@ function useDraggable(initialPos: { x: number; y: number }) {
 
   return { pos, onPointerDown, onPointerMove, onPointerUp }
 }
+
 export default function MapPage() {
   const [query, setQuery] = useState('')
   const [matchedSpaces, setMatchedSpaces] = useState<number[]>([])
@@ -198,13 +257,27 @@ export default function MapPage() {
   const [randomSpace, setRandomSpace] = useState<number | null>(null)
   const [showPbr, setShowPbr] = useState(false)
 
+  // random number tool
+  const [randMax, setRandMax] = useState('')
+  const [randResult, setRandResult] = useState('')
+
+  // saved preferences
+  const [ranking, setRanking] = useState<string[]>(DEFAULT_RANKING)
+  const [countInventory, setCountInventory] = useState(true)
+  const [countScrapbook, setCountScrapbook] = useState(true)
+  const [prefsHydrated, setPrefsHydrated] = useState(false)
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false)
+  const [dragIdx, setDragIdx] = useState<number | null>(null)
+
   const params = useParams()
   const sessionId = params.id as string
   const { user } = useAuth()
   const { userEntries } = useSessionData(sessionId, user?.email)
   const [scrapbooked, setScrapbooked] = useState<string[]>([])
+  const [inventory, setInventory] = useState<Record<string, number>>({})
   const dragCard = useDraggable({ x: 16, y: 16 })
   const dragStats = useDraggable({ x: 16, y: 16 })
+
   useEffect(() => {
     if (!user || !sessionId) return
     fetch(`/api/scrapbook/${sessionId}`, {
@@ -213,6 +286,55 @@ export default function MapPage() {
       .then(r => r.json())
       .then(json => setScrapbooked(json.scrapbooked_materials || []))
   }, [user, sessionId])
+
+  useEffect(() => {
+    if (!user || !sessionId) return
+    fetch(`/api/materials/${sessionId}`, {
+      headers: { 'x-user-id': user.email! }
+    })
+      .then(r => r.json())
+      .then(json => setInventory(json.material_counts || {}))
+  }, [user, sessionId])
+
+  // load prefs
+  useEffect(() => {
+    if (!user || !sessionId || prefsHydrated) return
+    fetch(`/api/mapprefs/${sessionId}`, {
+      headers: { 'x-user-id': user.email! }
+    })
+      .then(r => r.json())
+      .then(json => {
+        if (typeof json.brightness === 'number') setDimness(json.brightness)
+        if (Array.isArray(json.ranking)) {
+          const known = json.ranking.filter((k: string) => DEFAULT_RANKING.includes(k))
+          const missing = DEFAULT_RANKING.filter(k => !known.includes(k))
+          setRanking([...known, ...missing])
+        }
+        if (typeof json.count_inventory === 'boolean') setCountInventory(json.count_inventory)
+        if (typeof json.count_scrapbook === 'boolean') setCountScrapbook(json.count_scrapbook)
+        setPrefsHydrated(true)
+      })
+      .catch(() => setPrefsHydrated(true))
+  }, [user, sessionId, prefsHydrated])
+
+  // save prefs
+  useEffect(() => {
+    if (!user || !sessionId || !prefsHydrated) return
+    const t = setTimeout(() => {
+      fetch(`/api/mapprefs/${sessionId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_email: user.email,
+          brightness: dimness,
+          ranking,
+          count_inventory: countInventory,
+          count_scrapbook: countScrapbook,
+        }),
+      })
+    }, 400)
+    return () => clearTimeout(t)
+  }, [dimness, ranking, countInventory, countScrapbook, sessionId, user, prefsHydrated])
 
   const remainingLevels = useMemo(() =>
     computeRemainingLevels((userEntries || []) as LogicEntry[]),
@@ -224,10 +346,30 @@ export default function MapPage() {
     [remainingLevels, scrapbooked]
   )
 
+  // how many of each material you still need (remaining levels + scrapbook − inventory)
+  const materialNeed = useMemo(() => {
+    const need: Record<string, number> = {}
+    for (const lvl of remainingLevels) {
+      for (const m of materialList[lvl - 1] || []) need[m] = (need[m] || 0) + 1
+    }
+    if (countScrapbook) {
+      for (const m of ALL_MATERIALS) {
+        if (!scrapbooked.includes(m)) need[m] = (need[m] || 0) + 1
+      }
+    }
+    if (countInventory) {
+      for (const m of Object.keys(need)) {
+        need[m] = Math.max(0, need[m] - (inventory[m] || 0))
+      }
+    }
+    return need
+  }, [remainingLevels, scrapbooked, inventory, countInventory, countScrapbook])
+
   type PathMode =
     | 'idle'
     | 'best-picking-start' | 'best-picking-end' | 'best-result'
     | 'check-picking-start' | 'check-picking-end' | 'check-picking-waypoints' | 'check-result'
+    | 'opt-start' | 'opt-roll' | 'opt-result'
 
   const [pathMode, setPathMode] = useState<PathMode>('idle')
   const [pathStart, setPathStart] = useState<number | null>(null)
@@ -238,8 +380,47 @@ export default function MapPage() {
   const [highlightedPath, setHighlightedPath] = useState<number[]>([])
   const [showPathStats, setShowPathStats] = useState(false)
 
+  // Show Options / Best Option
+  const [optKind, setOptKind] = useState<'show' | 'best'>('show')
+  const [optStart, setOptStart] = useState<number | null>(null)
+  const [optRoll, setOptRoll] = useState<number | null>(null)
+  const [rollInput, setRollInput] = useState('')
+
+  const optResults = useMemo(() => {
+    if (pathMode !== 'opt-result' || optStart === null || optRoll === null) return []
+    const spaces = landingSpaces(optStart, optRoll)
+
+    if (optKind === 'show') {
+      return spaces.map(space => ({ space, rank: null as number | null }))
+    }
+
+    const items = spaces
+      .map(space => ({
+        space,
+        idx: ranking.indexOf(getSpaceCategory(space, materialNeed) ?? ''),
+      }))
+      .filter(x => x.idx >= 0)
+
+    const unique = Array.from(new Set(items.map(i => i.idx))).sort((a, b) => a - b)
+    return items.map(i => ({
+      space: i.space,
+      rank: unique.indexOf(i.idx) + 1 as number | null,
+    }))
+  }, [pathMode, optStart, optRoll, optKind, ranking, materialNeed])
+
+  function submitRoll() {
+    const n = parseInt(rollInput, 10)
+    if (optStart === null || isNaN(n) || n < 1 || n > 300) return
+    setOptRoll(n)
+    setPathMode('opt-result')
+  }
+
   function handlePathSpaceClick(spaceIndex: number) {
-    if (pathMode === 'best-picking-start') {
+    if (pathMode === 'opt-start' || pathMode === 'opt-roll') {
+      setOptStart(spaceIndex)
+      setRollInput('')
+      setPathMode('opt-roll')
+    } else if (pathMode === 'best-picking-start') {
       setPathStart(spaceIndex)
       setPathMode('best-picking-end')
     } else if (pathMode === 'best-picking-end') {
@@ -287,6 +468,9 @@ export default function MapPage() {
     setHighlightedPath([])
     setShowPathStats(false)
     setCheckPathCandidates([])
+    setOptStart(null)
+    setOptRoll(null)
+    setRollInput('')
   }
 
   const checkPathMaterials = useMemo(() => {
@@ -330,8 +514,14 @@ export default function MapPage() {
     setRandomSpace(pick)
   }
 
+  const handleRandomNumber = () => {
+    const n = parseInt(randMax, 10)
+    if (isNaN(n) || n < 1) return
+    setRandResult(String(Math.floor(Math.random() * n) + 1))
+  }
+
   const handleStarClick = (spaceIndex: number) => {
-    if (pathMode !== 'idle' && pathMode !== 'best-result' && pathMode !== 'check-result') {
+    if (pathMode !== 'idle' && !pathMode.endsWith('-result')) {
       handlePathSpaceClick(spaceIndex)
       return
     }
@@ -342,6 +532,16 @@ export default function MapPage() {
     setSelected({ index: spaceIndex, entries, world, coords })
   }
 
+  function moveRank(from: number, to: number) {
+    if (to < 0 || to >= ranking.length || from === to) return
+    setRanking(prev => {
+      const next = [...prev]
+      const [item] = next.splice(from, 1)
+      next.splice(to, 0, item)
+      return next
+    })
+  }
+
   const isMaterial = (entries: string[]) => entries[0] === 'M'
 
   const allSpaceIndices = useMemo(
@@ -349,89 +549,113 @@ export default function MapPage() {
     []
   )
 
-  const isPicking = pathMode !== 'idle' && pathMode !== 'best-result' && pathMode !== 'check-result'
+  const isPicking = pathMode !== 'idle' && !pathMode.endsWith('-result')
+  const optActive = pathMode.startsWith('opt')
+
+  const rowBtn = 'border rounded-lg px-3 py-2 text-sm shrink-0'
+  const rowBtnIdle = 'border-gray-200 text-gray-700 bg-white hover:bg-gray-50'
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      {/* ── toolbar ── */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200 shrink-0 flex-wrap">
-        <input
-          type="text"
-          value={query}
-          onChange={e => handleSearch(e.target.value)}
-          placeholder="Search spaces…"
-          className="flex-1 min-w-0 bg-gray-100 text-gray-900 placeholder-gray-400 rounded-lg px-4 py-2 text-sm outline-none"
-        />
-        {matchedSpaces.length > 0 && (
-          <span className="text-gray-500 text-xs shrink-0">
-            {matchedSpaces.length} space{matchedSpaces.length !== 1 ? 's' : ''}
-          </span>
-        )}
-        <select
-          value={dimness}
-          onChange={e => setDimness(Number(e.target.value))}
-          className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-700 bg-white"
-        >
-          {[100, 80, 70, 60, 50, 40].map(v => (
-            <option key={v} value={v}>{v}%</option>
-          ))}
-        </select>
-        <button
-          onClick={handleRandom}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white hover:bg-gray-50 shrink-0"
-        >
-          Random Space
-        </button>
-        <button
-          onClick={() => setShowPbr(v => !v)}
-          className={`border rounded-lg px-3 py-2 text-sm shrink-0 transition-colors ${
-            showPbr
-              ? 'bg-emerald-500 border-emerald-600 text-white'
-              : 'border-gray-200 text-gray-700 bg-white hover:bg-gray-50'
-          }`}
-        >
-          {showPbr ? 'Hide PBP' : 'Show PBP'}
-        </button>
-        <button
-          onClick={() => { resetPathMode(); setPathMode('best-picking-start') }}
-          className={`border rounded-lg px-3 py-2 text-sm shrink-0 ${
-            pathMode.startsWith('best')
-              ? 'bg-yellow-400 border-yellow-500 text-black'
-              : 'border-gray-200 text-gray-700 bg-white hover:bg-gray-50'
-          }`}
-        >
-          Best Path
-        </button>
-        <button
-          onClick={() => { resetPathMode(); setPathMode('check-picking-start') }}
-          className={`border rounded-lg px-3 py-2 text-sm shrink-0 ${
-            pathMode.startsWith('check')
-              ? 'bg-blue-400 border-blue-500 text-white'
-              : 'border-gray-200 text-gray-700 bg-white hover:bg-gray-50'
-          }`}
-        >
-          Check Path
-        </button>
-        {pathMode !== 'idle' && (
-          <button
-            onClick={resetPathMode}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white hover:bg-gray-50 shrink-0"
+      {/* ── toolbar (2 rows) ── */}
+      <div className="bg-white border-b border-gray-200 shrink-0">
+        {/* Row 1 */}
+        <div className="flex items-center gap-3 px-4 py-3 flex-wrap">
+          <input
+            type="text"
+            value={query}
+            onChange={e => handleSearch(e.target.value)}
+            placeholder="Search spaces…"
+            className="flex-1 min-w-[180px] bg-gray-100 text-gray-900 placeholder-gray-400 rounded-lg px-4 py-2 text-sm outline-none"
+          />
+          {query && (
+            <button
+              onClick={() => handleSearch('')}
+              className="text-gray-400 hover:text-gray-700 text-sm px-1"
+            >
+              ✕
+            </button>
+          )}
+          {matchedSpaces.length > 0 && (
+            <span className="text-gray-500 text-xs shrink-0">
+              {matchedSpaces.length} space{matchedSpaces.length !== 1 ? 's' : ''}
+            </span>
+          )}
+          <select
+            value={dimness}
+            onChange={e => setDimness(Number(e.target.value))}
+            className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-700 bg-white"
           >
-            Cancel
+            {[100, 80, 70, 60, 50, 40].map(v => (
+              <option key={v} value={v}>{v}%</option>
+            ))}
+          </select>
+          <button onClick={handleRandom} className={`${rowBtn} ${rowBtnIdle}`}>
+            Random Space
           </button>
-        )}
-        {query && (
+
+          {/* random number tool */}
+          <input
+            type="number"
+            min={1}
+            value={randMax}
+            onChange={e => setRandMax(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleRandomNumber() }}
+            placeholder="Max #"
+            className="w-24 border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 bg-white"
+          />
+          <input
+            type="text"
+            readOnly
+            value={randResult}
+            placeholder="Result"
+            className="w-20 border border-gray-200 rounded-lg px-2 py-2 text-sm text-center font-semibold text-gray-900 bg-gray-50"
+          />
+          <button onClick={handleRandomNumber} className={`${rowBtn} ${rowBtnIdle}`}>
+            Random
+          </button>
+        </div>
+
+        {/* Row 2 */}
+        <div className="flex items-center gap-3 px-4 pb-3 flex-wrap">
+          <button onClick={() => setShowOptionsMenu(true)} className={`${rowBtn} ${rowBtnIdle}`}>
+            Options
+          </button>
           <button
-            onClick={() => handleSearch('')}
-            className="text-gray-400 hover:text-gray-700 text-sm px-2"
+            onClick={() => { resetPathMode(); setOptKind('show'); setPathMode('opt-start') }}
+            className={`${rowBtn} ${optActive && optKind === 'show' ? 'bg-yellow-400 border-yellow-500 text-black' : rowBtnIdle}`}
           >
-            ✕
+            Show Options
           </button>
-        )}
+          <button
+            onClick={() => { resetPathMode(); setOptKind('best'); setPathMode('opt-start') }}
+            className={`${rowBtn} ${optActive && optKind === 'best' ? 'bg-yellow-400 border-yellow-500 text-black' : rowBtnIdle}`}
+          >
+            Best Option
+          </button>
+          <button
+            onClick={() => { resetPathMode(); setPathMode('check-picking-start') }}
+            className={`${rowBtn} ${pathMode.startsWith('check') ? 'bg-blue-400 border-blue-500 text-white' : rowBtnIdle}`}
+          >
+            Check Path
+          </button>
+          <button
+            onClick={() => setShowPbr(v => !v)}
+            className={`${rowBtn} transition-colors ${showPbr ? 'bg-emerald-500 border-emerald-600 text-white' : rowBtnIdle}`}
+          >
+            {showPbr ? 'Hide PBP' : 'Show PBP'}
+          </button>
+          {pathMode !== 'idle' && (
+            <button onClick={resetPathMode} className={`${rowBtn} ${rowBtnIdle}`}>
+              Cancel
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── board ── */}
-<div className="flex-1 relative" ref={containerRef} style={{ overflow: 'hidden' }}>        <Image
+      <div className="flex-1 relative" ref={containerRef} style={{ overflow: 'hidden' }}>
+        <Image
           src="/board.png"
           alt="Board"
           fill
@@ -497,9 +721,10 @@ export default function MapPage() {
         }
 
         {/* ── instruction banner ── */}
-        {isPicking && (
+        {isPicking && pathMode !== 'opt-roll' && (
           <div className="absolute inset-0 z-30 pointer-events-none flex items-start justify-center pt-4">
             <div className="bg-black/80 text-white px-4 py-2 rounded-lg text-sm font-medium">
+              {pathMode === 'opt-start' && '★ Click the space you are on'}
               {pathMode === 'best-picking-start' && '★ Click your current space'}
               {pathMode === 'best-picking-end' && '★ Click your destination space'}
               {pathMode === 'check-picking-start' && '⬡ Click your start space'}
@@ -510,7 +735,40 @@ export default function MapPage() {
           </div>
         )}
 
-        {/* ── clickable space pickers (path modes) ── */}
+        {/* ── roll input ── */}
+        {pathMode === 'opt-roll' && (
+          <div className="absolute inset-x-0 top-4 z-30 flex justify-center pointer-events-none">
+            <div className="pointer-events-auto bg-black/85 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+              <span>Space #{optStart} — enter your roll:</span>
+              <input
+                autoFocus
+                type="number"
+                min={1}
+                value={rollInput}
+                onChange={e => setRollInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') submitRoll() }}
+                className="w-16 text-black rounded px-2 py-0.5"
+              />
+              <button
+                onClick={submitRoll}
+                className="bg-yellow-400 text-black rounded px-3 py-0.5 font-semibold"
+              >
+                Go
+              </button>
+            </div>
+          </div>
+        )}
+
+        {pathMode === 'opt-result' && (
+          <div className="absolute inset-x-0 top-4 z-30 flex justify-center pointer-events-none">
+            <div className="bg-black/80 text-white px-4 py-2 rounded-lg text-sm">
+              Roll {optRoll} from #{optStart} — {optResults.length} space{optResults.length !== 1 ? 's' : ''}
+              {optKind === 'best' ? ' (1 = best)' : ''}
+            </div>
+          </div>
+        )}
+
+        {/* ── clickable space pickers ── */}
         {containerSize.w > 0 &&
           allSpaceIndices.map(spaceIndex => {
             const coords = SPACE_COORDINATES[spaceIndex - 1] as [number, number]
@@ -527,6 +785,59 @@ export default function MapPage() {
                   backgroundColor: isPicking ? 'rgba(255,255,255,0.2)' : 'transparent',
                 }}
               />
+            )
+          })
+        }
+
+        {/* ── start-space ring for options ── */}
+        {containerSize.w > 0 && optActive && optStart !== null && (() => {
+          const coords = SPACE_COORDINATES[optStart - 1] as [number, number]
+          if (!coords) return null
+          const { x, y } = boardToCanvas(coords, containerSize)
+          return (
+            <div
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                left: x, top: y, transform: 'translate(-50%,-50%)',
+                width: 26, height: 26, zIndex: 14,
+                border: '3px solid #22c55e',
+                boxShadow: '0 0 6px rgba(0,0,0,0.6)',
+              }}
+            />
+          )
+        })()}
+
+        {/* ── Show Options / Best Option result stars ── */}
+        {containerSize.w > 0 && pathMode === 'opt-result' &&
+          optResults.map(r => {
+            const coords = SPACE_COORDINATES[r.space - 1] as [number, number]
+            if (!coords) return null
+            const { x, y } = boardToCanvas(coords, containerSize)
+            return (
+              <button
+                key={`opt-${r.space}`}
+                onClick={() => handleStarClick(r.space)}
+                className="absolute flex items-center justify-center"
+                style={{
+                  left: x, top: y, transform: 'translate(-50%,-50%)',
+                  width: 32, height: 32, zIndex: 26,
+                }}
+              >
+                <img
+                  src="/star.png"
+                  alt={`Space ${r.space}`}
+                  style={{ width: 32, height: 32 }}
+                  className="absolute inset-0 drop-shadow-lg"
+                />
+                {r.rank !== null && (
+                  <span
+                    className="relative font-bold"
+                    style={{ fontSize: 12, color: '#111', textShadow: '0 0 3px #fff, 0 0 3px #fff' }}
+                  >
+                    {r.rank}
+                  </span>
+                )}
+              </button>
             )
           })
         }
@@ -556,21 +867,25 @@ export default function MapPage() {
           const mats = stats.materialsOnPath
           const covered = stats.coveredLevels
           return (
-           <div
-            className="absolute pointer-events-auto bg-gray-900 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-40 cursor-grab active:cursor-grabbing"
-            style={{ left: dragStats.pos.x, top: dragStats.pos.y, touchAction: 'none', pointerEvents: 'auto' }}
-            onClick={(e) => e.stopPropagation()}
-            onPointerDown={(e) => { e.stopPropagation(); dragStats.onPointerDown(e) }}
-            onPointerMove={dragStats.onPointerMove}
-            onPointerUp={dragStats.onPointerUp}
-          >
+            <div
+              className="absolute pointer-events-auto bg-gray-900 border border-yellow-400 rounded-xl shadow-2xl p-4 w-64 z-40 cursor-grab active:cursor-grabbing"
+              style={{ left: dragStats.pos.x, top: dragStats.pos.y, touchAction: 'none', pointerEvents: 'auto' }}
+              onClick={(e) => e.stopPropagation()}
+              onPointerDown={(e) => { e.stopPropagation(); dragStats.onPointerDown(e) }}
+              onPointerMove={dragStats.onPointerMove}
+              onPointerUp={dragStats.onPointerUp}
+            >
               <div className="flex justify-between items-start mb-3">
                 <div className="text-yellow-400 text-xs font-semibold uppercase tracking-widest">
                   {pathMode === 'best-result' ? 'Best Path' : 'Check Path'} — {highlightedPath.length} spaces
                 </div>
                 <button
-  onPointerDown={(e) => e.stopPropagation()}
-  onClick={() => setShowPathStats(false)} className="text-gray-500 hover:text-white text-lg leading-none ml-2">✕</button>
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => setShowPathStats(false)}
+                  className="text-gray-500 hover:text-white text-lg leading-none ml-2"
+                >
+                  ✕
+                </button>
               </div>
 
               <div className="mb-3">
@@ -579,18 +894,14 @@ export default function MapPage() {
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {Object.keys(mats).sort((a, b) => {
-  // 1. count descending
-  const countDiff = mats[b] - mats[a]
-  if (countDiff !== 0) return countDiff
-  // 2. color: red first, then yellow, then green
-  const colorOrder: Record<string, number> = { '#ef4444': 0, '#eab308': 1, '#22c55e': 2 }
-  const aColor = colorOrder[UNIFIED_PBR_COLOR[`mat:${a}`] ?? '#22c55e'] ?? 2
-  const bColor = colorOrder[UNIFIED_PBR_COLOR[`mat:${b}`] ?? '#22c55e'] ?? 2
-  const colorDiff = aColor - bColor
-  if (colorDiff !== 0) return colorDiff
-  // 3. alphabetical
-  return a.localeCompare(b)
-}).map(m => {
+                    const countDiff = mats[b] - mats[a]
+                    if (countDiff !== 0) return countDiff
+                    const colorOrder: Record<string, number> = { '#ef4444': 0, '#eab308': 1, '#22c55e': 2 }
+                    const aColor = colorOrder[UNIFIED_PBR_COLOR[`mat:${a}`] ?? '#22c55e'] ?? 2
+                    const bColor = colorOrder[UNIFIED_PBR_COLOR[`mat:${b}`] ?? '#22c55e'] ?? 2
+                    if (aColor !== bColor) return aColor - bColor
+                    return a.localeCompare(b)
+                  }).map(m => {
                     const mpbr = MATERIAL_PBR[m]
                     return (
                       <span
@@ -600,7 +911,7 @@ export default function MapPage() {
                         title={`Material PBR: ${mpbr}`}
                       >
                         {m}{mats[m] > 1 ? ` (${mats[m]})` : ''}{' '}
-        {mpbr !== undefined && (
+                        {mpbr !== undefined && (
                           <span
                             className="text-[9px] font-bold px-1 rounded"
                             style={{ backgroundColor: UNIFIED_PBR_COLOR[`mat:${m}`] ?? '#22c55e', color: '#fff' }}
@@ -651,7 +962,6 @@ export default function MapPage() {
                 {selected.world && (
                   <div className="text-gray-300 text-xs">{selected.world}</div>
                 )}
-                {/* Space PBR badge — always the raw integer for this one space */}
                 {(() => {
                   const pbr = SPACE_PBR[selected.index] ?? null
                   if (pbr === null) return null
@@ -669,8 +979,8 @@ export default function MapPage() {
                 })()}
               </div>
               <button
-  onPointerDown={(e) => e.stopPropagation()}
-  onClick={() => setSelected(null)}
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={() => setSelected(null)}
                 className="text-gray-500 hover:text-white text-lg leading-none ml-2"
               >
                 ✕
@@ -710,7 +1020,7 @@ export default function MapPage() {
                     {i === 0 && (() => {
                       const sum = getSpacePbr(selected.index)
                       if (sum === null || sum === undefined) return null
-                      const l = FULL_SPACE_GUIDE[selected.index - 1]?.[0]?.toLowerCase() ?? ''
+                      const l = getCanonicalLabel(FULL_SPACE_GUIDE[selected.index - 1]?.[0] ?? '')
                       return (
                         <span
                           className="text-[9px] font-bold px-1 rounded"
@@ -727,6 +1037,105 @@ export default function MapPage() {
           </div>
         )}
       </div>
+
+      {/* ── Options menu ── */}
+      {showOptionsMenu && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40"
+          onClick={() => setShowOptionsMenu(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[85vh] flex flex-col"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
+              <h2 className="text-lg font-bold text-gray-900">Map Options</h2>
+              <button
+                onClick={() => setShowOptionsMenu(false)}
+                className="text-gray-400 hover:text-gray-700 text-xl leading-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="overflow-y-auto px-5 py-4 space-y-5">
+              <div className="space-y-2">
+                <div className="text-sm font-semibold text-gray-800">What counts as “needed”</div>
+                <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={countInventory}
+                    onChange={e => setCountInventory(e.target.checked)}
+                  />
+                  Subtract materials in my inventory
+                </label>
+                <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={countScrapbook}
+                    onChange={e => setCountScrapbook(e.target.checked)}
+                  />
+                  Include unscrapbooked materials
+                </label>
+              </div>
+
+              <div>
+                <div className="text-sm font-semibold text-gray-800 mb-1">Space ranking</div>
+                <p className="text-xs text-gray-500 mb-2">
+                  Drag or use the arrows. Rank 1 is best for Best Option.
+                </p>
+                <ul className="space-y-1">
+                  {ranking.map((key, i) => (
+                    <li
+                      key={key}
+                      draggable
+                      onDragStart={() => setDragIdx(i)}
+                      onDragOver={e => e.preventDefault()}
+                      onDrop={() => {
+                        if (dragIdx !== null) moveRank(dragIdx, i)
+                        setDragIdx(null)
+                      }}
+                      className="flex items-center gap-2 border border-gray-200 rounded-lg px-2 py-1.5 bg-white cursor-grab"
+                    >
+                      <span className="w-6 text-center text-xs font-bold text-gray-500">{i + 1}</span>
+                      <span className="flex-1 text-sm text-gray-800">{CATEGORY_LABELS[key]}</span>
+                      <button
+                        onClick={() => moveRank(i, i - 1)}
+                        disabled={i === 0}
+                        className="px-1.5 text-gray-600 disabled:opacity-30"
+                      >
+                        ▲
+                      </button>
+                      <button
+                        onClick={() => moveRank(i, i + 1)}
+                        disabled={i === ranking.length - 1}
+                        className="px-1.5 text-gray-600 disabled:opacity-30"
+                      >
+                        ▼
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="flex gap-2 px-5 py-4 border-t border-gray-100 shrink-0">
+              <button
+                onClick={() => setRanking(DEFAULT_RANKING)}
+                className="flex-1 bg-gray-200 text-gray-800 rounded px-3 py-2 text-sm hover:bg-gray-300"
+              >
+                Reset to default
+              </button>
+              <button
+                onClick={() => setShowOptionsMenu(false)}
+                className="flex-1 bg-blue-600 text-white rounded px-3 py-2 text-sm hover:bg-blue-700"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
