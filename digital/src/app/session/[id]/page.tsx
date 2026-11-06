@@ -103,6 +103,17 @@ const [hoveredName, setHoveredName] = useState<string | null>(null)
 const [selectedMaterial, setSelectedMaterial] = useState('')
 const [extraLevel, setExtraLevel] = useState<number | null>(null)
 const [extraPick, setExtraPick] = useState('')
+const [outlineMatches, setOutlineMatches] = useState(true)
+
+useEffect(() => {
+  const saved = localStorage.getItem('outlineMatches')
+  if (saved !== null) setOutlineMatches(saved === 'true')
+}, [])
+
+function toggleOutline(value: boolean) {
+  setOutlineMatches(value)
+  localStorage.setItem('outlineMatches', String(value))
+}
 
 const greyedSet = useMemo(() => new Set(greyedList), [greyedList])
 const ALL_MATS = useMemo(
@@ -955,6 +966,14 @@ const audio = new Audio(soundFile)
             </button>
           ))}
         </div>
+        <label className="flex items-center gap-2 text-sm text-gray-700">
+  <input
+    type="checkbox"
+    checked={outlineMatches}
+    onChange={e => toggleOutline(e.target.checked)}
+  />
+  Outline matching materials
+</label>
         {isHost && (
           <button
             onClick={async () => {
@@ -993,6 +1012,7 @@ const audio = new Audio(soundFile)
     setHoveredName={setHoveredName}
     onToggle={toggleBoxGrey}
     onOpenExtra={openExtra}
+    outline={outlineMatches}
   />
 )}
             {ABILITY_TIERS.filter(t => myBuiltCount >= t.threshold).map(t => (
@@ -1049,6 +1069,7 @@ const audio = new Audio(soundFile)
     setHoveredName={setHoveredName}
     onToggle={toggleBoxGrey}
     onOpenExtra={openExtra}
+    outline={outlineMatches}
   />
 )}
   {SCRAPBOOK_ANCHORS.map(anchor => {

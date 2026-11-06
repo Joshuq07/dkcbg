@@ -9,6 +9,7 @@ type Props = {
   extras: Record<string, string[]>
   hoveredName: string | null
   selectedMaterial: string
+  outline: boolean
   setHoveredName: (n: string | null) => void
   onToggle: (id: string) => void
   onOpenExtra: (level: number) => void
@@ -26,6 +27,7 @@ export default function MaterialBoxes({
   setHoveredName,
   onToggle,
   onOpenExtra,
+  outline,
 }: Props) {
   const [hoverExtra, setHoverExtra] = useState<number | null>(null)
 
@@ -40,8 +42,8 @@ const extraMatches = items.includes(activeName || '')
   !b.isExtra &&
   (greyed.has(b.id) ||
     (activeName !== null && b.name !== activeName))
-  const highlighted =
-  !b.isExtra && !!selectedMaterial && b.name === selectedMaterial
+const highlighted =
+  outline && !b.isExtra && !!activeName && b.name === activeName
 
         return (
           <button
