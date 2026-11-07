@@ -170,9 +170,6 @@ function CompletionTrophy({ completion }: { completion: Completion }) {
           className="absolute z-50 bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 text-white rounded-lg shadow-xl pointer-events-none"
           style={{ minWidth: 150, padding: '10px 12px' }}
         >
-          <div className="text-xs font-bold mb-1" style={{ color: '#FFD700' }}>
-            🏆 Completed
-          </div>
           <div className="text-xs text-white mb-0.5">{playerName}</div>
           {completion.character_name && (
             <div className="text-xs text-gray-300 mb-0.5">as {completion.character_name}</div>
@@ -321,7 +318,7 @@ export default function AchievementsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs text-gray-500 mb-1 block">Player Image</label>
+                <label className="text-xs text-gray-500 mb-1 block">Player Name</label>
                 <select
                   className="w-full border rounded px-3 py-1.5 text-sm bg-white"
                   value={playerId}
@@ -340,7 +337,7 @@ export default function AchievementsPage() {
                   className="w-full border rounded px-3 py-1.5 text-sm"
                   value={gameNumber}
                   onChange={e => setGameNumber(e.target.value)}
-                  placeholder="e.g. 7"
+                  placeholder="Check Sheets if Unknown"
                   min={1}
                 />
               </div>
