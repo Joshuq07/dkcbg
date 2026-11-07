@@ -510,7 +510,7 @@ export default function SessionsPage() {
                 <PixelPercent
                   value={builtCounts[m.user_email] ?? 0}
                   x={tx + 125}
-                  y={ty + 15}
+                  y={ty + 17}
                 />
 
                 <img
