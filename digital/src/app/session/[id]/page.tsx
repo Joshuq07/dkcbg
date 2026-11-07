@@ -839,8 +839,6 @@ async function saveGame(newGame: string) {
     <main className="w-full min-h-screen p-4 flex justify-center">
       <div className="w-full max-w-[2400px]">
 
-        <h1 className="text-2xl font-bold mb-2">{session.name}</h1>
-
 
         {isHost && (
           <button

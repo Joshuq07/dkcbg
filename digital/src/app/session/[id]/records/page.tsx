@@ -554,9 +554,6 @@ function isTeamGame(summaries: PlacementSummary[]) {
   return (
     <main className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
-
-        <h1 className="text-3xl font-bold text-gray-900 mb-6 tracking-tight">Records</h1>
-
         <div className="flex gap-1 mb-6 bg-white border border-gray-200 rounded-xl p-1 shadow-sm w-fit">
           {(Object.keys(TAB_LABELS) as MainTab[]).map(tab => (
             <button
