@@ -29,7 +29,7 @@ const H = 273
 const TAPE_W = 170
 const TAPE_H = 34
 const TAPE_POS = [[13, 41], [13, 91], [13, 140], [13, 186]]
-const PLACE_POS = [[210, 54], [210, 102], [210, 151], [210, 199]]
+const PLACE_POS = [[210, 55], [210, 103], [210, 152], [210, 200]]
 const CYAN = '#00e5ff'
 
 const pctX = (x: number) => `${(x / W) * 100}%`
