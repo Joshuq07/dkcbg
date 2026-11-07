@@ -14,12 +14,20 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { achievement_name, user_email, display_name, character_name, player_id, game_number } = body
+  const { achievement_name, character_name, player_id, game_number } = body
+
   const { data, error } = await supabase
     .from('achievement_completions')
-    .insert({ achievement_name, user_email, display_name, character_name, player_id, game_number })
+    .insert({
+      achievement_name,
+      character_name,
+      player_id,
+      game_number
+    })
     .select()
     .single()
+
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
   return NextResponse.json({ completion: data })
 }

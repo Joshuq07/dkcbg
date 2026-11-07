@@ -122,8 +122,6 @@ const PLAYERS = [
 type Completion = {
   id: string
   achievement_name: string
-  user_email: string
-  display_name: string | null
   character_name: string | null
   player_id: string | null
   game_number: number | null
@@ -139,6 +137,7 @@ function Stars({ count }: { count: number }) {
 function CompletionTrophy({ completion }: { completion: Completion }) {
   const [hovered, setHovered] = useState(false)
   const imgSrc = completion.player_id ? `/trophies/${completion.player_id}.png` : null
+  const playerName = PLAYERS.find(p => p.id === completion.player_id)?.name ?? 'Unknown Player'
 
   return (
     <div
@@ -153,7 +152,7 @@ function CompletionTrophy({ completion }: { completion: Completion }) {
         {imgSrc ? (
           <Image
             src={imgSrc}
-            alt={completion.display_name ?? completion.user_email}
+            alt={playerName}
             width={40}
             height={40}
             className="object-contain w-full h-full"
@@ -161,22 +160,33 @@ function CompletionTrophy({ completion }: { completion: Completion }) {
           />
         ) : (
           <div className="w-full h-full bg-yellow-100 flex items-center justify-center text-xs font-bold text-yellow-600">
-            {(completion.display_name ?? completion.user_email)[0]?.toUpperCase()}
+            ?
           </div>
         )}
       </div>
 
       {hovered && (
-        <div className="absolute z-50 bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 text-white rounded-lg shadow-xl pointer-events-none"
-          style={{ minWidth: 180, padding: '10px 12px' }}>
-          <div className="text-xs font-bold mb-1" style={{ color: '#FFD700' }}>🏆 Completed</div>
-          {completion.display_name && <div className="text-xs text-white mb-0.5">{completion.display_name}</div>}
-          <div className="text-xs text-gray-400 mb-0.5">{completion.user_email}</div>
-          {completion.character_name && <div className="text-xs text-gray-300 mb-0.5">as {completion.character_name}</div>}
-          {completion.game_number && <div className="text-xs text-gray-400">Game #{completion.game_number}</div>}
+        <div
+          className="absolute z-50 bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 text-white rounded-lg shadow-xl pointer-events-none"
+          style={{ minWidth: 150, padding: '10px 12px' }}
+        >
+          <div className="text-xs font-bold mb-1" style={{ color: '#FFD700' }}>
+            🏆 Completed
+          </div>
+          <div className="text-xs text-white mb-0.5">{playerName}</div>
+          {completion.character_name && (
+            <div className="text-xs text-gray-300 mb-0.5">as {completion.character_name}</div>
+          )}
+          {completion.game_number && (
+            <div className="text-xs text-gray-400">Game #{completion.game_number}</div>
+          )}
           <div
             className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
-            style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '6px solid #111827' }}
+            style={{
+              borderLeft: '6px solid transparent',
+              borderRight: '6px solid transparent',
+              borderTop: '6px solid #111827'
+            }}
           />
         </div>
       )}
@@ -191,7 +201,6 @@ export default function AchievementsPage() {
   const [completions, setCompletions] = useState<Completion[]>([])
   const [sortByStars, setSortByStars] = useState(false)
   const [modalAchievement, setModalAchievement] = useState<string | null>(null)
-  const [displayName, setDisplayName] = useState('')
   const [characterName, setCharacterName] = useState('')
   const [playerId, setPlayerId] = useState('')
   const [gameNumber, setGameNumber] = useState('')
@@ -207,39 +216,39 @@ export default function AchievementsPage() {
       .then(data => setCompletions(data.completions ?? []))
   }, [])
 
-  useEffect(() => {
-    if (user?.name) setDisplayName(user.name)
-  }, [user])
 
   const displayedAchievements = sortByStars
     ? [...ACHIEVEMENTS].sort((a, b) => b.stars - a.stars)
     : ACHIEVEMENTS
 
-  async function handleSubmit() {
-    if (!user?.email || !modalAchievement) return
-    setSubmitting(true)
-    const res = await fetch('/api/achievements', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        achievement_name: modalAchievement,
-        user_email: user.email,
-        display_name: displayName || null,
-        character_name: characterName || null,
-        player_id: playerId || null,
-        game_number: gameNumber ? parseInt(gameNumber) : null,
-      })
+ async function handleSubmit() {
+  if (!modalAchievement) return
+
+  setSubmitting(true)
+
+  const res = await fetch('/api/achievements', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      achievement_name: modalAchievement,
+      character_name: characterName || null,
+      player_id: playerId || null,
+      game_number: gameNumber ? parseInt(gameNumber) : null,
     })
-    const data = await res.json()
-    if (data.completion) {
-      setCompletions(prev => [...prev, data.completion])
-    }
-    setSubmitting(false)
-    setModalAchievement(null)
-    setCharacterName('')
-    setPlayerId('')
-    setGameNumber('')
+  })
+
+  const data = await res.json()
+
+  if (data.completion) {
+    setCompletions(prev => [...prev, data.completion])
   }
+
+  setSubmitting(false)
+  setModalAchievement(null)
+  setCharacterName('')
+  setPlayerId('')
+  setGameNumber('')
+}
 
   if (isLoading || !user) return <div className="page-container">Loading...</div>
 
@@ -298,19 +307,6 @@ export default function AchievementsPage() {
               >✕</button>
             </div>
             <div className="px-5 py-4 space-y-3">
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Display Name</label>
-                <input
-                  className="w-full border rounded px-3 py-1.5 text-sm"
-                  value={displayName}
-                  onChange={e => setDisplayName(e.target.value)}
-                  placeholder="Your name"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Account Email</label>
-                <div className="w-full border rounded px-3 py-1.5 text-sm bg-gray-50 text-gray-500">{user.email}</div>
-              </div>
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Character</label>
                 <select
