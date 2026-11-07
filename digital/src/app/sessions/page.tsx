@@ -29,7 +29,7 @@ const H = 273
 const TAPE_W = 170
 const TAPE_H = 34
 const TAPE_POS = [[13, 41], [13, 91], [13, 140], [13, 186]]
-const PLACE_POS = [[210, 53], [210, 101], [210, 150], [210, 198]]
+const PLACE_POS = [[210, 54], [210, 102], [210, 151], [210, 199]]
 const CYAN = '#00e5ff'
 
 const pctX = (x: number) => `${(x / W) * 100}%`
@@ -372,6 +372,7 @@ export default function SessionsPage() {
   />
 </button>
 
+
           {/* Tapes + placement */}
           {sortedMembers.map((m, i) => {
             const [tx, ty] = TAPE_POS[i]
@@ -415,7 +416,19 @@ export default function SessionsPage() {
 
                 <Txt x={tx + 125} y={ty + 15} pt={10}>{builtCounts[m.user_email] ?? 0}</Txt>
 
-                <Txt x={px} y={py} pt={12} color={CYAN}>{ordinal(placementFor(m.user_email))}</Txt>
+                <img
+  src={`/${placementFor(m.user_email)}${['th', 'st', 'nd', 'rd'][placementFor(m.user_email) % 10] && placementFor(m.user_email) === 1 ? 'st' : placementFor(m.user_email) === 2 ? 'nd' : placementFor(m.user_email) === 3 ? 'rd' : 'th'}.png`}
+  alt=""
+  className="absolute pointer-events-none"
+  style={{
+    left: pctX(px),
+    top: pctY(py),
+    width: pctX(21),
+    height: pctY(7),
+    imageRendering: 'pixelated',
+  }}
+  draggable={false}
+/>
               </React.Fragment>
             )
           })}
