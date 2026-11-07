@@ -1030,33 +1030,44 @@ if (useRandForOptions && !isNaN(n) && n >= 1) {
       })}
     </div>
     {(() => {
-      const spaceMats = new Set(selected.entries.slice(1))
-      const covered = remainingLevels
-        .map(lvl => ({
-          levelId: lvl,
-          materialsFound: (materialList[lvl - 1] || []).filter(m => spaceMats.has(m)),
-        }))
-        .filter(x => x.materialsFound.length > 0)
-        .sort((a, b) => b.materialsFound.length - a.materialsFound.length)
-      if (covered.length === 0) return null
-      return (
-        <div>
-          <div className="text-gray-400 text-xs mb-1">
-            Levels with materials here ({covered.length})
+  const spaceMats = new Set(selected.entries.slice(1))
+  const covered = remainingLevels
+    .map(lvl => ({
+      levelId: lvl,
+      materialsFound: (materialList[lvl - 1] || []).filter(m => spaceMats.has(m)),
+    }))
+    .filter(x => x.materialsFound.length > 0)
+    .sort((a, b) => b.materialsFound.length - a.materialsFound.length)
+
+  const scrapbookMatsHere = countScrapbook
+    ? selected.entries.slice(1).filter(m => !scrapbooked.includes(m))
+    : []
+
+  if (covered.length === 0 && scrapbookMatsHere.length === 0) return null
+  return (
+    <div>
+      <div className="text-gray-400 text-xs mb-1">
+        Levels with materials here ({covered.length})
+      </div>
+      <div className="space-y-1 max-h-40 overflow-y-auto">
+        {covered.map(({ levelId, materialsFound }) => (
+          <div key={levelId} className="bg-gray-800 rounded p-1.5">
+            <div className="text-white text-xs font-medium">
+              {getLevelCode(levelId)} {levelNames[levelId - 1]}
+            </div>
+            <div className="text-gray-400 text-xs">{materialsFound.join(', ')}</div>
           </div>
-          <div className="space-y-1 max-h-40 overflow-y-auto">
-            {covered.map(({ levelId, materialsFound }) => (
-              <div key={levelId} className="bg-gray-800 rounded p-1.5">
-                <div className="text-white text-xs font-medium">
-                  {getLevelCode(levelId)} {levelNames[levelId - 1]}
-                </div>
-                <div className="text-gray-400 text-xs">{materialsFound.join(', ')}</div>
-              </div>
-            ))}
+        ))}
+        {scrapbookMatsHere.length > 0 && (
+          <div className="bg-gray-800 rounded p-1.5">
+            <div className="text-white text-xs font-medium">Scrapbook</div>
+            <div className="text-gray-400 text-xs">{scrapbookMatsHere.join(', ')}</div>
           </div>
-        </div>
-      )
-    })()}
+        )}
+      </div>
+    </div>
+  )
+})()}
   </div>
             ) : (
               <div className="flex flex-col gap-1">
