@@ -239,21 +239,33 @@ export default function SessionsPage() {
     return unique.indexOf(builtCounts[email]) + 1
   }
 
-  function hasJoined(s: Session) {
-    return s.host_email === user!.email || localStorage.getItem(`joined_${s.id}`) === 'true'
+  async function handleOpen() {
+  const email = user?.email?.toLowerCase()
+
+  if (!current || !email) return
+
+  if (current.host_email?.toLowerCase() === email) {
+    router.push(`/session/${current.id}`)
+    return
   }
 
-  function handleOpen() {
-    if (!current) return
-    if (hasJoined(current)) {
-      router.push(`/session/${current.id}`)
-      return
-    }
-    setSelectedSession(current)
-    setPassword('')
-    setMode('join')
-    setError('')
+  const res = await fetch(`/api/session_members?session_id=${current.id}`)
+  const data = await res.json()
+
+  const alreadyJoined = (data.members ?? []).some(
+    (m: Member) => m.user_email?.toLowerCase() === email
+  )
+
+  if (alreadyJoined) {
+    router.push(`/session/${current.id}`)
+    return
   }
+
+  setSelectedSession(current)
+  setPassword('')
+  setMode('join')
+  setError('')
+}
 
   function handleNext() {
     if (sessions.length === 0) return
@@ -309,7 +321,6 @@ export default function SessionsPage() {
     const data = await res.json()
     setLoading(false)
     if (data.error) return setError(data.error)
-    localStorage.setItem(`joined_${data.session.id}`, 'true')
     router.push(`/session/${data.session.id}`)
   }
 
