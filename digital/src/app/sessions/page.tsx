@@ -312,27 +312,63 @@ export default function SessionsPage() {
             draggable={false}
           />
 
-          {/* Invisible buttons */}
+          <img
+  src="/Select%20Game.png"
+  alt=""
+  className="absolute pointer-events-none"
+  style={{
+    left: pctX(85),
+    top: pctY(11),
+    imageRendering: 'pixelated',
+  }}
+  draggable={false}
+/>
+
           <button
-            aria-label="Open"
-            onClick={handleOpen}
-            className="absolute"
-            style={{
-              left: pctX(12), top: pctY(241),
-              width: `${(37 / W) * 100}%`, height: `${(17 / H) * 100}%`,
-              background: 'transparent', border: 'none', cursor: 'pointer',
-            }}
-          />
-          <button
-            aria-label="Next"
-            onClick={handleNext}
-            className="absolute"
-            style={{
-              left: pctX(55), top: pctY(241),
-              width: `${(42 / W) * 100}%`, height: `${(19 / H) * 100}%`,
-              background: 'transparent', border: 'none', cursor: 'pointer',
-            }}
-          />
+  aria-label="Open"
+  onClick={handleOpen}
+  className="absolute group"
+  style={{
+    left: pctX(12),
+    top: pctY(241),
+    width: `${(37 / W) * 100}%`,
+    height: `${(19 / H) * 100}%`,
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+  }}
+>
+  <img
+    src="/Open_On.png"
+    alt=""
+    className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 pointer-events-none"
+    style={{ imageRendering: 'pixelated' }}
+    draggable={false}
+  />
+</button>
+
+<button
+  aria-label="Next"
+  onClick={handleNext}
+  className="absolute group"
+  style={{
+    left: pctX(55),
+    top: pctY(241),
+    width: `${(42 / W) * 100}%`,
+    height: `${(19 / H) * 100}%`,
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+  }}
+>
+  <img
+    src="/Next_On.png"
+    alt=""
+    className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 pointer-events-none"
+    style={{ imageRendering: 'pixelated' }}
+    draggable={false}
+  />
+</button>
 
           {/* Tapes + placement */}
           {sortedMembers.map((m, i) => {
