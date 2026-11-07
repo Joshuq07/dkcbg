@@ -504,7 +504,7 @@ export default function SessionsPage() {
                     <PixelText value={first6(m.player_name_2)} x={tx + 77} y={ty + 20} />
                   </>
                 ) : (
-                  <PixelText value={first6(m.player_name)} x={tx + 77} y={ty + 15} />
+                  <PixelText value={first6(m.player_name)} x={tx + 77} y={ty + 17} />
                 )}
 
                 <PixelPercent
