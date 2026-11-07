@@ -486,7 +486,7 @@ function isTeamGame(summaries: PlacementSummary[]) {
         {PLACEMENT_LABELS[p.place]}
       </span>
       <span className="text-white">{getPlayerName(p.playerId)}</span>
-      <span className="text-white">·</span>
+      <span className="text-white">-</span>
       <span className="text-white">{CHARACTER_NAMES[p.characterId]}</span>
     </div>
   ))}
