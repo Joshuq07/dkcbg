@@ -319,6 +319,8 @@ export default function SessionsPage() {
   style={{
     left: pctX(85),
     top: pctY(11),
+    width: pctX(86),
+    height: pctY(16),
     imageRendering: 'pixelated',
   }}
   draggable={false}
