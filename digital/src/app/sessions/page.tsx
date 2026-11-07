@@ -54,6 +54,99 @@ function Txt({ x, y, pt, color = 'black', children }: {
   )
 }
 
+const FONT_PATH = "/SelectFont";
+
+function PixelText({
+  value,
+  x,
+  y,
+}: {
+  value: string;
+  x: number;
+  y: number;
+}) {
+  const characters = value.toUpperCase().slice(0, 6).split("");
+  let offset = 0;
+
+  return (
+    <>
+      {characters.map((char, index) => {
+        const valid = /^[A-Z0-9%]$/.test(char);
+        if (!valid) return null;
+
+        const width = char === "1" ? 4 : 6;
+
+        const image = (
+          <img
+            key={index}
+            src={`${FONT_PATH}/${char}.png`}
+            alt=""
+            draggable={false}
+            style={{
+              position: "absolute",
+              left: pctX(x + offset),
+              top: pctY(y),
+              width: pctX(width),
+              height: pctY(6),
+              imageRendering: "pixelated",
+            }}
+          />
+        );
+
+        offset += width + 1;
+        return image;
+      })}
+    </>
+  );
+}
+
+function PixelPercent({
+  value,
+  x,
+  y,
+}: {
+  value: number;
+  x: number;
+  y: number;
+}) {
+  const percent = Math.round((value / 142) * 100);
+  const digits = String(percent).padStart(3, "0");
+
+  return (
+    <>
+      {digits.split("").map((char, index) => (
+        <img
+          key={index}
+          src={`${FONT_PATH}/${char}.png`}
+          alt=""
+          draggable={false}
+          style={{
+            position: "absolute",
+            left: pctX(x + index * 7),
+            top: pctY(y),
+            width: pctX(6),
+            height: pctY(6),
+            imageRendering: "pixelated",
+          }}
+        />
+      ))}
+      <img
+        src={`${FONT_PATH}/%.png`}
+        alt=""
+        draggable={false}
+        style={{
+          position: "absolute",
+          left: pctX(x + 21),
+          top: pctY(y),
+          width: pctX(6),
+          height: pctY(6),
+          imageRendering: "pixelated",
+        }}
+      />
+    </>
+  );
+}
+
 function formatDate(iso: string) {
   const d = new Date(iso)
   const mm = String(d.getMonth() + 1).padStart(2, '0')
@@ -405,16 +498,20 @@ export default function SessionsPage() {
                   />
                 )}
 
-                {team ? (
+                                {team ? (
                   <>
-                    <Txt x={tx + 77} y={ty + 10} pt={6}>{first6(m.player_name)}</Txt>
-                    <Txt x={tx + 77} y={ty + 20} pt={6}>{first6(m.player_name_2)}</Txt>
+                    <PixelText value={first6(m.player_name)} x={tx + 77} y={ty + 10} />
+                    <PixelText value={first6(m.player_name_2)} x={tx + 77} y={ty + 20} />
                   </>
                 ) : (
-                  <Txt x={tx + 77} y={ty + 15} pt={10}>{first6(m.player_name)}</Txt>
+                  <PixelText value={first6(m.player_name)} x={tx + 77} y={ty + 15} />
                 )}
 
-                <Txt x={tx + 125} y={ty + 15} pt={10}>{builtCounts[m.user_email] ?? 0}</Txt>
+                <PixelPercent
+                  value={builtCounts[m.user_email] ?? 0}
+                  x={tx + 125}
+                  y={ty + 15}
+                />
 
                 <img
   src={`/${placementFor(m.user_email)}${['th', 'st', 'nd', 'rd'][placementFor(m.user_email) % 10] && placementFor(m.user_email) === 1 ? 'st' : placementFor(m.user_email) === 2 ? 'nd' : placementFor(m.user_email) === 3 ? 'rd' : 'th'}.png`}
