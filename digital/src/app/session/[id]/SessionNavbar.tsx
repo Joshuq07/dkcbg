@@ -89,7 +89,7 @@ export default function SessionNavbar({ sessionId }: { sessionId: string }) {
           <img src="/recordslogo.png" alt="Records" style={{ height: '27px' }} />
         </Link>
 
-        <Link href={`/achievements`} className="relative z-10 shrink-0">
+        <Link href="/achievements" className="relative z-10 shrink-0">
           <img src="/achievementslogo.png" alt="Achievements" style={{ height: '27px' }} />
         </Link>
 
