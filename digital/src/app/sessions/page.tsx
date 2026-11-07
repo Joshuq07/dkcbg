@@ -29,6 +29,7 @@ const H = 273
 const TAPE_W = 170
 const TAPE_H = 34
 const TAPE_POS = [[13, 41], [13, 91], [13, 140], [13, 186]]
+const PLAYER_NUMBER_POS = [1, 2, 3, 4]
 const PLACE_POS = [[210, 55], [210, 103], [210, 152], [210, 200]]
 const CYAN = '#00e5ff'
 
@@ -484,6 +485,20 @@ export default function SessionsPage() {
                     imageRendering: 'pixelated',
                   }}
                 />
+
+                <img
+  src={`/playernumber/${PLAYER_NUMBER_POS[i]}.png`}
+  alt=""
+  className="absolute pointer-events-none"
+  style={{
+    left: pctX(tx + 5),
+    top: pctY(ty + 9),
+    width: pctX(6),
+    height: pctY(7),
+    imageRendering: 'pixelated',
+  }}
+  draggable={false}
+/>
 
                 {charSrc && (
                   <img
