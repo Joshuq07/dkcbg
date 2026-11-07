@@ -31,33 +31,22 @@ const TAPE_H = 34
 const TAPE_POS = [[13, 41], [13, 91], [13, 140], [13, 186]]
 const PLACE_POS = [[210, 53], [210, 101], [210, 150], [210, 198]]
 const CYAN = '#00e5ff'
-const PLACE_GREEN = '#45d65b'
 
 const pctX = (x: number) => `${(x / W) * 100}%`
 const pctY = (y: number) => `${(y / H) * 100}%`
 // pt -> px (x 4/3) -> scaled to container width, so text scales with the image
 const fs = (pt: number) => `${((pt * 4) / 3 / W) * 100}cqw`
 
-function Txt({ x, y, pt, color = 'black', pixel = false, children }: {
-  x: number
-  y: number
-  pt: number
-  color?: string
-  pixel?: boolean
-  children: React.ReactNode
+function Txt({ x, y, pt, color = 'black', children }: {
+  x: number; y: number; pt: number; color?: string; children: React.ReactNode
 }) {
   return (
     <div
       className="absolute pointer-events-none"
       style={{
-        left: pctX(x),
-        top: pctY(y),
-        fontSize: fs(pt),
-        color,
-        lineHeight: 1,
-        whiteSpace: 'nowrap',
-        fontFamily: pixel ? "'Pixelify Sans', sans-serif" : 'inherit',
-        fontWeight: pixel ? 700 : 400,
+        left: pctX(x), top: pctY(y),
+        fontSize: fs(pt), color,
+        lineHeight: 1, whiteSpace: 'nowrap',
       }}
     >
       {children}
@@ -378,27 +367,17 @@ export default function SessionsPage() {
                 )}
 
                 {team ? (
-  <>
-    <Txt x={tx + 77} y={ty + 10} pt={6} pixel>
-      {first6(m.player_name)}
-    </Txt>
-    <Txt x={tx + 77} y={ty + 20} pt={6} pixel>
-      {first6(m.player_name_2)}
-    </Txt>
-  </>
-) : (
-  <Txt x={tx + 77} y={ty + 15} pt={10} pixel>
-    {first6(m.player_name)}
-  </Txt>
-)}
+                  <>
+                    <Txt x={tx + 77} y={ty + 10} pt={6}>{first6(m.player_name)}</Txt>
+                    <Txt x={tx + 77} y={ty + 20} pt={6}>{first6(m.player_name_2)}</Txt>
+                  </>
+                ) : (
+                  <Txt x={tx + 77} y={ty + 15} pt={10}>{first6(m.player_name)}</Txt>
+                )}
 
-<Txt x={tx + 125} y={ty + 15} pt={10} pixel>
-  {builtCounts[m.user_email] ?? 0}
-</Txt>
+                <Txt x={tx + 125} y={ty + 15} pt={10}>{builtCounts[m.user_email] ?? 0}</Txt>
 
-                <Txt x={px} y={py} pt={12} color={PLACE_GREEN} pixel>
-  {ordinal(placementFor(m.user_email))}
-</Txt>
+                <Txt x={px} y={py} pt={12} color={CYAN}>{ordinal(placementFor(m.user_email))}</Txt>
               </React.Fragment>
             )
           })}
