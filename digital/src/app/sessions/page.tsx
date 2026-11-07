@@ -131,7 +131,7 @@ function PixelPercent({
         />
       ))}
       <img
-        src={`${FONT_PATH}/%.png`}
+        src={`${FONT_PATH}/%25.png`}
         alt=""
         draggable={false}
         style={{
