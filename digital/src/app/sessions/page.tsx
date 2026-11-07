@@ -531,10 +531,10 @@ export default function SessionsPage() {
           })}
 
           {/* Game # and date */}
-          <Txt x={117} y={246} pt={8} color={CYAN}>
+          <Txt x={117} y={244} pt={8} color={CYAN}>
             Game {current.game_number ?? sessions.length - index}
           </Txt>
-          <Txt x={185} y={246} pt={8} color={CYAN}>{formatDate(current.created_at)}</Txt>
+          <Txt x={185} y={244} pt={8} color={CYAN}>{formatDate(current.created_at)}</Txt>
          </div>
 
     <div className="flex justify-end mt-3">
